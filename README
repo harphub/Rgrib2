@@ -1,0 +1,36 @@
+### 14/07/2006 : long overdue clean-up of Gdescribe, add DWD-204 for PEPS
+### 14/08/2006 : Inclusion of scanning mode and wind direction flags!
+###                                                         (Jure Cedilnik)
+###              Fix file names of code tables.
+### 15/08/2006 : Fix wind direction for LatLon: local aspect ratio cos(lat)
+### 19/08/2006 : Fix memory leak (open files) in C code. (Jure Cedilnik)
+### 23/01/2008 : Add rotated latlon projection (for Hirlam output)
+###              Add some more "table 2" versions from DWD (PEPS data...)
+### 30/01/2008 : Modify for interface with proj4 package from CRAN
+###              This requires geogrid 2.6.0
+### ...        : various fixes
+### 15/10/2010 : Rgrib2
+###              Linked to grib_api
+###              Currently requires grib_api to be re-compiled
+###                    with CFLAGS="-fPIC"
+### 20/01/2011 : v1.0.1
+###              Gdescribe and Gtime now return parameter name and time
+###              Gdescribe allows for adding GRIB1 local table2's
+###              Man pages (more or less) up to date. At last.
+### v1.0.2 :
+### 21/01/2011 : Fix if Lat-Lon domain crosses the 180/-180 meridian
+###                in that case you can not take 0 as central meridian
+###                of the map. 
+### 19/07/2011 : Fix very bad memory leak in Gdec (reported by Daan Degrauwe)
+### 02/08/2011 : Fix reading of table.csv : 
+###                in recent R such data files are zipped
+### 15/09/2011 : Fix for default grib-1 table
+###              Fix for Gcreate in case of Rotated LatLon
+###              Fix Ginfo: for non-existing parameters return NA
+###              Remove useless warning in Ggrid for longitudes
+### 23/12/2011 : Fix bug in Gcreate: wrond dx,dy for rotated LatLon
+### 03/01/2012 : Bugfix for Ggrid : put central meridian in projection for latlon
+### 25/01/2012 : Add default NAMESPACE file.
+### 02/07/2012 : Bugfix Gdec
+### 20/08/2012 : Add spherical earth parameters.
+

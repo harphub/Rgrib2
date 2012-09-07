@@ -1,0 +1,17 @@
+# if GRIB_API_LIB is undefined, we assume the LIB and INCLUDE paths are OK
+# if it is (probably running on ecgate...) we use it
+#
+# These variables should not only include the path to
+# the include fiels and libraries
+# but also the libraries themselves, e.g.
+# GRIB_API_LIB=-L/usr/local/lib -lgrib_api_f90 -lgrib_api -ljasper
+# GRIB_API_INCLUDE=-I/auxlib/grib_api-1.9.5/include
+
+ifeq ($(GRIB_API_LIB),)
+  PKG_LIBS = -lgrib_api -ljasper -lpng
+else
+  PKG_LIBS = $(GRIB_API_LIB)
+  PKG_CPPFLAGS = $(GRIB_API_INCLUDE)
+endif
+
+
