@@ -33,4 +33,5 @@
 ### 25/01/2012 : Add default NAMESPACE file.
 ### 02/07/2012 : Bugfix Gdec
 ### 20/08/2012 : Add spherical earth parameters.
+### ../08/2012 : Add support for multi-field messages BUGGED
 

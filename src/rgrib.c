@@ -95,7 +95,6 @@ long Rgrib_count_handles_C(){
 }
 
 SEXP Rgrib_count_handles(){
-  long cl;
   SEXP result;
   PROTECT(result=allocVector(INTSXP,1));
   INTEGER(result)[0]= Rgrib_count_handles_C();
@@ -123,7 +122,6 @@ SEXP Rgrib_list_handles(){
 }
 
 SEXP Rgrib_clear_handle(SEXP gribhandle){
-  grib_handle *h;
   int* id;
   int iid;
 
@@ -176,7 +174,7 @@ void Rgrib_count_messages(char** filename, int* nfields,int* multi)  {
       (*nfields)++;
       grib_handle_delete(h);
     }
-    Rprintf("MULTI found %d messages and %d fields.\n",nmess,*nfields);
+    Rprintf("MULTI: found %d message(s) and %d field(s).\n",nmess,*nfields);
   }
   else{
     *nfields=nmess;
@@ -201,7 +199,7 @@ SEXP Rgrib_parse(SEXP filename,
   size_t vlen=MAX_VAL_LEN;
   double Dbl_value;
   long Long_value;
-  SEXP result,StrV,DblV,IntV,parvec,param;
+  SEXP result,parvec;
   char   ***StrAns;
   long   **IntAns;
   double **DblAns;
@@ -242,26 +240,26 @@ SEXP Rgrib_parse(SEXP filename,
 /*  Rprintf("There are %d GRIB messages in file %s !\n",nmesg,CHAR(STRING_ELT(filename,0)));
 */
 
-/*  allocate the R lists */
+/*  allocate the R lists, initialise to NA/NULL */
   StrAns=(char***) R_alloc(nStrPar,sizeof(char**));
   for(i=0;i<nStrPar;i++){
     StrAns[i]=(char**) R_alloc(nrec,sizeof(char*));
-    for(j=0;j<irec;j++) StrAns[i][j]=NULL;
+    for(j=0;j<nrec;j++) StrAns[i][j]=NULL;
   }
 
   IntAns=(long**) R_alloc(nIntPar,sizeof(long*));
   for(i=0;i<nIntPar;i++){
     IntAns[i]=(long*) R_alloc(nrec,sizeof(long));
-    for(j=0;j<irec;j++) IntAns[i][j]=NA_INTEGER;
+    for(j=0;j<nrec;j++) IntAns[i][j]=NA_INTEGER;
   }
 
   DblAns=(double**) R_alloc(nDblPar,sizeof(double*));
   for(i=0;i<nDblPar;i++){
     DblAns[i]=(double*) R_alloc(nrec,sizeof(double));
-    for(j=0;j<irec;j++) DblAns[i][j]=NA_REAL;
+    for(j=0;j<nrec;j++) DblAns[i][j]=NA_REAL;
   }
 
-  if(INTEGER(multi))grib_multi_support_on(0);
+  if (INTEGER(multi)) grib_multi_support_on(0);
   else grib_multi_support_off(0);
 
   irec=0;
@@ -271,13 +269,10 @@ SEXP Rgrib_parse(SEXP filename,
       for(j=0;j<nStrPar;j++) {
         vlen=MAX_VAL_LEN;
         err=grib_get_string(h,CHAR(STRING_ELT(StrPar,j)),Str_value,&vlen);
-/* some error checking! but GRIB_CHECK exits R itself */
+/* some error checking! but GRIB_CHECK exits R itself, so avoid using it */
         if (err) {
 /* ==NA_STRING is not a string but type SEXP, so we can not use it here yet! */
           Rprintf("Problem: length is %d\n",vlen);
-/*          StrAns[j][irec]=R_alloc(10,sizeof(char));
-          strncpy(StrAns[j][irec],"NA_STRING\0",10);
-*/
         }
         else {
           StrAns[j][irec]=R_alloc(vlen,sizeof(char));
@@ -286,20 +281,20 @@ SEXP Rgrib_parse(SEXP filename,
       }
       for(j=0;j<nIntPar;j++) {
         err=grib_get_long(h,CHAR(STRING_ELT(IntPar,j)),&Long_value);
-/* some error checking! but GRIB_CHECK exits R itself */
         if (!err) IntAns[j][irec] = Long_value;
       }
       for(j=0;j<nDblPar;j++) {
         err=grib_get_double(h,CHAR(STRING_ELT(DblPar,j)),&Dbl_value);
-/* some error checking! but GRIB_CHECK exits R itself */
         if (!err) DblAns[j][irec]=Dbl_value;
       }
 
       irec+=1;
     }
-    grib_handle_delete(h);
+    grib_handle_delete(h);/* for memory leakage: better to delete every time ? */
   }
   fclose(infile);
+
+/* now we create the R objects */
 
   PROTECT(result=allocVector(VECSXP,npar));
   for(i=0;i<nStrPar;i++){
@@ -369,16 +364,27 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
     return(R_NilValue);
   }
 
+  i=0;
+  while( (h = grib_handle_new_from_file(0,infile,&err))!=NULL && ++i<INTEGER(message)[0] ){
+/* should I delete the handle at every iteration to stop memory leakage? */
+/* It isn't done in the examples, but I think it is necessary. */
+/*
+    GRIB_CHECK(grib_get_long(h,"validityTime",&id),0);
+    printf("message No %d of %d: FC range=%ld\n",i,INTEGER(message)[0],id); 
+*/
+    grib_handle_delete(h);
 
+  }
+/*
   for(i=1;i<INTEGER(message)[0];i++){
     if((h = grib_handle_new_from_file(0,infile,&err))==NULL) break; 
     else grib_handle_delete(h);
   }
-  h = grib_handle_new_from_file(0,infile,&err);
+*/
   if(h==NULL) {
-   Rprintf("Error: reached end of file.\n");
-   fclose(infile);
-   return(R_NilValue);
+    Rprintf("Error: reached end of file.\n");
+    fclose(infile);
+    return(R_NilValue);
   }
 
   id = newhandle->id;
@@ -428,7 +434,7 @@ SEXP Rgrib_handle_new_sample(SEXP sample){
 
 SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
   grib_handle *h;
-  int nmesg,i,j,irec,err,nIntPar,nDblPar,nStrPar,nrec,npar ;
+  int i,irec,err,nIntPar,nDblPar,nStrPar,npar ;
   char   **StrAns;
   size_t vlen=MAX_VAL_LEN;
   char Str_value[MAX_VAL_LEN];
@@ -468,7 +474,6 @@ SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
 
   for(i=0;i<nIntPar;i++) {
      err=grib_get_long(h,CHAR(STRING_ELT(IntPar,i)),IntAns+i);
-/* some error checking! but GRIB_CHECK exits R itself */
      if (err) {
        IntAns[i] = NA_INTEGER;
      }
@@ -476,7 +481,6 @@ SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
 
   for(i=0;i<nDblPar;i++) {
     err=grib_get_double(h,CHAR(STRING_ELT(DblPar,i)),DblAns+i);
-/* some error checking! but GRIB_CHECK exits R itself */
     if (err) {
        DblAns[i] = NA_REAL;
     }
@@ -511,7 +515,6 @@ SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
 
 SEXP Rgrib_handle_decode(SEXP gribhandle)
 {
-  int i,j,err ;
   size_t dlen;
   grib_handle *h;
   double *dres;
@@ -541,7 +544,7 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
 /************/
 
 SEXP Rgrib_handle_mod(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
-  int i,err,nIntPar,nDblPar,nStrPar ;
+  int i,nIntPar,nDblPar,nStrPar,err ;
   grib_handle *h;
   size_t vlen;
   int *id;
@@ -575,10 +578,8 @@ SEXP Rgrib_handle_mod(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
 }
 
 SEXP Rgrib_handle_enc(SEXP gribhandle,SEXP fieldvalues){
-  int i,err ;
-  const void* buffer = NULL;
   double * values;
-  size_t values_len,size;
+  size_t values_len;
   grib_handle *h;
   int *id;
 
@@ -638,7 +639,6 @@ GRIB_KEYS_ITERATOR_SKIP_COMPUTED;
 /* name_space=NULL to get all the keys */
 /* char* name_space=0; */
   grib_keys_iterator* kiter=NULL;
-  int err=0;
   char value[MAX_VAL_LEN];
   size_t vlen=MAX_VAL_LEN;
   int *id;
