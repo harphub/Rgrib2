@@ -1,0 +1,8 @@
+.Rbuildignore
+.Rproj.user
+.Rhistory
+.RData
+src/*.[ao]
+src/*.so
+src/*.dll
+.*.swp

@@ -10,7 +10,7 @@
 
   gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
 
-  earthshape <- Ginfo(gribhandle,IntPar=c("shapeOfTheEarth","scaledValueOfRadiusOfSphericalEarth",
+  earthshape <- Ginfo(gribhandle,IntPar=c("editionNumber","shapeOfTheEarth","scaledValueOfRadiusOfSphericalEarth",
                          "scaleFactorOfRadiusOfSphericalEarth",
                          "scaleFactorOfEarthMajorAxis",
                          "scaledValueOfEarthMajorAxis",
@@ -19,7 +19,7 @@
  ))
   
   earthproj <- switch(as.character(earthshape$shapeOfTheEarth),
-  "0"=list(a=6367470.0,es=0.0),
+  "0"=list(a=6367470.0,es=0.0), ### WMO standard for grib-1!
   "1"=list(a=10^-earthshape$scaleFactorOfRadiusOfSphericalEarth * earthshape$scaledValueOfRadiusOfSphericalEarth,es=0.0),
   "2"=list(a=6378160.0,b=6356775.0),
   "3"=list(a=10^(3-earthshape$scaleFactorOfEarthMajorAxis) * 
@@ -28,24 +28,30 @@
            earthshape$scaledValueOfEarthMinorAxis),
   "4"=list(ellps="GRS80"),
   "5"=list(ellps="WGS84"),
-  "6"=list(a=6371229.0,es=0.0),
+  "6"=list(a=6371229.0,es=0.0), ### as used e.g. by ALADIN
   "7"=list(a=10^(-earthshape$scaleFactorOfEarthMajorAxis) * 
-           earthshape$scaledValueOfEarthMajorAxis,
-         b=10^(-earthshape$scaleFactorOfEarthMinorAxis) * 
-           earthshape$scaledValueOfEarthMinorAxis),
+             earthshape$scaledValueOfEarthMajorAxis,
+           b=10^(-earthshape$scaleFactorOfEarthMinorAxis) * 
+             earthshape$scaledValueOfEarthMinorAxis),
   list(a=6371200.0,es=0.0)
   )
   if(earthshape$shapeOfTheEarth>=8) warning(paste("This earth shape is not yet fully implemented. Defaulting to sphere with radius",6371200.0)) 
+
+### ATTENTION: the WMO standard for GRIB-1 files has earth radius a=6367470.0
+###            On the other hand, NCEP uses a=6371200.0 (also hardcoded in grads)
+###            and the ALADIN model a=6371229.0
+###            In GRIB-1 it is not possible to pass the Earth radius.
+### strangely, grib_api returns shape="6" and radius 6367470.0 for grib-1 files. This is inconsistent!
+### 
+### For lat/lon, this is of no consequence, but for Lambert and Mercator, 
+### the earth radius has an impact when calculating NE point from SW.
+### We could *assume* that Lambert projections always originate from ALADIN/ALARO/AROME... or use centre of origin?
 
 
 # LATLON
   if(gridtype=="regular_ll"){
     info <- gridtype
     projection <- list(proj="latlong")
-### ATTENTION: the WMO standard for GRIB files has earth radius a=6367470.0
-###            On the other hand, NCEP uses a=6371200.0 (also hardcoded in grads)
-###            and the ALADIN model a=6371229.0
-###            In GRIB-1 it is not possible to pass the Earth radius.
 
     ggg <- Ginfo(gribhandle,
               IntPar=c("Nx","Ny",

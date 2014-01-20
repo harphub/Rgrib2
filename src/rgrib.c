@@ -9,6 +9,18 @@
 #define MAX_KEY_LEN 255
 #define MAX_VAL_LEN 1024
 
+/******************************************************************************/
+/* This library links to grib_api. It uses the grib_handle structure.         */
+/* But there is an added complexity due to the R interface. Some handles      */
+/* must remain resident in R for analysis, while other are deleted on the fly.*/
+/* So we work with an array GRIBhandleList[MAX_HANDLE] of RgribHandle*        */
+/* which are structures with a pointer to the original grib_handle plus some  */
+/* extra stuff to keep R happy.                                               */
+
+
+
+
+
 /* prototypes */
 static void Rgrib_handleFinalizer(SEXP);
 
@@ -16,7 +28,6 @@ static void Rgrib_handleFinalizer(SEXP);
 /* bookkeeping */
 /***************/
 #define MAX_HANDLE 15
-
 
 static int RgribInitialised=0;
 
@@ -216,7 +227,7 @@ SEXP Rgrib_parse(SEXP filename,
 
   if(imulti){
     grib_multi_support_on(0);
-    warning("MULTI is NEW!\n");
+    warning("MULTI is still buggy!\n");
   }
   else grib_multi_support_off(0);
 
@@ -259,9 +270,6 @@ SEXP Rgrib_parse(SEXP filename,
     for(j=0;j<nrec;j++) DblAns[i][j]=NA_REAL;
   }
 
-  if (INTEGER(multi)) grib_multi_support_on(0);
-  else grib_multi_support_off(0);
-
   irec=0;
   for(i=0;irec<nrec && (h = grib_handle_new_from_file(0,infile,&err))!=NULL;i++) {
 
@@ -290,8 +298,9 @@ SEXP Rgrib_parse(SEXP filename,
 
       irec+=1;
     }
-    grib_handle_delete(h);/* for memory leakage: better to delete every time ? */
+    grib_handle_delete(h);/* for memory leakage & MULTI : better to delete every time ! */
   }
+/*  if(h!=NULL) grib_handle_delete(h);  */
   fclose(infile);
 
 /* now we create the R objects */
@@ -332,7 +341,8 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   FILE* infile ;
   int nmesg,i,err,imulti;
   int *id;
-  grib_handle *h=NULL;
+  long int ttt;
+  grib_handle *h=NULL,*g=NULL;
   RgribHandle *newhandle;
   SEXP output;
 
@@ -368,10 +378,9 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   while( (h = grib_handle_new_from_file(0,infile,&err))!=NULL && ++i<INTEGER(message)[0] ){
 /* should I delete the handle at every iteration to stop memory leakage? */
 /* It isn't done in the examples, but I think it is necessary. */
-/*
-    GRIB_CHECK(grib_get_long(h,"validityTime",&id),0);
-    printf("message No %d of %d: FC range=%ld\n",i,INTEGER(message)[0],id); 
-*/
+
+    GRIB_CHECK(grib_get_long(h,"validityTime",&ttt),0);
+
     grib_handle_delete(h);
 
   }
@@ -388,8 +397,10 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   }
 
   id = newhandle->id;
-  newhandle->h = h;
+  newhandle->h = grib_handle_clone(h);
+  grib_handle_delete(h);
   newhandle->ext_ptr = R_MakeExternalPtr(id, install("GRIBhandle"), R_NilValue);
+
   R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
 
   R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);

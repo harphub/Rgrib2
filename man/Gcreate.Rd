@@ -1,17 +1,16 @@
 \name{Gcreate}
 \alias{Gcreate}
-\alias{GRIB info}
 \title{Create a new GRIB handle}
 \description{
   Creates a new GRIBhandle object.
 }
 \usage{
-  Gcreate(domain=,gribversion=2,sample)
+  Gcreate(gribedition=2,DOMAIN,sample)
 }
 \arguments{
+  \item{gribedition}{Denotes the GRIB edition: either 1 or 2.}
   \item{domain}{A \code{geodomain} object defining the grid. If \code{domain} is not specified, the grid definition of thye sample is unmodified.}
-  \item{gribversion}{Denotes the GRIB version: either 1 or 2.}
-  \item{sample}{Character string. Denotes the name of a GRIBfile to be used as a template for the new message. The default is "regular_ll_sfc_gribN" where N is theh gribversion.}}
+  \item{sample}{Character string. Denotes the name of a GRIBfile to be used as a template for the new message. TIf undefined, the default is "regular_ll_sfc_gribN" where N is the gribedition.}}
 \value{
 A \code{GRIBhandle} for a new GRIB message.
 }

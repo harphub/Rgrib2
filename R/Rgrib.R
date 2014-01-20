@@ -14,7 +14,7 @@
 ### 27/10/2010 : First version linked to grib_api
 ### 21/01/2011 : Read local table-2 for unknown parameters.
 ### ../09/2011 : Change in Gmod for data: allow either precision or nbits
-### ../09/2012 : MULTI messages support
+### ../09/2012 : MULTI messages support -- BUG in GRIB_API, so not very useful
 #####################################
 
 ### trim whitespace from character strings
