@@ -529,7 +529,8 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   size_t dlen;
   grib_handle *h;
   double *dres;
-  long nx,ny ;
+/*  long nx,ny ;
+*/
   SEXP result;
   int *id;
 
@@ -538,10 +539,8 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   h=GRIBhandleList[*id]->h;
   if(!h) error("Not a registered GRIBhandle.\n");
 
-  grib_get_long(h,"Nx",&nx);
-  grib_get_long(h,"Ny",&ny);
-
-  dlen= (size_t) nx*ny;
+/* Nx=-1 for gaussian. numberOfCodedValues or numberOfDataPoints may be better? */
+  grib_get_long(h,"numberOfValues",&dlen);     
   PROTECT(result=allocVector(REALSXP,dlen));
   dres=REAL(result);
   grib_get_double_array(h,"values",dres,&dlen);

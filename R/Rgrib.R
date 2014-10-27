@@ -130,13 +130,44 @@ function (x,field=1,get.meta=TRUE,multi=FALSE)
   scan <- Ginfo(gribhandle,IntPar=c("Nx","Ny","iScansNegatively","jScansPositively",
                                      "jPointsAreConsecutive","alternativeRowScanning",
                                      "missingValue","numberOfMissing" ) )
-  result <- matrix(data,nrow=scan$Nx,ncol=scan$Ny,byrow=(scan$jPointsAreConsecutive==1))
-  if(scan$iScansNegatively==1) result <- result[scan$Nx:1,]
-  if(scan$jScansPositively==0) result <- result[,scan$Ny:1]
-  if(scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
+  if(scan$numberOfMissing > 0) data[which(data==scan$missingValue)] <- NA
+  if(is.na(scan$Nx) | is.na(scan$Ny)) {
+    warning("Spectral harmonics data not yet supported")
+    return(data)
+  }
+  else if(scan$Nx<=0 | scan$Ny <= 0){
+    warning("(reduced) gaussian grid is experimental!")
+    N <- Ginfo(gribhandle,IntPar="N")$N
+    Nggg <- paste("N",N,sep="")
+    cat("N=",N,"loading",Nggg,"\n")
+    data(list=Nggg,package="Rgrib2",envir=environment(NULL))
+#    cat("OK\n")
+    assign("Ngg",eval(parse(text=Nggg)))
 
-  if(scan$numberOfMissing > 0) result[result==scan$missingValue] <- NA
-
+    result <- matrix(NA,ncol=2*N,nrow=4*N+1)
+    print(dim(result))
+    gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
+    print(gridtype)
+    if(gridtype=="reduced_gg") Nlon <- Ngg$reduced
+    else Nlon <- Ngg$regular
+#    return(data)
+    i <- 1
+# ECMWF: iScansNeg=0,jScansPos=0,jPointsConsec=0
+# so the points start NE, go by longitude
+    for(lat in (2*N):1){
+      result[1:Nlon[lat],lat] <- data[i:(i+Nlon[lat]-1)]
+      result[(Nlon[lat]+1),lat] <- result[1,lat] # for periodicity: much easier this way
+      i <- i+Nlon[lat]
+    }
+    class(result) <- c(class(result),"gaussian")
+  }
+  else {
+ # standard LAM grid
+    result <- matrix(data,nrow=scan$Nx,ncol=scan$Ny,byrow=(scan$jPointsAreConsecutive==1))
+    if(scan$iScansNegatively==1) result <- result[scan$Nx:1,]
+    if(scan$jScansPositively==0) result <- result[,scan$Ny:1]
+    if(scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
+  }
   if(get.meta){
     attributes(result)$domain <- Ggrid(gribhandle)
     attributes(result)$info <- Gdescribe(gribhandle)

@@ -335,6 +335,22 @@ else if(gridtype=="rotated_ll") {
 #  else if(gridtype == "11"){
 #     warning("Rotated Mercator projection is not officially part of the GRIB definition!")
 #  }
+  else if(gridtype=="reduced_gg"){
+    info <- "Reduced gaussian grid (experimental!)"
+    ggg <- Ginfo(gribhandle,IntPar=c("Ny","N"))
+# this gives Nlon and the list of latitudes
+    N <- ggg$N
+    Nggg <- paste("N",N,sep="")
+    data(list=Nggg,package="Rgrib2",envir=environment(NULL))
+    assign("Ngg",eval(parse(text=Nggg)))
+    Nlon <- Ngg$reduced
+
+    result <- list(name=Nggg,nlon=Nlon,latlist=Ngg$latitude)
+  }
+#  else if(gridtype=="sh"){
+#    info <- "Spectral harmonics! (experimental!)"
+#  }
+
   else {
     info <- "Unimplemented grid"
     projection <- list(proj="unknown")
