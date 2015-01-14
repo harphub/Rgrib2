@@ -141,7 +141,6 @@ function (x,field=1,get.meta=TRUE,multi=FALSE)
     Nggg <- paste("N",N,sep="")
     cat("N=",N,"loading",Nggg,"\n")
     data(list=Nggg,package="Rgrib2",envir=environment(NULL))
-#    cat("OK\n")
     assign("Ngg",eval(parse(text=Nggg)))
 
     result <- matrix(NA,ncol=2*N,nrow=4*N+1)
@@ -149,8 +148,7 @@ function (x,field=1,get.meta=TRUE,multi=FALSE)
     gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
     print(gridtype)
     if(gridtype=="reduced_gg") Nlon <- Ngg$reduced
-    else Nlon <- Ngg$regular
-#    return(data)
+    else Nlon <- rep(4*N,4*N)
     i <- 1
 # ECMWF: iScansNeg=0,jScansPos=0,jPointsConsec=0
 # so the points start NE, go by longitude
