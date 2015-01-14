@@ -1,3 +1,8 @@
+/*
+ * Copyright 2014 Alex Deckmyn
+ * 
+ * This software is licensed under the GPL licence v3
+ */
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>

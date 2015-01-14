@@ -6,5 +6,4 @@ Author: Alex Deckmyn <Alex.Deckmyn@meteo.be>.
 Maintainer: Alex Deckmyn <Alex.Deckmyn@meteo.be>
 Depends: geogrid
 Description: An R interface to the GRIB_API library developed by ECMWF. Decoding and encoding of GRIB files. 
-License: GPL>=2
-URL: http://www.ecmwf.int/products/data/software/grib_api.html
+License: GPL3
