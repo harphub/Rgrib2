@@ -48,15 +48,20 @@ function (filename,
     if(is.element("unknown",result$shortName)){
       data(extratab)
       missing <- which(result$shortName=="unknown" & result$table2Version==1)
-      zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,seo="\r"),
-                  with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")
-      result$shortName[missing] <- extratab$shortname[zz]
+      zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
+                  with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+      result$shortName[missing] <- as.character(extratab$shortName[zz])
+## BUG: because of stringsAsFActors, we now got a number, not the 
+## we may have created some NA's: switch them back to "unknown"
+      result$shortName[which(is.na(result$shortName))] <- "unknown"
     }
 # EXTRA: should we try to get "2t" etc. 
     data(specialnames)
-    zz2 <- match(with(result,paste(table2Version,indicatorOfParameter;indicatorOfTypeOfLevel;level,sep="\r")),
-                 with(specialnames,paste(table2Version,indicatorOfParameter;indicatorOfTypeOfLevel;level,sep="\r")))
-    result$shortnames[zz2] <- specialnames$shortNames[zz2]
+    zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
+                 with(specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
+    zz3 <- which(!is.na(zz2))
+    if(length(zz3)>0) result$shortnames[zz3] <- specialnames$shortNames[zz2[zz3]]
+
   }
 ###
   attributes(result)$filename <- filename
