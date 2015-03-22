@@ -44,11 +44,19 @@ function (filename,
 ### a patch for tables that are missing in grib_api
 ##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
 ##  if (dim(noresult)[1] > 0) {
-  if(lextra & is.element("unknown",result$shortName)){
-    data(extratab)
-    missing <- which(result$shortName=="unknown" & resutl$table2Version==1)
-    noresult <- result[missing,]
-    result$shortName[missing] <- extratab[match(noresult$table2Version,extratab$table2Version)]$shortName
+  if(lextra) {
+    if(is.element("unknown",result$shortName)){
+      data(extratab)
+      missing <- which(result$shortName=="unknown" & result$table2Version==1)
+      zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,seo="\r"),
+                  with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")
+      result$shortName[missing] <- extratab$shortname[zz]
+    }
+# EXTRA: should we try to get "2t" etc. 
+    data(specialnames)
+    zz2 <- match(with(result,paste(table2Version,indicatorOfParameter;indicatorOfTypeOfLevel;level,sep="\r")),
+                 with(specialnames,paste(table2Version,indicatorOfParameter;indicatorOfTypeOfLevel;level,sep="\r")))
+    result$shortnames[zz2] <- specialnames$shortNames[zz2]
   }
 ###
   attributes(result)$filename <- filename

@@ -1,4 +1,4 @@
-tabel2Version;indicatorOfParameter;shortName;comment
+table2Version;indicatorOfParameter;shortName;comment
 1;61;tp;Total precipitation  [kg m-2]
 2;61;tp;Total precipitation  [kg m-2]
 3;61;tp;Total precipitation  [kg m-2]
@@ -450,14 +450,14 @@ tabel2Version;indicatorOfParameter;shortName;comment
 228;189;unknown;unknown
 228;190;unknown;unknown
 228;191;SBLwind;SBL Wind Velocity (m/s)
-228;192;u10;10 m u  wind component m/s m/s
-228;193;v10;10 m v  wind component m/s m/s
-228;194;t2;2 m temperature K \SP\o\SPR\C
-228;195;td2;2 m dewpoint temperature K \SP\o\SPR\C
-228;196;r2;2m Relative humidity % %
-228;197;q2;2m Specific humidity kg/kg g/kg
-228;198;MaxT2;2 m Max temp (since ppp) K \SP\o\SPR\C
-228;199;MinT2;2 m Min temp (since ppp) K \SP\o\SPR\C
+228;192;10u;10 m u  wind component m/s m/s
+228;193;10v;10 m v  wind component m/s m/s
+228;194;2t;2 m temperature K \SP\o\SPR\C
+228;195;2d;2 m dewpoint temperature K \SP\o\SPR\C
+228;196;2r;2m Relative humidity % %
+228;197;2q;2m Specific humidity kg/kg g/kg
+228;198;mx2t;2 m Max temp (since ppp) K \SP\o\SPR\C
+228;199;mn2t;2 m Min temp (since ppp) K \SP\o\SPR\C
 228;200;ST;Surface Temperature K \SP\o\SPR\C
 228;201;DST;Deep Soil Temperature K \SP\o\SPR\C
 228;202;SWC;Surface Water Contents ? ?
