@@ -60,7 +60,7 @@ function (filename,
     zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
                  with(specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
     zz3 <- which(!is.na(zz2))
-    if(length(zz3)>0) result$shortnames[zz3] <- specialnames$shortNames[zz2[zz3]]
+    if(length(zz3)>0) result$shortnames[zz3] <- as.character(specialnames$shortNames[zz2[zz3]])
 
   }
 ###
