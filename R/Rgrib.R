@@ -50,8 +50,8 @@ function (filename,
       missing <- which(result$shortName=="unknown" & result$table2Version==1)
       zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
                   with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+### use as.character to fix for default stringsAsFactors in data()...
       result$shortName[missing] <- as.character(extratab$shortName[zz])
-## BUG: because of stringsAsFActors, we now got a number, not the 
 ## we may have created some NA's: switch them back to "unknown"
       result$shortName[which(is.na(result$shortName))] <- "unknown"
     }
@@ -84,6 +84,22 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
   else result
 }
 
+### a more basic version for parameter (number or shortName), 
+Gfind <- function(griblist,par="t",levelType="P",level=NULL,all=FALSE,...){
+  if(is.character(griblist)) griblist <- Gopen(griblist)
+  if(!is.null(level)){
+    levelType <- switch(levelType,
+              "P"=100,
+              "H"=105,
+              "S"=109,
+              levelType)
+    ttt <- paste(par,levelType,level,sep="\r")
+    pos <- which(with(x,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
+  }
+  else pos <- which(x$shortName==par)
+  if(!all) pos
+  else x[pos,]
+}
 
 ###
 ### The main routine for getting parameters from a GRIB file or record
@@ -122,8 +138,10 @@ Ginfo.character <- function(filename,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL
 
 #####################################
 "Gdec" <-
-function (x,field=1,get.meta=TRUE,multi=FALSE)
+function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
 {
+### FIX ME: pos should point at the position in the file
+### use field for the GRIB par number?
 # Decode a grib record (call to C routine)
 # return data
   freeHandle <- TRUE
@@ -131,15 +149,21 @@ function (x,field=1,get.meta=TRUE,multi=FALSE)
     gribhandle <- x
     freeHandle <- FALSE
   }
-  else if(inherits(x,"GRIBlist")) {
-    gribhandle <- Ghandle(attributes(x)$filename,field,multi=multi)
-    if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
+### allow asking a field by shortName
+### this may also require providing a level (model, pressure, height...)
+  else if(is.character(field)){
+    sel <- Gfind(x,par=field,levelType=levelType,level=level,all=TRUE)
+    if(dim(sel)[1]!=1) {
+      print(sel)
+      stop("Need exactly 1 matching field!")
+    }
+    pos <- sel$position
+    gribhandle <- Ghandle(x,pos,multi=multi)
   }
-  else if(is.character(x)) {
+  else {
     gribhandle <- Ghandle(x,field,multi=multi)
-    if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
   }
-  else stop("not a valid GRIB reference")
+  if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
 
   data <- .Call("Rgrib_handle_decode",attr(gribhandle,"gribhandle_ptr"))
 #  cat("data length:",length(data),"\n")
