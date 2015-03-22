@@ -30,7 +30,7 @@ function(griblist){
 function (filename,
           IntPar=c("editionNumber","dataDate","dataTime","validityDate","validityTime","Nx","Ny",
                    "table2Version","indicatorOfParameter","indicatorOfTypeOfLevel","level"),
-          StrPar=c("shortName","gridType"), DblPar=c() , multi=FALSE)
+          StrPar=c("shortName","gridType"), DblPar=c() , multi=FALSE,lextra=TRUE)
 {
 ### FIX ME: the default choice of parameters is only OK for GRIB-1!
 ### passing a logical only works on recent installations, I think
@@ -42,11 +42,14 @@ function (filename,
 
   result <- Ginfo(filename,IntPar,DblPar,StrPar,rList=as.integer(1:nmessages),multi=multi)
 ### a patch for tables that are missing in grib_api
-#  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
-#  if (dim(noresult)[1] > 0) {
-#    for(pp in noresult$position)
-#
-#  }
+##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
+##  if (dim(noresult)[1] > 0) {
+  if(lextra & is.element("unknown",result$shortName)){
+    data(extratab)
+    missing <- which(result$shortName=="unknown" & resutl$table2Version==1)
+    noresult <- result[missing,]
+    result$shortName[missing] <- extratab[match(noresult$table2Version,extratab$table2Version)]$shortName
+  }
 ###
   attributes(result)$filename <- filename
   attributes(result)$nmessages <- nmessages

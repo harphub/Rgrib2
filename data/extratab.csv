@@ -1,0 +1,515 @@
+tabel2Version;indicatorOfParameter;shortName;comment
+1;61;tp;Total precipitation  [kg m-2]
+2;61;tp;Total precipitation  [kg m-2]
+3;61;tp;Total precipitation  [kg m-2]
+253;0;unknown;Reserved  [n/a]
+253;1;pres;Pressure  [Pa]
+253;2;msl;Pressure reduced to MSL  [Pa]
+253;3;ptend;Pressure tendency  [Pa s-1]
+253;4;pv;Potential vorticity  [K m2 kg-1 s-1]
+253;5;icaht;ICAO Standard Atmosphere reference height  [m]
+253;6;z;Geopotential  [m2 s-2]
+253;7;gh;Geopotential height  [gpm]
+253;8;h;Geometrical height  [m]
+253;9;hstdv;Standard deviation of height  [m]
+253;10;tco3;Total ozone  [Dobson]
+253;11;t;Temperature  [K]
+253;12;vtmp;Virtual temperature  [K]
+253;13;pt;Potential temperature  [K]
+253;14;papt;Pseudo-adiabatic potential temperature  [K]
+253;15;tmax;Maximum temperature  [K]
+253;16;tmin;Minimum temperature  [K]
+253;17;dpt;Dew-point temperature  [K]
+253;18;depr;Dew-point depression (or deficit)  [K]
+253;19;lapr;Lapse rate  [K m-1]
+253;20;vis;Visibility  [m]
+253;21;rdsp1;Radar spectra (1)  [-]
+253;22;rdsp2;Radar spectra (2)  [-]
+253;23;rdsp3;Radar spectra (3)  [-]
+253;24;pli;Parcel lifted index (to 500 hPa)  [K]
+253;25;ta;Temperature anomaly  [K]
+253;26;presa;Pressure anomaly  [Pa]
+253;27;gpa;Geopotential height anomaly  [gpm]
+253;28;wvsp1;Wave spectra (1)  [-]
+253;29;wvsp2;Wave spectra (2)  [-]
+253;30;wvsp3;Wave spectra (3)  [-]
+253;31;wdir;Wind direction  [Degree true]
+253;32;ws;Wind speed  [m s-1]
+253;33;u;u-component of wind  [m s-1]
+253;34;v;v-component of wind  [m s-1]
+253;35;strf;Stream function  [m2 s-1]
+253;36;vp;Velocity potential  [m2 s-1]
+253;37;mntsf;Montgomery stream function  [m2 s-1]
+253;38;sgcvv;Sigma coordinate vertical velocity  [s-1]
+253;39;w;Vertical velocity  [Pa s-1]
+253;40;tw;Vertical velocity  [m s-1]
+253;41;absv;Absolute vorticity  [s-1]
+253;42;absd;Absolute divergence  [s-1]
+253;43;vo;Relative vorticity  [s-1]
+253;44;d;Relative divergence  [s-1]
+253;45;vucsh;Vertical u-component shear  [s-1]
+253;46;vvcsh;Vertical v-component shear  [s-1]
+253;47;dirc;Direction of current  [Degree true]
+253;48;spc;Speed of current  [m s-1]
+253;49;ucurr;u-component of current  [m s-1]
+253;50;vcurr;v-component of current  [m s-1]
+253;51;q;Specific humidity  [kg kg-1]
+253;52;r;Relative humidity  [%]
+253;53;mixr;Humidity mixing ratio  [kg kg-1]
+253;54;pwat;Precipitable water  [kg m-2]
+253;55;vp;Vapor pressure  [Pa]
+253;56;satd;Saturation deficit  [Pa]
+253;57;e;Evaporation  [kg m-2]
+253;58;cicw;Cloud ice  [kg m-2]
+253;59;prate;Precipitation rate  [kg m-2 s-1]
+253;60;tstm;Thunderstorm probability  [%]
+253;61;tp;Total precipitation  [kg m-2]
+253;62;lsp;Large scale precipitation  [kg m-2]
+253;63;acpcp;Convective precipitation  [kg m-2]
+253;64;srweq;Snowfall rate water equivalent  [kg m-2 s-1]
+253;65;sf;Water equivalent of accumulated snow depth  [kg m-2]
+253;66;sd;Snow depth  [m]
+253;67;mld;Mixed layer depth  [m]
+253;68;tthdp;Transient thermocline depth  [m]
+253;69;mthd;Main thermocline depth  [m]
+253;70;mtha;Main thermocline anomaly  [m]
+253;71;tcc;Total cloud cover  [%]
+253;72;ccc;Convective cloud cover  [%]
+253;73;lcc;Low cloud cover  [%]
+253;74;mcc;Medium cloud cover  [%]
+253;75;hcc;High cloud cover  [%]
+253;76;cwat;Cloud water  [kg m-2]
+253;77;bli;Best lifted index (to 500 hPa)  [K]
+253;78;csf;Convective snow  [kg m-2]
+253;79;lssf;Large scale snow  [kg m-2]
+253;80;wtmp;Water temperature  [K]
+253;81;lsm;Land cover (1 = land, 0 = sea)  [Proportion]
+253;82;dslm;Deviation of sea level from mean  [m]
+253;83;sr;Surface roughness  [m]
+253;84;al;Albedo  [%]
+253;85;st;Soil temperature  [K]
+253;86;sm;Soil moisture content  [kg m-2]
+253;87;vegrea;Vegetation  [%]
+253;88;s;Salinity  [kg kg-1]
+253;89;den;Density  [kg m-3]
+253;90;ro;Water run-off  [kg m-2]
+253;91;icec;Ice cover (1 = ice, 0 = no ice)  [Proportion]
+253;92;icetk;Ice thickness  [m]
+253;93;diced;Direction of ice drift  [Degree true]
+253;94;siced;Speed of ice drift  [m s-1]
+253;95;uice;u-component of ice drift  [m s-1]
+253;96;vice;v-component of ice drift  [m s-1]
+253;97;iceg;Ice growth rate  [m s-1]
+253;98;iced;Ice divergence  [s-1]
+253;99;snom;Snow melt  [kg m-2]
+253;100;swh;Significant height of combined wind waves and swell  [m]
+253;101;mdww;Direction of wind waves  [Degree true]
+253;102;shww;Significant height of wind waves  [m]
+253;103;mpww;Mean period of wind waves  [s]
+253;104;swdi;Direction of swell waves  [Degree true]
+253;105;swell;Significant height of swell waves  [m]
+253;106;swper;Mean period of swell waves  [s]
+253;107;mdps;Primary wave direction  [Degree true]
+253;108;mpps;Primary wave mean period  [s]
+253;109;dirsw;Secondary wave direction  [Degree true]
+253;110;swp;Secondary wave mean period  [s]
+253;111;nswrs;Net short-wave radiation flux (surface)  [W m-2]
+253;112;nlwrs;Net long-wave radiation flux (surface)  [W m-2]
+253;113;nswrt;Net short-wave radiation flux (top of atmosphere)  [W m-2]
+253;114;nlwrt;Net long-wave radiation flux (top of atmosphere)  [W m-2]
+253;115;lwavr;Long-wave radiation flux  [W m-2]
+253;116;swavr;Short-wave radiation flux  [W m-2]
+253;117;grad;Global radiation flux  [W m-2]
+253;118;btmp;Brightness temperature  [K]
+253;119;lwrad;Radiance (with respect to wave number)  [W m-1 sr-1]
+253;120;swrad;Radiance (with respect to wave length)  [W m-3 sr-1]
+253;121;lhf;Latent heat flux  [W m-2]
+253;122;shf;Sensible heat flux  [W m-2]
+253;123;bld;Boundary layer dissipation  [W m-2]
+253;124;uflx;Momentum flux, u-component  [N m-2]
+253;125;vflx;Momentum flux, v-component  [N m-2]
+253;126;wmixe;Wind mixing energy  [J]
+253;127;imgd;Image data  [-]
+253;128;armsp;Analysed RMS of PHI (CANARI)  [m2 s-2]
+253;129;frmsp;Forecasted RMS of PHI (CANARI)  [m2 s-2]
+253;130;cssw;SW net clear sky rad  [W m-2]
+253;131;cslw;LW net clear sky rad  [W m-2]
+253;132;lhe;Latent heat flux through evaporation  [W m-2]
+253;133;msca;Mask of significant cloud amount  [
+253;134;unknown;Available  [
+253;135;psct;Icing index  [Code table]
+253;136;unknown;Pseudo satellite image, cloud top temperature (infrared)  [K]
+253;137;pstb;Pseudo satellite image, water vapour brightness temperature  [K]
+253;138;pstbc;Pseudo satellite image, water vapour br. temp. + correction for clouds  [K]
+253;139;pscw;Pseudo satellite image, cloud water reflectivity (visible)  [?]
+253;140;unknown;Available  [
+253;141;unknown;Available  [
+253;142;unknown;Available  [
+253;143;unknown;Available  [
+253;144;prtp;Precipition Type  [Code table]
+253;145;unknown;Available  [
+253;146;unknown;Available  [
+253;147;unknown;Available  [
+253;148;unknown;Available  [
+253;149;unknown;Available  [
+253;150;unknown;Available  [
+253;151;unknown;Available  [
+253;152;unknown;Available  [
+253;153;unknown;Available  [
+253;154;unknown;Available  [
+253;155;unknown;Available  [
+253;156;unknown;Available  [
+253;157;unknown;Available  [
+253;158;unknown;Surface downward moon radiation  [W m-2]
+253;159;unknown;Available  [
+253;160;cape;CAPE out of the model  [J kg-1]
+253;161;xhail;AROME hail diagnostic  [%]
+253;162;ugst;U-momentum of gusts out of the model  [m s-1]
+253;163;vgst;V-momentum of gusts out of the model  [m s-1]
+253;164;unknown;Available  [
+253;165;unknown;Available  [
+253;166;mcn;MOCON out of the model  [kg/kg s-1]
+253;167;totqv;Total water vapour
+253;168;unknown;Available  [
+253;169;unknown;Available  [
+253;170;unknown;Brightness temperature OZ clear  [K]
+253;171;unknown;Brightness temperature OZ cloud  [K]
+253;172;unknown;Brightness temperature IR clear  [K]
+253;173;unknown;Brightness temperature IR cloud  [K]
+253;174;unknown;Brightness temperature WV clear  [K]
+253;175;unknown;Brightness temperature WV cloud  [K]
+253;176;unknown;Available  [
+253;177;unknown;Available  [
+253;178;unknown;Available  [
+253;179;unknown;Available  [
+253;180;unknown;Available  [
+253;181;rain;Rain  [kg m-2]
+253;182;srain;Stratiform Rain  [kg m-2]
+253;183;cr;Convective Rain  [kg m-2]
+253;184;unknown;Snow  [kg m-2]
+253;185;tpsolid;Total solid precipitation  [kg m-2]
+253;186;unknown;Cloud base [
+253;187;ct;Cloud top  [
+253;188;ful;Fraction of urban land  [Proportion]
+253;189;unknown;Available  [
+253;190;unknown;Snow Albedo  [Proportion]
+253;191;rsn;Snow density  [kg/m3]
+253;192;w_i;Water on canopy  [kg/m2]
+253;193;w_so_ice;Soil ice  [kg/m2]
+253;194;unknown;Available  [
+253;195;gwdu;Gravity wave stress U-comp  [N/m2]
+253;196;gwdv;Gravity wave stress V-comp  [N/m2]
+253;197;unknown;Available  [
+253;198;unknown;Available  [
+253;199;unknown;Vegetation type  [-]
+253;200;tke;TKE  [m2 s-2]
+253;201;grpl;Graupel  [kg m-2]
+253;202;unknown;Stratiform Graupel  [kg m-2]
+253;203;unknown;Convective Graupel  [kg m-2]
+253;204;hail;Hail  [kg m-2]
+253;205;unknown;Stratiform Hail  [kg m-2]
+253;206;unknown;Convective Hail  [kg m-2]
+253;207;unknown;Available  [
+253;208;unknown;Available  [
+253;209;lgt;Lightning [
+253;210;refl;Simulated reflectivity  [dBz]
+253;211;unknown;Available  [
+253;212;pdep;Pressure departure  [Pa]
+253;213;vdiv;Vertical divergence  [s-1]
+253;214;upom;UD_OMEGA  [ms-1?]
+253;215;dnom;DD_OMEGA  [ms-1?]
+253;216;upmf;UD_MESH_FRAC  [-]
+253;217;dnmf;DD_MESH_FRAC  [-]
+253;218;unknown;PSHI_CONV_CL  [-]
+253;219;unknown;Surface albedo for non snow covered areas  [Proportion]
+253;220;stdo;Standard deviation of orography * g  [J/Kg]
+253;221;atop;Anisotropy coeff of topography  [-]
+253;222;dtop;Direction of main axis of topography  [rad]
+253;223;unknown;Roughness length of bare surface * g  [m2 s-2]
+253;224;unknown;Roughness length for vegetation * g  [m2 s-2]
+253;225;clfr;Fraction of clay within soil  [Proportion]
+253;226;slfr;Fraction of sand within soil  [Proportion]
+253;227;unknown;Maximum proportion of vegetation  [Proportion]
+253;228;fg;Gust wind speed  [m s-1]
+253;229;alb;Albedo of bare ground  [Proportion]
+253;230;alv;Albedo of vegetation  [Proportion]
+253;231;smnr;Stomatal minimum resistance  [s/m]
+253;232;lai;Leaf area index  [m2/m2]
+253;233;unknown;Thetaprimwprim surface flux  [Km/s]
+253;234;dvi;Dominant vegetation index  [-]
+253;235;se;Surface emissivity  [-]
+253;236;unknown;Maximum soil depth  [m]
+253;237;sld;Soil depth  [m]
+253;238;unknown;Surface liquid water content  [kg/m2]
+253;239;zt;Thermal roughness length * g  [m2 s-2]
+253;240;rev;Resistance to evapotransiration  [s/m]
+253;241;rmn;Minimum relative moisture at 2 meters  [%]
+253;242;rmx;Maximum relative moisture at 2 meters  [%]
+253;243;dutp;Duration of total precipitations  [s]
+253;244;lhsub;Latent Heat Sublimation  [W/m2]
+253;245;wevap;Water evaporation  [kg/m2]
+253;246;snsub;Snow sublimation  [kg/m2]
+253;247;shis;Snow history  [???]
+253;248;ao;A OZONE  [???]
+253;249;bo;B OZONE  [???]
+253;250;cb;C OZONE  [???]
+253;251;aers;Surface aerosol sea  [???]
+253;252;aerl;Surface aerosol land  [???]
+253;253;aerc;Surface aerosol soot  [???]
+253;254;aerd;Surface aerosol desert  [???]
+253;255;Missing;Missing value  [n/a ]
+228;0;unknown;unknown
+228;1;oro;Surface orography  [m**2 s**-2 m]
+228;2;lsm;Land-Sea Mask 0/1 
+228;3;LandFrac;Land Fraction pu pu
+228;4;stdo;Std dev of orography - -
+228;5;AniSO;Anisotropy sbgrd orog - -
+228;6;AngSO;Angle sbgrd orog - -
+228;7;SSO;Slope sbgrd orog - -
+228;8;OroR;Orography roughness m m
+228;9;srg;Surface roughness m m
+228;10;zt;Thermal roughness m m
+228;11;ClayFrac;Clay fraction % pu
+228;12;SandFrac;Sand fraction % pu
+228;13;VegTyp;Veg Type (1-4) (1-4)
+228;14;lai;L.A.I. - -
+228;15;RD;Root Depth m m
+228;16;SMR;Stomatal min Resistance ? ?
+228;17;VegFrac;Vegetation fraction pu pu
+228;18;UrbFrac;Urbanisation frctn pu pu
+228;19;al;Albedo pu
+228;20;emis;Emissivity pu pu
+228;21;CST;Clim Surf Temperature K \SP\o\SPR\C
+228;22;CDST;Clim Deep Soil Temp K \SP\o\SPR\C
+228;23;RT;Relax Temperature K \SP\o\SPR\C
+228;24;CSW;Clim Surface Wetness m mm
+228;25;CDSW;Clim Deep Soil Wetness m mm
+228;26;RDSW;Relax Deep Soil Wetness pu pu
+228;27;SWR;Surf Water Reservoir m (water equiv) m (water equiv)
+228;28;DWR;Deep Water Reservoir m (water equiv) m (water equiv)
+228;29;CSR;Clim Snow Reservoir m (water equiv) m (water equiv)
+228;30;IR;Interception Reservoir m (water equiv) m (water equiv)
+228;31;RE;Res to Evapotranspirn ? ?
+228;32;CA;Compl. Albedo pu pu
+228;33;M-VG;Max Veg fraction pu pu
+228;34;M-RD;Max Root Depth m m
+228;35;VR;Vegtn roughness m m
+228;36;unknown;unknown
+228;37;unknown;unknown
+228;38;unknown;unknown
+228;39;unknown;unknown
+228;40;SLP;Surface pressure Pa hPa
+228;41;msl;Mean sea level pressure Pa hPa
+228;42;IZJ;ICAO zonal Jet m/s m/s
+228;43;IMJ;ICAO meridian Jet m/s m/s
+228;44;TP;Tropopause Pressure Pa hPa
+228;45;ITT;ICAO Tropopause Temper K \SP\o\SPR\C
+228;46;TFI;Tropopause Fold Indic - -
+228;47;SVV;Surf vertical velocity m/s m/s
+228;48;SurfT;Surface Temperature
+228;49;DeepT;Deep Soil Temperature
+228;50;IntSurfT;Interpolated Surf. Temp.
+228;51;SurfSWet;Surface Soil Wetness
+228;52;DeepSWet;Deep Soil Wetness
+228;53;FrozenSurfWet;Forzen Surface Soil Wetness
+228;54;FrozenDeepWet;Fozen Deep Soil Wetness
+228;55;SurfRelMoi;Surface Relative Moisture
+228;56;SoilM;Soil Moisture
+228;57;unknown;unknown
+228;58;unknown;unknown
+228;59;unknown;unknown
+228;60;unknown;unknown
+228;61;unknown;unknown
+228;62;unknown;unknown
+228;63;unknown;unknown
+228;64;unknown;unknown
+228;65;unknown;unknown
+228;66;unknown;unknown
+228;67;unknown;unknown
+228;68;unknown;unknown
+228;69;unknown;unknown
+228;70;unknown;unknown
+228;71;unknown;unknown
+228;72;unknown;unknown
+228;73;unknown;unknown
+228;74;unknown;unknown
+228;75;unknown;unknown
+228;76;UpdPronVel;Updraught pron Velocity (m/s)
+228;77;DownpronVel;Downdraught pron Velocity (m/s)
+228;78;Dens;Density (kg/m**3)
+228;79;CAM;Convective Activity Mask
+228;80;UPMF;Updraught pron mass flx Pa/s Kg/(s m**2)
+228;81;DPMF;Dndraught pron mass flx Pa/s Kg/(s m**2)
+228;82;UPV;Updraught pron velocity Pa/s  Pa/s
+228;83;UMF;Updraught mesh fraction pu pu
+228;84;DPV;Downdraught pron velocity Pa/s Pa/s
+228;85;DMF;Downdraught mesh fraction pu pu
+228;86;LHP;(RMI) Last hour Precipit m mm
+228;87;PTVG;(RMI) Pot Temp Vert grad K/Pa  K/Pa
+228;88;VTG;(RMI) Vertic Temp Grad K/Pa K/Pa
+228;89;STW;(RMI) Sect Tangent wind m/s m/s
+228;90;SNW;(RMI) Sect Normal wind m/s m/s
+228;91;absvA;Absolute Vorticity Adv s**-2 10**-9 /s**2
+228;92;voA;Relative Vorticity Adv s**-2 10**-9 /s**2
+228;93;PVA;Potential Vorticity Adv 1.E6PVU/s PVU /s
+228;94;TA;Temperature Advection K/s K/h
+228;95;h;Height (geopotential) m m
+228;96;z;Geopotential  m**2 s**-2 dam
+228;97;pres;Pressure Pa hPa
+228;98;t;Temperature K \SP\o\SPR\C
+228;99;td;Dewpoint Temperature K \SP\o\SPR\C
+228;100;pt;Potential Temperature K \SP\o\SPR\C
+228;101;WT;Wet Bulb Temperature K \SP\o\SPR\C
+228;102;WPT;Wet Bulb Poten Temper K \SP\o\SPR\C
+228;103;ET;Equiv Temperature K \SP\o\SPR\C
+228;104;EPT;Equiv Poten Temperature K \SP\o\SPR\C
+228;105;q;Specific humidity kg/kg g/kg
+228;106;r;Relative humidity % %
+228;107;u;U-velocity m/s m/s
+228;108;v;V-velocity m/s m/s
+228;109;w;Vertical velocity Pa/s Pa/s
+228;110;d;Divergence per sec 10**-5/sec
+228;111;vo;Vorticity (relative) s**-1  10**-5/sec
+228;112;absv;Absolute Vorticity s**-1 10**-5/sec
+228;113;pv;Potential Vorticity  1.E6 PVU PVU
+228;114;VP;Velocity potential m**2 s**-1 m**2 s**-1
+228;115;SF;Stream Function m/s m/s
+228;116;SHS;Shearing strain - -
+228;117;STS;Stretching strain - -
+228;118;Pdep;NH Pressure departure - -
+228;119;Vdiv;NH Vertical Divergence
+228;120;Vvel;NH Vertical velocity
+228;121;unknown;unknown
+228;122;CLW;Cloud liquid water cnt kg/kg kg/kg
+228;123;CSW;Cloud solid water cnt kg/kg kg/kg
+228;124;unknown;unknown
+228;125;unknown;unknown
+228;126;unknown;unknown
+228;127;None;reserved for gribex
+228;128;lsr;Large scale rain m mm
+228;129;lssf;Large scale snow m mm (water equiv)
+228;130;CR;Convective rain m mm
+228;131;csf;Convective snow m mm (water equiv)
+228;132;tp;Total precipitation m mm
+228;133;ConvCl;Convective Cloud Cover 0-1 0-1
+228;134;lcc;Low Cloud Cover 0-1 0-1
+228;135;mcc;Medium Cloud Cover 0-1 0-1
+228;136;hcc;High Cloud Cover 0-1 0-1
+228;137;tcc;Total cloud cover 0-1 0-1
+228;138;Cl;Cloudiness (0-9) (0-9)
+228;139;SoilMois;Soil moisture (0-1) (0-1)
+228;140;wevap;Water evaporation m (of water) mm (of water)
+228;141;LatHeatEvap;Latent heat evaporation J/kg J/kg
+228;142;SM;Snow mass kg/sq m kg/sq m
+228;143;SS;Snow sublimation
+228;144;LatHeatSubl;Latent heat sublimation
+228;145;SMelt;Snow melting
+228;146;SurfSensHeatFl;Surf Sensible heat flx J/sq m J/sq m
+228;147;SurfLatHeatFl;Surf Latent heat flx J/ sq m J/ sq m
+228;148;PD;PBL dissipation J/sq m J/sq m
+228;149;TME;Top mesospheric enthalpy J J
+228;150;SurfSWrad;Surf Solar radiation J/sq m J/sq m
+228;151;SurfLWrad;Surf Thermal radiation J/sq m J/sq m
+228;152;TopSWrad;Top Solar radiation J/sq m J/sq m
+228;153;TopLWrad;Top Thermal radiation J/sq m J/sq m
+228;154;csSWF;Clear sky Shrt Wv rad flx J/sq m J/sq m
+228;155;csLWF;Clear sky Long Wv rad flx J/sq m J/sq m
+228;156;SPF;Surf Parall Solar flx J/sq m J/sq m
+228;157;TPF;Top Parall Solar flx J/sq m J/sq m
+228;158;SurfDownSW;Surf Downward Solar flux J/sq m J/sq m
+228;159;SurfDownLW;Surf Downward Thermal flx J/sq m J/sq m
+228;160;SoilHeatFlux;Soil heat flux J/sq m J/sq m
+228;161;SoilWaterFlux;Soil water flux kg/sq m kg/sq m
+228;162;SurfRunoff;Surface runoff  kg/sq m kg/sq m
+228;163;DSR;Deep soil runoff  kg/sq m kg/sq m
+228;164;IRR;Interception res runoff  kg/sq m kg/sq m
+228;165;EvapoTrans;Evapotranspiration
+228;166;Trans;Transpiration
+228;167;tco;Total Ozone
+228;168;TPW;Tot Precipitable Water m mm
+228;169;SSM;Solid specific moisture kg/kg  kg/kg
+228;170;LSM;Liquid specific moisture kg/kg kg/kg
+228;171;CFU;Convective flux of U m/s m/s
+228;172;CFV;Convective flux of V m/s m/s
+228;173;CFM;Convec Moist flux (Q) kg/sq m kg/sq m
+228;174;CFH;Convec Heat flux (Cp.T) J/sq m J/sq m
+228;175;TFU;Turbulent flux of U m/s m/s
+228;176;TFV;Turbulent flux of V m/s m/s
+228;177;TFM;Turbul Moist flux (Q) kg/sq m kg/sq m
+228;178;TFH;Turbul Heat flux (Cp.T) J/sq m J/sq m
+228;179;ZTS;Zonal Turbulent stress N/sq m N/sq m
+228;180;MTS;Merid. Turbulent stress N/sq m N/sq m
+228;181;ZGWS;Zonal Grav wave stress N/sq m N/sq m
+228;182;MGWS;Merid. Grav wave stress N/sq m N/sq m
+228;183;GWD;Gravity Wave dissipation J/sq m J/sq m
+228;184;SPT;Tendency of surf press Pa/s Pa/s
+228;185;CumCape;Time Cumulated Cape (J*s)
+228;186;CumMocon;Time Cumulated Mocon (kg/kg)
+228;187;DurPrec;Duration of total Precip.
+228;188;unknown;unknown
+228;189;unknown;unknown
+228;190;unknown;unknown
+228;191;SBLwind;SBL Wind Velocity (m/s)
+228;192;u10;10 m u  wind component m/s m/s
+228;193;v10;10 m v  wind component m/s m/s
+228;194;t2;2 m temperature K \SP\o\SPR\C
+228;195;td2;2 m dewpoint temperature K \SP\o\SPR\C
+228;196;r2;2m Relative humidity % %
+228;197;q2;2m Specific humidity kg/kg g/kg
+228;198;MaxT2;2 m Max temp (since ppp) K \SP\o\SPR\C
+228;199;MinT2;2 m Min temp (since ppp) K \SP\o\SPR\C
+228;200;ST;Surface Temperature K \SP\o\SPR\C
+228;201;DST;Deep Soil Temperature K \SP\o\SPR\C
+228;202;SWC;Surface Water Contents ? ?
+228;203;DSWC;Deep Soil Water Contents ? ?
+228;204;BLU;u at bottom level m/s m/s
+228;205;BLV;v at bottom level m/s m/s
+228;206;BLT;T at bottom level K \SP\o\SPR\C
+228;207;BLQ;Q at bottom level kg/kg  kg/kg
+228;208;BLGP;Geopot bottom level m**2/s**2 dam
+228;209;IFLR;Inst flx LS rain kg/sq m s mm/s
+228;210;IFLS;Inst flx LS snow kg/sq m s mm/s(water equiv)
+228;211;IFCR;Inst flx Conv rain kg/sq m s mm/s
+228;212;IFCS;Inst flx Conv snow kg/sq m s mm/s(water equiv)
+228;213;IFCCC;Inst flx Conv Cld Cover 0-1 0-1
+228;214;IFLCC;Inst flx Low Cld Cover 0-1 0-1
+228;215;IFMCC;Inst flx Medium Cld Cover 0-1 0-1
+228;216;IFHCC;Inst flx High Cld Cover 0-1 0-1
+228;217;IFTCC;Inst flx Tot Cld cover 0-1 0-1
+228;218;IFC;Inst flx Cloudiness (0-9) (0-9)
+228;219;SMass;Snow mass kg/sq m kg/sq m
+228;220;ISSR;Inst Surf Solar radn W/sq m W/sq m
+228;221;ISER;Inst Surf Earth radn W/sq m W/sq m
+228;222;ITSR;Inst Top Solar radn W/sq m W/sq m
+228;223;ITER;Inst Top Earth radn W/sq m W/sq m
+228;224;ICFU;Inst Convective flux of U m/s**2 m/s**2
+228;225;ICFV;Inst Convective flux of V m/s**2 m/s**2
+228;226;ICFM;Inst Convec Moist flux (Q) kg/sq m s kg/sq m s
+228;227;ICFH;Inst Convec Heat flux (Cp.T) W/sq m W/sq m
+228;228;ITFU;Inst Turbulent flux of U m/s**2 m/s**2
+228;229;ITFV;Inst Turbulent flux of V m/s**2 m/s**2
+228;230;ITFM;Inst Turbul Moist flux (Q) kg/sq m s kg/sq m s
+228;231;ITFH;Inst Turbul Heat flux (Cp.T) W/sq m W/sq m
+228;232;PCUC;(RMI) Prono Conv Upd Cover [0-1] [0-1]
+228;233;PCV;(RMI) Prono Conv VV dt Pa Pa
+228;235;ZonGust;SBL Zonal gust
+228;236;MerGust;SBL Meridian gust
+228;237;gust;SBL Gust
+228;238;RHmax;SBL Max. Rel. Humidity
+228;239;RHmin;SBL Min. Rel. Humidity
+228;240;SurfCape;Surface CAPE (J)
+228;241;PBLMocon;PBL Mocon (g/kg s^-1)
+228;242;PBLh;PBL height (m)
+228;243;unknown;unknown
+228;244;unknown;unknown
+228;245;unknown;unknown
+228;246;unknown;unknown
+228;247;unknown;unknown
+228;248;unknown;unknown
+228;249;unknown;unknown
+228;250;unknown;unknown
+228;251;unknown;unknown
+228;252;unknown;unknown
+228;253;unknown;unknown
+228;254;unknown;unknown
+228;255;unknown;unknown
