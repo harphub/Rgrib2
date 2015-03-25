@@ -95,11 +95,11 @@ Gfind <- function(griblist,shortName="t",level=NULL,levelType="P",all=FALSE,...)
               "S"=109,
               levelType)
     ttt <- paste(shortName,levelType,level,sep="\r")
-    pos <- which(with(x,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
+    pos <- which(with(griblist,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
   }
-  else pos <- which(x$shortName==shortName)
+  else pos <- which(griblist$shortName==shortName)
   if(!all) pos
-  else x[pos,]
+  else griblist[pos,]
 }
 
 ###
