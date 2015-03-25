@@ -85,7 +85,8 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
 }
 
 ### a more basic version for parameter (number or shortName), 
-Gfind <- function(griblist,par="t",levelType="P",level=NULL,all=FALSE,...){
+### leave parameter list "open" (,...) for later additions
+Gfind <- function(griblist,shortName="t",level=NULL,levelType="P",all=FALSE,...){
   if(is.character(griblist)) griblist <- Gopen(griblist)
   if(!is.null(level)){
     levelType <- switch(levelType,
@@ -93,10 +94,10 @@ Gfind <- function(griblist,par="t",levelType="P",level=NULL,all=FALSE,...){
               "H"=105,
               "S"=109,
               levelType)
-    ttt <- paste(par,levelType,level,sep="\r")
+    ttt <- paste(shortName,levelType,level,sep="\r")
     pos <- which(with(x,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
   }
-  else pos <- which(x$shortName==par)
+  else pos <- which(x$shortName==shortName)
   if(!all) pos
   else x[pos,]
 }
