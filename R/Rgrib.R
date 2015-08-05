@@ -153,7 +153,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
 ### allow asking a field by shortName
 ### this may also require providing a level (model, pressure, height...)
   else if(is.character(field)){
-    sel <- Gfind(x,par=field,levelType=levelType,level=level,all=TRUE)
+    sel <- Gfind(x,shortName=field,levelType=levelType,level=level,all=TRUE)
     if(dim(sel)[1]!=1) {
       print(sel)
       stop("Need exactly 1 matching field!")
@@ -274,8 +274,7 @@ Gdescribe.local <- function(param,center,subcenter,partab,process){
        assign("partable",eval(parse(text=loadpartable)))
 #      partable <- read.table(file=paste(datapath,loadpartable,".csv",sep=""),header=TRUE,sep=";")
        result <- trim(partable$comment[!is.na(match(partable$field,param))])
-       if(length(result)==0) result=paste("unknown_",loadpartable,"_",i2a(param,3),sep="")
-
+       if(length(result)==0) result <- sprintf("unknown_%s_%03i",loadpartable,param)
     }
 
   result
