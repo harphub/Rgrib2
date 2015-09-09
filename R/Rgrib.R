@@ -47,7 +47,7 @@ function (filename,
   if(lextra) {
     if(is.element("unknown",result$shortName)){
       data(extratab)
-      missing <- which(result$shortName=="unknown" & result$table2Version==1)
+      missing <- which(result$shortName=="unknown")
       zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
                   with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
 ### use as.character to fix for default stringsAsFactors in data()...
