@@ -666,7 +666,7 @@ GRIB_KEYS_ITERATOR_SKIP_COMPUTED;
   kiter=grib_keys_iterator_new(h,key_iterator_filter_flags,name_space);
   if (!kiter) {
     Rprintf("ERROR: Unable to create keys iterator\n");
-    exit(1);
+    return(R_NilValue) ;
   }
   while(grib_keys_iterator_next(kiter))
   {
