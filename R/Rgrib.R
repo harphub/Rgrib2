@@ -17,13 +17,10 @@
 ### ../09/2012 : MULTI messages support -- BUG in GRIB_API, so not very useful
 #####################################
 
-### trim whitespace from character strings
-trim <- function(x) sub(pattern=" +$",repl="",x=sub(pattern="| +",repl="",x))
-
 "print.GRIBlist" <-
-function(griblist){
-  cat("File",attributes(griblist)$filename,":","\n")
-  cat("containing ",attributes(griblist)$nfields,"fields.","\n")
+function(x,...){
+  cat("File",attributes(x)$filename,":","\n")
+  cat("containing ",attributes(x)$nfields,"fields.","\n")
 }
 ####################################
 "Gopen" <-
@@ -86,7 +83,7 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
 
 ### a more basic version for parameter (number or shortName), 
 ### leave parameter list "open" (,...) for later additions
-Gfind <- function(griblist,shortName="t",level=NULL,levelType="P",all=FALSE,...){
+Gfind <- function(griblist,shortName="t",level=NULL,levelType="P",all=FALSE){
   if(is.character(griblist)) griblist <- Gopen(griblist)
   if(!is.null(level)){
     levelType <- switch(levelType,
@@ -109,9 +106,8 @@ Ginfo <- function(x,...){
   UseMethod("Ginfo")
 }
 
-Ginfo.GRIBhandle <- function(gribhandle,IntPar=c(),DblPar=c(),StrPar=c()){
-  if(!inherits(gribhandle,"GRIBhandle")) stop("Not a valid GRIBhandle.")
-  result <- .Call("Rgrib_handle_info",attr(gribhandle,"gribhandle_ptr"),StrPar,IntPar,DblPar)
+Ginfo.GRIBhandle <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),...){
+  result <- .Call("Rgrib_handle_info",attr(x,"gribhandle_ptr"),StrPar,IntPar,DblPar)
   if(length(result)>0){
     result <- data.frame(result,stringsAsFactors=FALSE)
     names(result) <- c(StrPar,DblPar,IntPar)
@@ -119,18 +115,18 @@ Ginfo.GRIBhandle <- function(gribhandle,IntPar=c(),DblPar=c(),StrPar=c()){
   result
 }
 
-Ginfo.GRIBlist <- function(griblist,...){
-  filename <- attributes(griblist)$filename
-  Ginfo.character(filename,...)
+Ginfo.GRIBlist <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE){
+  filename <- attributes(x)$filename
+  Ginfo.character(filename,IntPar,DblPar,StrPar,rList,multi)
 }
 
-Ginfo.character <- function(filename,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE){
+Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE){
   if(is.null(rList) ) {
-    nmessages <- .C("Rgrib_count_messages",filename=filename,nmessages=integer(1),
+    nmessages <- .C("Rgrib_count_messages",filename=x,nmessages=integer(1),
                  multi=as.integer(multi))$nmessages
     rList <- 1:nmessages
   }
-  result <- .Call("Rgrib_parse",filename,IntPar,DblPar,StrPar,
+  result <- .Call("Rgrib_parse",x,IntPar,DblPar,StrPar,
                as.integer(rList),multi=multi)
   result <- cbind(rList,data.frame(result,stringsAsFactors=FALSE))
   names(result) <- c("position",StrPar,DblPar,IntPar)
@@ -396,14 +392,14 @@ GhandleList <- function(){
   .Call("Rgrib_list_handles")
 }
 
-print.GRIBhandle <- function(gribhandle){
-  cat("GRIBhandle (ID=",as.integer(gribhandle),")\n")
-  if(!is.null(attr(gribhandle,"filename"))) {
-    cat("from file",attr(gribhandle,"filename"),"\n")
-    cat("message number",attr(gribhandle,"message"),"\n")
+print.GRIBhandle <- function(x,...){
+  cat("GRIBhandle (ID=",as.integer(x),")\n")
+  if(!is.null(attr(x,"filename"))) {
+    cat("from file",attr(x,"filename"),"\n")
+    cat("message number",attr(x,"message"),"\n")
   }
-  if(!is.null(attr(gribhandle,"sample"))) {
-    cat("from sample",attr(gribhandle,"sample"),"\n")
+  if(!is.null(attr(x,"sample"))) {
+    cat("from sample",attr(x,"sample"),"\n")
   }
 }
 

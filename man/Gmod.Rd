@@ -26,13 +26,13 @@ No return value (NULL).
 \seealso{
   \code{\link{Gdec}}, \code{\link{Gopen}}, \code{\link{Gmod}}, \code{\link{Gwrite}}
 }
-\examples{
+\examples{\dontrun{
 #Get first 5 records of a file.
 mygrib <-Gopen('filename')
 #return level info from all messages in the file:
 a <- Ghandle(mygrib,1)
 Gmod(a,IntPar=list(typeOfLevel=105,level=500),data=Gdec(a)*5)
 Gwrite(a,file=newfile,append=TRUE)
-}
+}}
 
 \keyword{file}

@@ -22,8 +22,8 @@ A vector with the message indices of all messages that satisfy the required valu
 \seealso{
   \code{\link{Gdec}}, \code{\link{Gopen}}, \code{\link{Ginfo}}
 }
-\examples{
+\examples{\dontrun{
 #Find T2m in a file:
 Glocate('filename',StrPar=list(shortName="t2"))
-}
+}}
 \keyword{file}

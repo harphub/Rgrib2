@@ -8,7 +8,7 @@
 ### - return a GRIBhandle               ###
 ###########################################
 
-Genc=function(geofield,gribformat=2,precision=4){
+Gencf<- function(geofield,gribformat=2,precision=4){
   gribhandle <- Gcreate(gribformat,attributes(geofield)$domain)
   Gmod(gribhandle,IntPar=list(changeDecimalPrecision=as.integer(precision)) )
   Gmod(gribhandle,data=geofield)

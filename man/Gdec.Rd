@@ -6,12 +6,14 @@
  returns the values stored in the grib record
 }
 \usage{
-  Gdec(x,field=1,get.meta=TRUE,multi=FALSE)
+  Gdec(x, field=1, level = NULL, levelType = "P", 
+       get.meta = TRUE, multi = FALSE)
 }
 \arguments{
   \item{x}{An object of class "GRIBhandle" (or a file name or a GRIBlist, in which case field must be specified as an integer or a name.)}
   \item{field}{An integer indicating the
   position of the field in the file or list. Not used if x is a GRIBhandle.}
+  \item{level, levelType}{Possibly add a level (pressure, height above surface).}
   \item{get.meta}{Logical key to retrieve parameter and date-time information.}
   \item{multi}{Setting this to TRUE turns on support for multi-field messages in GRIB2.}
 }
@@ -25,10 +27,11 @@
   \code{\link{Gopen}},  \code{\link{Ghandle}}, \code{\link{GRIBhandle}}
 }
 \examples{
+\dontrun{
 #Get first 5 records of a file.
 h1 <- Ghandle('filename',5)
 #decode first record
 mydata <- Gdec(h1)
-}
+}}
 \keyword{file}
 

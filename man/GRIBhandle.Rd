@@ -28,9 +28,10 @@
   \code{\link{Ghandle}}, \code{\link{Gmod}}, \code{\link{Gcreate}},\code{\link{Gwrite}}
 }
 \examples{
+\dontrun{
 #Get 5th message in a file.
 h1 <- Ghandle('filename',5)
 GhandleList()
 GhandleFree(h1)
-}
+}}
 \keyword{file}

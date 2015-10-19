@@ -5,12 +5,13 @@
  returns a GRIBhandle object for the message.
 }
 \usage{
-  Ghandle(x,message)
+  Ghandle(x, message, multi=FALSE)
 }
 \arguments{
   \item{x}{The name of a GRIB file. x may also be a GRIBlist object.}
   \item{imessage}{An integer indicating the
-  position of the message in the file or list. }
+  position of the message in the file or list.}
+  \item{multi}{Turn on support for multi-message records (experimental).}
 }
 \value{
 a GRIBhandle.
@@ -21,10 +22,10 @@ a GRIBhandle.
 \seealso{
   \code{\link{Gopen}}, \code{\link{GRIBhandle}}
 }
-\examples{
+\examples{\dontrun{
 #Get first 5 records of a file.
 h1 <- Ghandle('filename',5)
 #decode first record
 mydata <- Gdec(h1)
-}
+}}
 \keyword{file}

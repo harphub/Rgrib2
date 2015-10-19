@@ -21,10 +21,10 @@ NULL
 \seealso{
   \code{\link{Gdec}}, \code{\link{Gopen}}, \code{\link{Gmod}}
 }
-\examples{
+\examples{\dontrun{
 #Get first 5 records of a file.
 mygrib <-Ghandle('filename',1)
 #return level info from all messages in the file:
 Gwrite(mygrib,newfile,append=TRUE)
-}
+}}
 \keyword{file}

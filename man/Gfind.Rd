@@ -6,12 +6,12 @@
   Find the position of a particular message (field) inside a GRIB file.
 }
 \usage{
-  Gfind(x,par="t",levelType="P",level="NULL",all=FALSE)
+  Gfind(griblist, shortName = "t", level = NULL, levelType = "P", all = FALSE)
 }
 \arguments{
-  \item{x}{Either a character string (filename) or a GRIBlist object. Anything that has a Ginfo method. }
-  \item{par}{A character to be matched to the "shortName" field, or an integer to be matched to the parameter index. Currently, table2Version is not taken into account. Use Glocate for more detailed searches.}
-  \item{levelType}{An integer according to the GRIB level type. It may also be a character similar to FA files ("P"=100,"H"=105 or "S"=107). This is only taken into account if level!=NULL.}
+  \item{griblist}{Either a character string (filename) or a GRIBlist object. Anything that has a Ginfo method. }
+  \item{shortName}{A character to be matched to the "shortName" field, or an integer to be matched to the parameter index. Currently, table2Version is not taken into account. Use Glocate for more detailed searches.}
+  \item{level, levelType}{An integer according to the GRIB level type. It may also be a character similar to FA files ("P"=100,"H"=105 or "S"=107). This is only taken into account if level!=NULL.}
   \item{all}{If TRUE, all fields are returned. if FALSE, only the position(s)}
 }
 \value{
@@ -24,7 +24,8 @@ A vector with the message indices of all messages that satisfy the required valu
   \code{\link{Glocate}}
 }
 \examples{
+\dontrun{
 #Find T2m in a file:
 Gfind('filename',"z",levelType="P",level=500)
-}
+}}
 \keyword{file}

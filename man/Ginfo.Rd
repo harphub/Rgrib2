@@ -1,12 +1,17 @@
 \name{Ginfo}
 \alias{Ginfo}
-\alias{GRIB info}
+\alias{Ginfo.GRIBhandle}
+\alias{Ginfo.GRIBlist}
+\alias{Ginfo.character}
 \title{Extract information from a GRIB message or file}
 \description{
   Reads a list  information of a Grib file (not the encoded data itself).
 }
 \usage{
-  Ginfo(x,IntPar=c(),StrPar=c(),DblPar=c(),rList=1,multi=FALSE)
+  Ginfo(x,IntPar=c(),StrPar=c(),DblPar=c(),rList=NULL,multi=FALSE)
+\method{Ginfo}{GRIBhandle}(x,IntPar=c(),StrPar=c(),DblPar=c())
+\method{Ginfo}{GRIBlist}(x,IntPar=c(),StrPar=c(),DblPar=c(),rList=NULL,multi=FALSE)
+\method{Ginfo}{character}(x,IntPar=c(),StrPar=c(),DblPar=c(),rList=NULL,multi=FALSE)
 }
 \arguments{
   \item{x}{An object of class \code{GRIBhandle}, a file name or a \code{GRIBlist}. In the first case, the }
@@ -23,10 +28,10 @@ A data.frame with one column per parameter and one row per GRIB message.
 \seealso{
   \code{\link{Gdec}}, \code{\link{Gopen}}, \code{\link{Gmod}}
 }
-\examples{
+\examples{\dontrun{
 #Get first 5 records of a file.
 mygrib <-Gopen('filename')
 #return level info from all messages in the file:
 Ginfo(mygrib,IntPar=c("typeOfLevel","level"),rList=NULL)
-}
+}}
 \keyword{file}

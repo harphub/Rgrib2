@@ -26,12 +26,11 @@
 \seealso{
   \code{\link{Ginfo}}, \code{\link{Gdec}}, \code{\link{iview}}
 }
-\examples{
+\examples{\dontrun{
 #Get first 5 records of a file.
 mylist <- Gopen('filename')
 #one grib record:
 mylist[1,]
 Gdec(mylist,1)
-
-}
+}}
 \keyword{file}
