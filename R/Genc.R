@@ -18,7 +18,7 @@ Gencf<- function(geofield,gribformat=2,precision=4){
   gribhandle
 }
 
-Gcreate <- function(gribformat=2,DOMAIN,sample)
+Gcreate <- function(gribformat=2,domain,sample)
 {
 ### create a new GRIBhandle
   if(missing(sample)){
@@ -31,22 +31,22 @@ Gcreate <- function(gribformat=2,DOMAIN,sample)
   if(is.null(gribhandle)) stop("Can\'t create gribhandle.")
   class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
 
-  if(!missing(DOMAIN)){
-    if(is.geofield(DOMAIN)) DOMAIN <- attributes(DOMAIN)$domain
+  if (!missing(domain)){
+    if (!inherits(domain,"geogrid")) domain <- attributes(domain)$domain
 ### start building the modifications
     IntPar <- list()
     DblPar <- list()
     StrPar <- list()
 
 ### Earth shape
-    if (gribformat==2 & !is.null(DOMAIN$projection$a) ){
-      if( abs(DOMAIN$projection$a - 6367470.0)<10^(-5) )
+    if (gribformat==2 & !is.null(domain$projection$a) ){
+      if( abs(domain$projection$a - 6367470.0)<10^(-5) )
         IntPar$shapeOfTheEarth <- as.integer(0)
-      else if( abs(DOMAIN$projection$a - 6371229.0)<10^(-5) )
+      else if( abs(domain$projection$a - 6371229.0)<10^(-5) )
         IntPar$shapeOfTheEarth <- as.integer(6)
       else {
         IntPar$shapeOfTheEarth <- as.integer(1)
-        IntPar$scaledValueOfRadiusOfSphericalEarth <- as.integer(round(DOMAIN$projection$a * 10^3))
+        IntPar$scaledValueOfRadiusOfSphericalEarth <- as.integer(round(domain$projection$a * 10^3))
         IntPar$scaleFactorOfRadiusOfSphericalEarth <- as.integer(3)
       }
     }
@@ -56,153 +56,153 @@ Gcreate <- function(gribformat=2,DOMAIN,sample)
 ###########################
 
 ### LAT-LON
-    if (DOMAIN$projection$proj=="latlong") {
+    if (domain$projection$proj=="latlong") {
       Gmod(gribhandle,StrPar=list(gridType="regular_ll"))
 
-      IntPar$Nx <- DOMAIN$nx
-      IntPar$Ny <- DOMAIN$ny
-      if(gribformat==2) IntPar$numberOfValues  <-  DOMAIN$nx * DOMAIN$ny
+      IntPar$Nx <- domain$nx
+      IntPar$Ny <- domain$ny
+      if(gribformat==2) IntPar$numberOfValues  <-  domain$nx * domain$ny
       IntPar$iScansNegatively <- 0
       IntPar$jScansPositively <- 1
 
-      DblPar$longitudeOfFirstGridPointInDegrees <- DOMAIN$SW[1]
-      DblPar$latitudeOfFirstGridPointInDegrees <- DOMAIN$SW[2]
-      DblPar$longitudeOfLastGridPointInDegrees <- DOMAIN$NE[1]
-      DblPar$latitudeOfLastGridPointInDegrees <- DOMAIN$NE[2]
-      if(is.null(DOMAIN$dx) | is.null(DOMAIN$dy)){
-        DblPar$iDirectionIncrementInDegrees <- (DOMAIN$NE[1]-DOMAIN$SW[1])/(DOMAIN$nx-1)
-        DblPar$jDirectionIncrementInDegrees <- (DOMAIN$NE[2]-DOMAIN$SW[2])/(DOMAIN$ny-1)
+      DblPar$longitudeOfFirstGridPointInDegrees <- domain$SW[1]
+      DblPar$latitudeOfFirstGridPointInDegrees <- domain$SW[2]
+      DblPar$longitudeOfLastGridPointInDegrees <- domain$NE[1]
+      DblPar$latitudeOfLastGridPointInDegrees <- domain$NE[2]
+      if(is.null(domain$dx) | is.null(domain$dy)){
+        DblPar$iDirectionIncrementInDegrees <- (domain$NE[1]-domain$SW[1])/(domain$nx-1)
+        DblPar$jDirectionIncrementInDegrees <- (domain$NE[2]-domain$SW[2])/(domain$ny-1)
       }
       else {
-        DblPar$iDirectionIncrementInDegrees <- DOMAIN$dx
-        DblPar$jDirectionIncrementInDegrees <- DOMAIN$dy
+        DblPar$iDirectionIncrementInDegrees <- domain$dx
+        DblPar$jDirectionIncrementInDegrees <- domain$dy
       }
     }
 ### LAMBERT
-    else if (DOMAIN$projection$proj=="lcc") {
+    else if (domain$projection$proj=="lcc") {
       Gmod(gribhandle,StrPar=list(gridType="lambert"))
 
-      IntPar$Nx <- DOMAIN$nx
-      IntPar$Ny <- DOMAIN$ny
-      if(gribformat==2) IntPar$numberOfValues  <-  DOMAIN$nx * DOMAIN$ny
+      IntPar$Nx <- domain$nx
+      IntPar$Ny <- domain$ny
+      if(gribformat==2) IntPar$numberOfValues  <-  domain$nx * domain$ny
       IntPar$iScansNegatively <- 0
       IntPar$jScansPositively <- 1
       IntPar$jPointsAreConsecutive <- 0
       IntPar$projectionCentreFlag <- 0  ### the North Pole as centre
 
-      DblPar$Latin1InDegrees <- DOMAIN$projection$"lat_1"
-      DblPar$Latin2InDegrees <- DOMAIN$projection$"lat_2"
-      DblPar$LoVInDegrees <- DOMAIN$projection$"lon_0"
+      DblPar$Latin1InDegrees <- domain$projection$"lat_1"
+      DblPar$Latin2InDegrees <- domain$projection$"lat_2"
+      DblPar$LoVInDegrees <- domain$projection$"lon_0"
 ### This is a GUESS, may not be correct in general:
 ### In fact I don't really know what this LaD means...
-      DblPar$LaDInDegrees <- DOMAIN$projection$"lat_1"
+      DblPar$LaDInDegrees <- domain$projection$"lat_1"
 
-      DblPar$longitudeOfFirstGridPointInDegrees <- DOMAIN$SW[1]
-      DblPar$latitudeOfFirstGridPointInDegrees <- DOMAIN$SW[2]
+      DblPar$longitudeOfFirstGridPointInDegrees <- domain$SW[1]
+      DblPar$latitudeOfFirstGridPointInDegrees <- domain$SW[2]
 
-      if(is.null(DOMAIN$dx) | is.null(DOMAIN$dy)){
-        xy1 <- project(DOMAIN$SW,proj=DOMAIN$projection,inv=FALSE)
-        xy2 <- project(DOMAIN$NE,proj=DOMAIN$projection,inv=FALSE)
+      if(is.null(domain$dx) | is.null(domain$dy)){
+        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
 
-        DblPar$DxInMetres <- (xy2$x-xy1$x)/(DOMAIN$nx-1)
-        DblPar$DyInMetres <- (xy2$y-xy1$y)/(DOMAIN$ny-1)
+        DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
+        DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
       }
       else {
-        DblPar$DxInMetres <- DOMAIN$dx
-        DblPar$DyInMetres <- DOMAIN$dy
+        DblPar$DxInMetres <- domain$dx
+        DblPar$DyInMetres <- domain$dy
       }
     }
 ### MERCATOR
-    else if (DOMAIN$projection$proj=="merc"){
+    else if (domain$projection$proj=="merc"){
       Gmod(gribhandle,StrPar=list(gridType="mercator"))
 
-      IntPar$Nx <- DOMAIN$nx
-      IntPar$Ny <- DOMAIN$ny
-      if(gribformat==2) IntPar$numberOfValues  <-  DOMAIN$nx * DOMAIN$ny
+      IntPar$Nx <- domain$nx
+      IntPar$Ny <- domain$ny
+      if(gribformat==2) IntPar$numberOfValues  <-  domain$nx * domain$ny
       IntPar$iScansNegatively <- 0
       IntPar$jScansPositively <- 1
       IntPar$jPointsAreConsecutive <- 0
 
-      DblPar$LaDInDegrees <- DOMAIN$projection$lat_ts
+      DblPar$LaDInDegrees <- domain$projection$lat_ts
 
-      DblPar$longitudeOfFirstGridPointInDegrees <- DOMAIN$SW[1]
-      DblPar$latitudeOfFirstGridPointInDegrees <- DOMAIN$SW[2]
-      DblPar$longitudeOfLastGridPointInDegrees <- DOMAIN$NE[1]
-      DblPar$latitudeOfLastGridPointInDegrees <- DOMAIN$NE[2]
+      DblPar$longitudeOfFirstGridPointInDegrees <- domain$SW[1]
+      DblPar$latitudeOfFirstGridPointInDegrees <- domain$SW[2]
+      DblPar$longitudeOfLastGridPointInDegrees <- domain$NE[1]
+      DblPar$latitudeOfLastGridPointInDegrees <- domain$NE[2]
 
-      if(is.null(DOMAIN$dx) | is.null(DOMAIN$dy)){
-        xy1 <- project(DOMAIN$SW,proj=DOMAIN$projection,inv=FALSE)
-        xy2 <- project(DOMAIN$NE,proj=DOMAIN$projection,inv=FALSE)
-        DblPar$DxInMetres <- (xy2$x-xy1$x)/(DOMAIN$nx-1)
-        DblPar$DyInMetres <- (xy2$y-xy1$y)/(DOMAIN$ny-1)
+      if(is.null(domain$dx) | is.null(domain$dy)){
+        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
+        DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
+        DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
       }
       else {
-        DblPar$DxInMetres <- DOMAIN$dx
-        DblPar$DyInMetres <- DOMAIN$dy
+        DblPar$DxInMetres <- domain$dx
+        DblPar$DyInMetres <- domain$dy
       }
     }
 ### POLAR STEROGRAPHIC
-    else if (DOMAIN$projection$proj=="stere"){
+    else if (domain$projection$proj=="stere"){
       Gmod(gribhandle,StrPar=list(gridType="polar_stereographic"))
 
-      IntPar$Nx <- DOMAIN$nx
-      IntPar$Ny <- DOMAIN$ny
-      if(gribformat==2) IntPar$numberOfValues  <-  DOMAIN$nx * DOMAIN$ny
+      IntPar$Nx <- domain$nx
+      IntPar$Ny <- domain$ny
+      if(gribformat==2) IntPar$numberOfValues  <-  domain$nx * domain$ny
       IntPar$iScansNegatively <- 0
       IntPar$jScansPositively <- 1
       IntPar$jPointsAreConsecutive <- 0
 
-      DblPar$longitudeOfFirstGridPointInDegrees <- DOMAIN$SW[1]
-      DblPar$latitudeOfFirstGridPointInDegrees <- DOMAIN$SW[2]
-      DblPar$LoVInDegrees <- DOMAIN$projection$"lon_0"
+      DblPar$longitudeOfFirstGridPointInDegrees <- domain$SW[1]
+      DblPar$latitudeOfFirstGridPointInDegrees <- domain$SW[2]
+      DblPar$LoVInDegrees <- domain$projection$"lon_0"
 
-      if(is.null(DOMAIN$dx) | is.null(DOMAIN$dy)){
-        xy1 <- project(DOMAIN$SW,proj=DOMAIN$projection,inv=FALSE)
-        xy2 <- project(DOMAIN$NE,proj=DOMAIN$projection,inv=FALSE)
-        DblPar$DxInMetres <- (xy2$x-xy1$x)/(DOMAIN$nx-1)
-        DblPar$DyInMetres <- (xy2$y-xy1$y)/(DOMAIN$ny-1)
+      if(is.null(domain$dx) | is.null(domain$dy)){
+        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
+        DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
+        DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
       }
       else {
-        DblPar$DxInMetres <- DOMAIN$dx
-        DblPar$DyInMetres <- DOMAIN$dy
+        DblPar$DxInMetres <- domain$dx
+        DblPar$DyInMetres <- domain$dy
       }
     }
 
 ### ROTATED MERCATOR -> not yet in GRIB-2
 ### OBLIQUE PROJECTIONS
-    else if (DOMAIN$projection$proj=="ob_tran" &
-        !is.null(DOMAIN$projection$o_proj) ){
+    else if (domain$projection$proj=="ob_tran" &
+        !is.null(domain$projection$o_proj) ){
 ### ROTATED LAT-LON
-      if(DOMAIN$projection$o_proj=="latlong") {
+      if(domain$projection$o_proj=="latlong") {
         Gmod(gribhandle,StrPar=list(gridType="rotated_ll"))
 
-        IntPar$Nx <- DOMAIN$nx
-        IntPar$Ny <- DOMAIN$ny
-        if(gribformat==2) IntPar$numberOfValues <- DOMAIN$nx * DOMAIN$ny
+        IntPar$Nx <- domain$nx
+        IntPar$Ny <- domain$ny
+        if(gribformat==2) IntPar$numberOfValues <- domain$nx * domain$ny
         IntPar$iScansNegatively <- 0
         IntPar$jScansPositively <- 1
 ### RLL is defined with SW and NE in the rotated co-ordinates!
-        SWr <- project(x=DOMAIN$SW[1],y=DOMAIN$SW[2],
-                    proj=DOMAIN$projection,inv=FALSE)/pi*180
-        NEr <- project(x=DOMAIN$NE[1],y=DOMAIN$NE[2],
-                    proj=DOMAIN$projection,inv=FALSE)/pi*180
+        SWr <- project(x=domain$SW[1],y=domain$SW[2],
+                    proj=domain$projection,inv=FALSE)/pi*180
+        NEr <- project(x=domain$NE[1],y=domain$NE[2],
+                    proj=domain$projection,inv=FALSE)/pi*180
 
         DblPar$longitudeOfFirstGridPointInDegrees <- SWr[1]
         DblPar$latitudeOfFirstGridPointInDegrees <- SWr[2]
         DblPar$longitudeOfLastGridPointInDegrees <- NEr[1]
         DblPar$latitudeOfLastGridPointInDegrees <- NEr[2]
-        if(is.null(DOMAIN$dx) | is.null(DOMAIN$dy)){
-          DblPar$iDirectionIncrementInDegrees <- (NEr[1] - SWr[1])/(DOMAIN$nx-1)
-          DblPar$jDirectionIncrementInDegrees <- (NEr[2] - SWr[2])/(DOMAIN$ny-1)
+        if(is.null(domain$dx) | is.null(domain$dy)){
+          DblPar$iDirectionIncrementInDegrees <- (NEr[1] - SWr[1])/(domain$nx-1)
+          DblPar$jDirectionIncrementInDegrees <- (NEr[2] - SWr[2])/(domain$ny-1)
         }
         else {
-          DblPar$iDirectionIncrementInDegrees <- DOMAIN$dx
-          DblPar$jDirectionIncrementInDegrees <- DOMAIN$dy
+          DblPar$iDirectionIncrementInDegrees <- domain$dx
+          DblPar$jDirectionIncrementInDegrees <- domain$dy
         }
-        if(DOMAIN$projection$"o_lon_p"!=0)
+        if(domain$projection$"o_lon_p"!=0)
           stop("RotLatLon - Sorry, not implemented for some rotations...")
-        DblPar$latitudeOfSouthernPoleInDegrees  <-  -DOMAIN$projection$"o_lat_p"
-        DblPar$longitudeOfSouthernPoleInDegrees  <-  DOMAIN$projection$"lon_0"
+        DblPar$latitudeOfSouthernPoleInDegrees  <-  -domain$projection$"o_lat_p"
+        DblPar$longitudeOfSouthernPoleInDegrees  <-  domain$projection$"lon_0"
         DblPar$angleOfRotationInDegrees <- 0
       }
     }

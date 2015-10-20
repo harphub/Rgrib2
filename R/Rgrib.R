@@ -27,7 +27,7 @@ function(x,...){
 function (filename,
           IntPar=c("editionNumber","dataDate","dataTime","validityDate","validityTime","Nx","Ny",
                    "table2Version","indicatorOfParameter","indicatorOfTypeOfLevel","level"),
-          StrPar=c("shortName","gridType"), DblPar=c() , multi=FALSE,lextra=TRUE)
+          DblPar=c(), StrPar=c("shortName","gridType"), multi=FALSE,lextra=TRUE)
 {
 ### FIX ME: the default choice of parameters is only OK for GRIB-1!
 ### passing a logical only works on recent installations, I think
@@ -115,12 +115,12 @@ Ginfo.GRIBhandle <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),...){
   result
 }
 
-Ginfo.GRIBlist <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE){
+Ginfo.GRIBlist <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE,...){
   filename <- attributes(x)$filename
   Ginfo.character(filename,IntPar,DblPar,StrPar,rList,multi)
 }
 
-Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE){
+Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE,...){
   if(is.null(rList) ) {
     nmessages <- .C("Rgrib_count_messages",filename=x,nmessages=integer(1),
                  multi=as.integer(multi))$nmessages
@@ -224,19 +224,19 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     tabinfo <- Ginfo(gribhandle,IntPar=c("table2Version","indicatorOfParameter",
                                          "centre","subCentre","generatingProcessIdentifier"))
     param     <- tabinfo$indicatorOfParameter
-    center    <- tabinfo$centre
-    subcenter <- tabinfo$subCentre
+    centre    <- tabinfo$centre
+    subcentre <- tabinfo$subCentre
     partab    <- tabinfo$table2Version
     process   <- tabinfo$generatingProcessIdentifier
 
-    ggg$parameterName <- Gdescribe.local(param,center,subcenter,partab,process)
+    ggg$parameterName <- Gdescribe.extra(param,centre,subcentre,partab,process)
   }
 ### return
   return(list(name=ggg$parameterName,origin=ggg$centre,
               level=ggg$level,leveltype=ggg$levelType))
 }
 
-Gdescribe.local <- function(param,center,subcenter,partab,process){
+Gdescribe.extra <- function(param,centre,subcentre,partab,process){
 ### a patch to read parameter name from local GRIB tables in stead of grib_api
 ### For NCEP tables, I adapted the code from wgrib (W. Ebisuzaki)
 #    datapath <- paste(searchpaths()[grep("/Rgrib2$",searchpaths())],"/data/",sep="")
@@ -249,20 +249,20 @@ Gdescribe.local <- function(param,center,subcenter,partab,process){
 #      return("unknown")
 #    }
     data(tablist,package="Rgrib2",envir=environment(NULL))
-    if ( (center==7) & (partab <= 3) ){
-       if (subcenter == 1) loadpartable <- "ncepreanal"
+    if ( (centre==7) & (partab <= 3) ){
+       if (subcentre == 1) loadpartable <- "ncepreanal"
        else
-         if (subcenter != 0 | (process != 80 & process != 180) | (partab != 1 & partab != 2))
+         if (subcentre != 0 | (process != 80 & process != 180) | (partab != 1 & partab != 2))
              loadpartable <- "ncepopn"
 ### default NCEP table:
          else loadpartable <- "ncepopn"
     }
-    else loadpartable <-  as.character(tablist[ (tablist[,1]==center) & (tablist[,2]==partab),3])
+    else loadpartable <-  as.character(tablist[ (tablist[,1]==centre) & (tablist[,2]==partab),3])
 ### default table:
     if (length(loadpartable)==0 & partab==1) loadpartable <- "WMOtable001"
     if (length(loadpartable)==0) {
-     warning(paste("Unknown parameter table:\n center=",center," subcenter=",
-              subcenter," process=",process,"\n partable=",partab,"parameter=",param))
+     warning(paste("Unknown parameter table:\n centre=",centre," subcentre=",
+              subcentre," process=",process,"\n partable=",partab,"parameter=",param))
       return("unknown")
     }
     else{
@@ -315,7 +315,7 @@ Glevel <- function(gribhandle,...)
 ### GRIB handle -> use external pointers
 #########################################
 
-Ghandle <- function(x,message,multi=FALSE){
+Ghandle <- function(x,message=1,multi=FALSE){
 ### create a GRIBhandle from a file and message number
   if(inherits(x,"GRIBlist")) filename=attributes(x)$filename
   else if (is.character(x)) filename=x

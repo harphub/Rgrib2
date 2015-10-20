@@ -3,13 +3,11 @@
 {
   if (.Machine$integer.max != 2147483647)
     stop("Current Rgrib implementation assumes 32-bit integers.")
-#  require(geogrid)
-#  library.dynam("Rgrib2", pkg, lib)
 }
 ####################################
-".Last.lib" <- function (path){
+".onUnload" <- function (libpath){
   GhandleFreeAll();
-#  library.dynam.unload(paste(path,"/libs/","Rgrib2",".so",sep=""))
+  library.dynam.unload("Rgrib2",libpath)
 }
 
 

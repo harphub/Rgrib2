@@ -1,6 +1,5 @@
 import("geogrid")
 useDynLib("Rgrib2")
 exportPattern("^G")
-export(".Last.lib")
 S3method(print,GRIBhandle)
 S3method(print,GRIBlist)

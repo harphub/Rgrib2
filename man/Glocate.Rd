@@ -6,7 +6,7 @@
   Find the position of a particular message (field) insiode a GRIB file.
 }
 \usage{
-  Glocate(filename,IntPar=c(),StrPar=c(),DblPar=c(),...)
+  Glocate(filename,IntPar=list(),DblPar=list(),StrPar=list(),...)
 }
 \arguments{
   \item{filename}{Either a character string (filename) or a GRIBlist object. Anything that has a Ginfo method. }

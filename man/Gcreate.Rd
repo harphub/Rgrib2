@@ -5,7 +5,7 @@
   Creates a new GRIBhandle object.
 }
 \usage{
-  Gcreate(gribformat=2,DOMAIN,sample)
+  Gcreate(gribformat=2,domain,sample)
 }
 \arguments{
   \item{gribformat}{Denotes the GRIB edition: either 1 or 2.}
