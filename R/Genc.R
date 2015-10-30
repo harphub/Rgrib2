@@ -8,7 +8,7 @@
 ### - return a GRIBhandle               ###
 ###########################################
 
-Gencf<- function(geofield,gribformat=2,precision=4){
+Genc <- function(geofield,gribformat=2,precision=4){
   gribhandle <- Gcreate(gribformat,attributes(geofield)$domain)
   Gmod(gribhandle,IntPar=list(changeDecimalPrecision=as.integer(precision)) )
   Gmod(gribhandle,data=geofield)
@@ -32,7 +32,7 @@ Gcreate <- function(gribformat=2,domain,sample)
   class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
 
   if (!missing(domain)){
-    if (!inherits(domain,"geogrid")) domain <- attributes(domain)$domain
+    if (!inherits(domain,"geodomain")) domain <- attributes(domain)$domain
 ### start building the modifications
     IntPar <- list()
     DblPar <- list()

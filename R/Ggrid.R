@@ -1,4 +1,4 @@
-"Ggrid" <- function(gribhandle){
+"Gdomain" <- function(gribhandle){
 #####################################################
 ### input is a GRIBhandle
 ### output is a "geodomain" with grid description
@@ -374,3 +374,7 @@ else if(gridtype=="rotated_ll") {
                 nx=nx,ny=ny,x0=0,y0=0,x1=1,y1=1,delx=delx,dely=dely))
   }
 }
+
+### OBSOLETE
+Ggrid <- Gdomain
+

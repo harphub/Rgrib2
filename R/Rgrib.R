@@ -204,7 +204,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     if(scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
   }
   if(get.meta){
-    attributes(result)$domain <- Ggrid(gribhandle)
+    attributes(result)$domain <- Gdomain(gribhandle)
     attributes(result)$info <- Gdescribe(gribhandle)
     attributes(result)$time <- Gtime(gribhandle)
     class(result) <- c(class(result),"geofield")
@@ -280,7 +280,8 @@ Ghandle <- function(x,message=1,multi=FALSE){
   gribhandle
 }
 
-Gmod <- function(gribhandle,StrPar=list(),IntPar=list(),DblPar=list(),data,precision=NULL,nbits=NULL,...){
+Gmod <- function(gribhandle,IntPar=list(),DblPar=list(),StrPar=list(),
+                 data=NULL,precision=NULL,nbits=NULL){
 ### modify parameters and/or data of a handle
   if(!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle")
   if(length(StrPar)+length(IntPar)+length(DblPar) > 0) {
@@ -290,7 +291,7 @@ Gmod <- function(gribhandle,StrPar=list(),IntPar=list(),DblPar=list(),data,preci
     .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
            StrPar,IntPar,DblPar)
   }
-  if(!missing(data)) {
+  if(!is.null(data)) {
     if(any(!is.finite(data))) stop("Some values are not finite! Missing values (NA) not yet supported.")
     dims <- Ginfo(gribhandle,IntPar=c("Nx","Ny","bitsPerValue",
                        "iScansNegatively","jScansPositively",
