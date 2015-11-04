@@ -545,7 +545,7 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   if(!h) error("Not a registered GRIBhandle.\n");
 
 /* Nx=-1 for gaussian. numberOfCodedValues or numberOfDataPoints may be better? */
-  grib_get_long(h,"numberOfValues",&dlen);     
+  grib_get_long(h,"numberOfDataPoints",&dlen);     
   PROTECT(result=allocVector(REALSXP,dlen));
   dres=REAL(result);
   grib_get_double_array(h,"values",dres,&dlen);
