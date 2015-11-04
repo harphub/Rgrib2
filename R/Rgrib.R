@@ -32,6 +32,7 @@ function (filename,
 ### FIX ME: the default choice of parameters is only OK for GRIB-1!
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
+  filename <- path.expand(filename)
   nmessages <- .C("Rgrib_count_messages",filename=filename,nrec=integer(1),
                  multi=as.integer(multi))$nrec
 
@@ -126,7 +127,8 @@ Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=
                  multi=as.integer(multi))$nmessages
     rList <- 1:nmessages
   }
-  result <- .Call("Rgrib_parse",x,IntPar,DblPar,StrPar,
+  filename <- path.expand(x)
+  result <- .Call("Rgrib_parse",filename,IntPar,DblPar,StrPar,
                as.integer(rList),multi=multi)
   result <- cbind(rList,data.frame(result,stringsAsFactors=FALSE))
   names(result) <- c("position",StrPar,DblPar,IntPar)
@@ -270,13 +272,13 @@ Glevel <- function(gribhandle,...)
 
 Ghandle <- function(x,message=1,multi=FALSE){
 ### create a GRIBhandle from a file and message number
-  if(inherits(x,"GRIBlist")) filename=attributes(x)$filename
-  else if (is.character(x)) filename=x
+  if(inherits(x,"GRIBlist")) filename <- attributes(x)$filename
+  else if (is.character(x)) filename <- path.expand(x)
   else stop("Not a valid file of GRIB reference.")
 
   gribhandle <- .Call("Rgrib_handle_new_file",filename,as.integer(message),multi)
 
-  if(!is.null(gribhandle)) class(gribhandle)=c(class(gribhandle),"GRIBhandle")
+  if(!is.null(gribhandle)) class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
   gribhandle
 }
 
@@ -320,6 +322,7 @@ Gmod <- function(gribhandle,IntPar=list(),DblPar=list(),StrPar=list(),
 Gwrite <- function(gribhandle,filename,append=TRUE){
 ### write a GRIBhandle to a file
   filemode <- ifelse(append,"a","w")
+  filename <- path.expand(filename)
   .Call("Rgrib_handle_write",attr(gribhandle,"gribhandle_ptr"),filename,filemode)
   invisible(NULL)
 }
