@@ -16,8 +16,6 @@
 \value{
 NULL 
 }
-\details{  
-}
 \seealso{
   \code{\link{Gdec}}, \code{\link{Gopen}}, \code{\link{Gmod}}
 }

@@ -21,9 +21,6 @@
 \value{
   a data.frame of class \code{GRIBlist}, containing the basic information of the data in the file. 
 }
-\details{
-  
-}
 \seealso{
   \code{\link{Ginfo}}, \code{\link{Gdec}}, \code{\link{iview}}
 }

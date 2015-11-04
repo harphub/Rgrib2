@@ -41,9 +41,9 @@ function (filename,
 ### a patch for tables that are missing in grib_api
 ##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
 ##  if (dim(noresult)[1] > 0) {
-  if(lextra) {
-    if(is.element("unknown",result$shortName)){
-      data(extratab)
+  if (lextra) {
+    if (is.element("unknown",result$shortName)) {
+      extratab <- get("extratab")
       missing <- which(result$shortName=="unknown")
       zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
                   with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
@@ -53,7 +53,7 @@ function (filename,
       result$shortName[which(is.na(result$shortName))] <- "unknown"
     }
 # EXTRA: should we try to get "2t" etc. 
-    data(specialnames)
+    specialnames <- get("specialnames")
     zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
                  with(specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
     zz3 <- which(!is.na(zz2))
@@ -76,7 +76,7 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
   allpar <- c(IntPar,DblPar,StrPar)
   subs <- paste(names(allpar),"==\"",allpar,"\"",sep="",collapse=" & ")
   result <- subset(gribtab,subset=eval(parse(text=subs)),
-                   select=position)$position
+                   select="position")$position   # use quotes to satisfy "check"
   if(length(result)==0) NA
   else result
 }
@@ -204,7 +204,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     if(scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
   }
   if(get.meta){
-    attributes(result)$domain <- Ggrid(gribhandle)
+    attributes(result)$domain <- Gdomain(gribhandle)
     attributes(result)$info <- Gdescribe(gribhandle)
     attributes(result)$time <- Gtime(gribhandle)
     class(result) <- c(class(result),"geofield")
@@ -221,61 +221,15 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
          )
 ### a temporary fix for unconventional tables
   if(ggg$name=="unknown" & ggg$editionNumber==1){
-    tabinfo <- Ginfo(gribhandle,IntPar=c("table2Version","indicatorOfParameter",
-                                         "centre","subCentre","generatingProcessIdentifier"))
-    param     <- tabinfo$indicatorOfParameter
-    centre    <- tabinfo$centre
-    subcentre <- tabinfo$subCentre
-    partab    <- tabinfo$table2Version
-    process   <- tabinfo$generatingProcessIdentifier
-
-    ggg$parameterName <- Gdescribe.extra(param,centre,subcentre,partab,process)
+    extratab <- get("extratab")
+    zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
+                with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+    if (!is.na(zz)) gg$parameterName <- as.character(extratab$name[zz])
   }
 ### return
   return(list(name=ggg$parameterName,origin=ggg$centre,
               level=ggg$level,leveltype=ggg$levelType))
 }
-
-Gdescribe.extra <- function(param,centre,subcentre,partab,process){
-### a patch to read parameter name from local GRIB tables in stead of grib_api
-### For NCEP tables, I adapted the code from wgrib (W. Ebisuzaki)
-#    datapath <- paste(searchpaths()[grep("/Rgrib2$",searchpaths())],"/data/",sep="")
-#    if (file.exists(paste(datapath,"tablist.csv",sep="")))
-#      tablist <- read.table(file=paste(datapath,"tablist.csv",sep=""),header=TRUE,sep=";",strip.white = TRUE)
-#    else if (file.exists(paste(datapath,"tablist.csv.gz",sep="")))
-#      tablist <- read.table(gzfile(paste(datapath,"tablist.csv.gz",sep="")),header=TRUE,sep=";",strip.white = TRUE)
-#    else {
-#      warning("Could not find tablist.csv(.gz) file! Is the library installed correctly?")
-#      return("unknown")
-#    }
-    data(tablist,package="Rgrib2",envir=environment(NULL))
-    if ( (centre==7) & (partab <= 3) ){
-       if (subcentre == 1) loadpartable <- "ncepreanal"
-       else
-         if (subcentre != 0 | (process != 80 & process != 180) | (partab != 1 & partab != 2))
-             loadpartable <- "ncepopn"
-### default NCEP table:
-         else loadpartable <- "ncepopn"
-    }
-    else loadpartable <-  as.character(tablist[ (tablist[,1]==centre) & (tablist[,2]==partab),3])
-### default table:
-    if (length(loadpartable)==0 & partab==1) loadpartable <- "WMOtable001"
-    if (length(loadpartable)==0) {
-     warning(paste("Unknown parameter table:\n centre=",centre," subcentre=",
-              subcentre," process=",process,"\n partable=",partab,"parameter=",param))
-      return("unknown")
-    }
-    else{
-       data(list=loadpartable,package="Rgrib2",envir=environment(NULL))
-       assign("partable",eval(parse(text=loadpartable)))
-#      partable <- read.table(file=paste(datapath,loadpartable,".csv",sep=""),header=TRUE,sep=";")
-       result <- trim(partable$comment[!is.na(match(partable$field,param))])
-       if(length(result)==0) result <- sprintf("unknown_%s_%03i",loadpartable,param)
-    }
-
-  result
-}
-
 
 #####################################
 Gtime <- function(gribhandle,...)
@@ -307,7 +261,6 @@ Glevel <- function(gribhandle,...)
   ggg <- Ginfo(gribhandle,IntPar=c("indicatorOfTypeOfLevel","topLevel",
             "bottomLevel"),
             StrPar=c("stepUnits"),...)
-
 }
 
 
@@ -327,7 +280,8 @@ Ghandle <- function(x,message=1,multi=FALSE){
   gribhandle
 }
 
-Gmod <- function(gribhandle,StrPar=list(),IntPar=list(),DblPar=list(),data,precision=NULL,nbits=NULL,...){
+Gmod <- function(gribhandle,IntPar=list(),DblPar=list(),StrPar=list(),
+                 data=NULL,precision=NULL,nbits=NULL){
 ### modify parameters and/or data of a handle
   if(!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle")
   if(length(StrPar)+length(IntPar)+length(DblPar) > 0) {
@@ -337,7 +291,7 @@ Gmod <- function(gribhandle,StrPar=list(),IntPar=list(),DblPar=list(),data,preci
     .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
            StrPar,IntPar,DblPar)
   }
-  if(!missing(data)) {
+  if(!is.null(data)) {
     if(any(!is.finite(data))) stop("Some values are not finite! Missing values (NA) not yet supported.")
     dims <- Ginfo(gribhandle,IntPar=c("Nx","Ny","bitsPerValue",
                        "iScansNegatively","jScansPositively",
