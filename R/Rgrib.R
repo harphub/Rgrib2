@@ -219,7 +219,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
 {
   ggg <- Ginfo(gribhandle,
           StrPar=c("centre","subCentre","parameterName","levelType","name"),
-          IntPar=c("level","editionNumber")
+          IntPar=c("level","editionNumber","table2Version","indicatorOfParameter")
          )
 ### a temporary fix for unconventional tables
   if(ggg$name=="unknown" & ggg$editionNumber==1){
