@@ -226,7 +226,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     extratab <- get("extratab")
     zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
                 with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
-    if (!is.na(zz)) gg$parameterName <- as.character(extratab$name[zz])
+    if (!is.na(zz)) ggg$parameterName <- as.character(extratab$name[zz])
   }
 ### return
   return(list(name=ggg$parameterName,origin=ggg$centre,
