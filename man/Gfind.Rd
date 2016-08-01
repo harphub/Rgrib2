@@ -6,13 +6,15 @@
   Find the position of a particular message (field) inside a GRIB file.
 }
 \usage{
-  Gfind(griblist, shortName = "t", level = NULL, levelType = "P", all = FALSE)
+  Gfind(griblist, shortName = "t", level = NULL, levelType = "P",
+        all = FALSE, ...)
 }
 \arguments{
   \item{griblist}{Either a character string (filename) or a GRIBlist object. Anything that has a Ginfo method. }
   \item{shortName}{A character to be matched to the "shortName" field, or an integer to be matched to the parameter index. Currently, table2Version is not taken into account. Use Glocate for more detailed searches.}
   \item{level, levelType}{An integer according to the GRIB level type. It may also be a character similar to FA files ("P"=100,"H"=105 or "S"=107). This is only taken into account if level!=NULL.}
   \item{all}{If TRUE, all fields are returned. if FALSE, only the position(s)}
+  \item{...}{Not used. Added for HARP compatibility.}
 }
 \value{
 A vector with the message indices of all messages that satisfy the required values of the parameters.
