@@ -1,3 +1,11 @@
+#-------------------------------------------#
+# Part of R-package Rgrib2                  #
+# Copyright (c) 2003-2016 Alex Deckmyn      #
+#   Royal Meteorological Institute, Belgium #
+# alex.deckmyn@meteo.be                     #
+# Released under GPL-3 license              #
+#-------------------------------------------#
+
 ###########################################
 ### encode a geofield into a GRIBhandle ###
 ### - create new handle from sample     ###

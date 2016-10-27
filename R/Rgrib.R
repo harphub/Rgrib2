@@ -1,21 +1,11 @@
-#####################################
-### Rgrib : read GRIB files into R
-### Alex Deckmyn, Royal Meteorological Institute, Belgium
-### alex.deckmyn@oma.be
-###
-### long set of non-listed of modifications
-### 14/07/2006 : long overdue clean-up of Gdescribe, add DWD-204 for PEPS
-### 14/08/2006 : Inclusion of scanning mode and wind direction flags!
-### 03/10/2006 : Added a "raw" switch to Gdec to read th edata "as is"
-###              Useful for difference files with plain Fourier components
-### 08/01/2008 : added rotated LatLon grid (for Hirlam domains)
-###              added some more "table 2" versions
-### ../10/2009 : start port to GRIB_API
-### 27/10/2010 : First version linked to grib_api
-### 21/01/2011 : Read local table-2 for unknown parameters.
-### ../09/2011 : Change in Gmod for data: allow either precision or nbits
-### ../09/2012 : MULTI messages support -- BUG in GRIB_API, so not very useful
-#####################################
+#-------------------------------------------#
+# Part of R-package Rgrib2                  #
+# Copyright (c) 2003-2016 Alex Deckmyn      #
+#   Royal Meteorological Institute, Belgium #
+# alex.deckmyn@meteo.be                     #
+# Released under GPL-3 license              #
+#-------------------------------------------#
+
 
 "print.GRIBlist" <-
 function(x,...){
@@ -33,10 +23,11 @@ function (filename,
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
   filename <- path.expand(filename)
+  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
   nmessages <- .C("Rgrib_count_messages",filename=filename,nrec=integer(1),
                  multi=as.integer(multi))$nrec
 
-  if(is.na(nmessages)) stop("Error opening file.")
+  if (is.na(nmessages)) stop("Error opening file.")
 
   result <- Ginfo(filename,IntPar,DblPar,StrPar,rList=as.integer(1:nmessages),multi=multi)
 ### a patch for tables that are missing in grib_api
@@ -58,7 +49,7 @@ function (filename,
     zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
                  with(specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
     zz3 <- which(!is.na(zz2))
-    if(length(zz3)>0) result$shortName[zz3] <- as.character(specialnames$shortName[zz2[zz3]])
+    if (length(zz3)>0) result$shortName[zz3] <- as.character(specialnames$shortName[zz2[zz3]])
 
   }
 ###
@@ -78,7 +69,7 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
   subs <- paste(names(allpar),"==\"",allpar,"\"",sep="",collapse=" & ")
   result <- subset(gribtab,subset=eval(parse(text=subs)),
                    select="position")$position   # use quotes to satisfy "check"
-  if(length(result)==0) NA
+  if (length(result)==0) NA
   else result
 }
 
@@ -86,8 +77,13 @@ Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
 ### leave parameter list "open" (,...) for later additions
 Gfind <- function(griblist, shortName="t", level=NULL, levelType="P",
                   all=FALSE, ...){
-  if(is.character(griblist)) griblist <- Gopen(griblist)
-  if(!is.null(level)){
+  if (is.character(griblist)) {
+    filename <- griblist
+    if (!file.exists(filename)) stop(paste("File",filename,"not found."))
+    griblist <- Gopen(filename)
+  }
+
+  if (!is.null(level)){
     levelType <- switch(levelType,
               "P"=100,
               "H"=105,
@@ -95,10 +91,8 @@ Gfind <- function(griblist, shortName="t", level=NULL, levelType="P",
               levelType)
     ttt <- paste(shortName,levelType,level,sep="\r")
     pos <- which(with(griblist,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
-  }
-  else pos <- which(griblist$shortName==shortName)
-  if(!all) pos
-  else griblist[pos,]
+  } else pos <- which(griblist$shortName==shortName)
+  if (!all) pos else griblist[pos,]
 }
 
 ###
@@ -110,7 +104,7 @@ Ginfo <- function(x,...){
 
 Ginfo.GRIBhandle <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),...){
   result <- .Call("Rgrib_handle_info",attr(x,"gribhandle_ptr"),StrPar,IntPar,DblPar)
-  if(length(result)>0){
+  if (length(result)>0) {
     result <- data.frame(result,stringsAsFactors=FALSE)
     names(result) <- c(StrPar,DblPar,IntPar)
   }
@@ -123,12 +117,13 @@ Ginfo.GRIBlist <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=F
 }
 
 Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE,...){
-  if(is.null(rList) ) {
+  if (is.null(rList) ) {
     nmessages <- .C("Rgrib_count_messages",filename=x,nmessages=integer(1),
                  multi=as.integer(multi))$nmessages
     rList <- 1:nmessages
   }
   filename <- path.expand(x)
+  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
   result <- .Call("Rgrib_parse",filename,IntPar,DblPar,StrPar,
                as.integer(rList),multi=multi)
   result <- cbind(rList,data.frame(result,stringsAsFactors=FALSE))
@@ -145,22 +140,21 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
 # Decode a grib record (call to C routine)
 # return data
   freeHandle <- TRUE
-  if(inherits(x,"GRIBhandle")) {
+  if (inherits(x,"GRIBhandle")) {
     gribhandle <- x
     freeHandle <- FALSE
   }
 ### allow asking a field by shortName
 ### this may also require providing a level (model, pressure, height...)
-  else if(is.character(field)){
+  else if (is.character(field)){
     sel <- Gfind(x,shortName=field,levelType=levelType,level=level,all=TRUE)
-    if(dim(sel)[1]!=1) {
+    if (dim(sel)[1]!=1) {
       print(sel)
       stop("Need exactly 1 matching field!")
     }
     pos <- sel$position
     gribhandle <- Ghandle(x,pos,multi=multi)
-  }
-  else {
+  } else {
     gribhandle <- Ghandle(x,field,multi=multi)
   }
   if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
@@ -170,12 +164,11 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
   scan <- Ginfo(gribhandle,IntPar=c("Nx","Ny","iScansNegatively","jScansPositively",
                                      "jPointsAreConsecutive","alternativeRowScanning",
                                      "missingValue","numberOfMissing" ) )
-  if(scan$numberOfMissing > 0) data[which(data==scan$missingValue)] <- NA
-  if(is.na(scan$Nx) | is.na(scan$Ny)) {
+  if (scan$numberOfMissing > 0) data[which(data==scan$missingValue)] <- NA
+  if (is.na(scan$Nx) | is.na(scan$Ny)) {
     warning("Spectral harmonics data not yet supported")
     return(data)
-  }
-  else if(scan$Nx<=0 | scan$Ny <= 0){
+  } else if (scan$Nx<=0 | scan$Ny <= 0) {
     warning("(reduced) gaussian grid is experimental!")
     N <- Ginfo(gribhandle,IntPar="N")$N
     Nggg <- paste("N",N,sep="")
@@ -187,32 +180,30 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     print(dim(result))
     gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
     print(gridtype)
-    if(gridtype=="reduced_gg") Nlon <- Ngg$reduced
-    else Nlon <- rep(4*N,4*N)
+    if (gridtype=="reduced_gg") Nlon <- Ngg$reduced else Nlon <- rep(4*N,4*N)
     i <- 1
 # ECMWF: iScansNeg=0,jScansPos=0,jPointsConsec=0
 # so the points start NE, go by longitude
-    for(lat in (2*N):1){
+    for (lat in (2*N):1){
       result[1:Nlon[lat],lat] <- data[i:(i+Nlon[lat]-1)]
       result[(Nlon[lat]+1),lat] <- result[1,lat] # for periodicity: much easier this way
       i <- i+Nlon[lat]
     }
     class(result) <- c(class(result),"gaussian")
-  }
-  else {
+  } else {
  # standard LAM grid
     result <- matrix(data,nrow=scan$Nx,ncol=scan$Ny,byrow=(scan$jPointsAreConsecutive==1))
-    if(scan$iScansNegatively==1) result <- result[scan$Nx:1,]
-    if(scan$jScansPositively==0) result <- result[,scan$Ny:1]
-    if(scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
+    if (scan$iScansNegatively==1) result <- result[scan$Nx:1,]
+    if (scan$jScansPositively==0) result <- result[,scan$Ny:1]
+    if (scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
   }
-  if(get.meta){
+  if (get.meta){
     attributes(result)$domain <- Gdomain(gribhandle)
     attributes(result)$info <- Gdescribe(gribhandle)
     attributes(result)$time <- Gtime(gribhandle)
     class(result) <- c(class(result),"geofield")
   }
-  if(freeHandle)GhandleFree(gribhandle)  # not really necessary: garbage collection does this
+  if (freeHandle)GhandleFree(gribhandle)  # not really necessary: garbage collection does this
   result
 }
 ####################################
@@ -223,7 +214,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
           IntPar=c("level","editionNumber","table2Version","indicatorOfParameter")
          )
 ### a temporary fix for unconventional tables
-  if(ggg$name=="unknown" & ggg$editionNumber==1){
+  if (ggg$name=="unknown" & ggg$editionNumber==1){
     extratab <- get("extratab")
     zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
                 with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
@@ -253,7 +244,7 @@ Gtime <- function(gribhandle,...)
 
 ### Is it a forecast or what...
 
-  if(ggg$timeRangeIndicator==10) fcrange <- paste("+",ggg$startStep,ggg$stepUnits,sep="")
+  if (ggg$timeRangeIndicator==10) fcrange <- paste("+",ggg$startStep,ggg$stepUnits,sep="")
   else fcrange <- paste(ggg$startStep,"-",ggg$endStep," ",ggg$stepUnits,sep="")
 
   paste(anatime,fcrange)
@@ -273,46 +264,47 @@ Glevel <- function(gribhandle,...)
 
 Ghandle <- function(x,message=1,multi=FALSE){
 ### create a GRIBhandle from a file and message number
-  if(inherits(x,"GRIBlist")) filename <- attributes(x)$filename
+  if (inherits(x,"GRIBlist")) filename <- attributes(x)$filename
   else if (is.character(x)) filename <- path.expand(x)
-  else stop("Not a valid file of GRIB reference.")
+  else stop("Not a valid file name or GRIB handle.")
 
+  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
   gribhandle <- .Call("Rgrib_handle_new_file",filename,as.integer(message),multi)
 
-  if(!is.null(gribhandle)) class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
+  if (!is.null(gribhandle)) class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
   gribhandle
 }
 
 Gmod <- function(gribhandle,IntPar=list(),DblPar=list(),StrPar=list(),
                  data=NULL,precision=NULL,nbits=NULL){
 ### modify parameters and/or data of a handle
-  if(!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle")
-  if(length(StrPar)+length(IntPar)+length(DblPar) > 0) {
+  if (!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle")
+  if (length(StrPar)+length(IntPar)+length(DblPar) > 0) {
     IntPar=lapply(as.list(IntPar),as.integer)
     DblPar=lapply(as.list(DblPar),as.numeric)
     StrPar=lapply(as.list(StrPar),as.character)
     .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
            StrPar,IntPar,DblPar)
   }
-  if(!is.null(data)) {
-    if(any(!is.finite(data))) stop("Some values are not finite! Missing values (NA) not yet supported.")
+  if (!is.null(data)) {
+    if (any(!is.finite(data))) stop("Some values are not finite! Missing values (NA) not yet supported.")
     dims <- Ginfo(gribhandle,IntPar=c("Nx","Ny","bitsPerValue",
                        "iScansNegatively","jScansPositively",
                        "jPointsAreConsecutive","alternativeRowScanning") )
-    if(dims$Nx != dim(data)[1] | dims$Ny != dim(data)[2]) stop("data has wrong dimensions.")
+    if (dims$Nx != dim(data)[1] | dims$Ny != dim(data)[2]) stop("data has wrong dimensions.")
 #    if(dims$bitsPerValue==0) warning("Decimal precision is 0! Data will be constant.")
-    if(dims$iScansNegatively == 1) data <- data[dims$Nx:1,]
-    if(dims$jScansPositively == 0) data <- data[,dims$Ny:1]
-    if(dims$alternativeRowScanning == 1) stop("alternativeRowScanning not supported")
+    if (dims$iScansNegatively == 1) data <- data[dims$Nx:1,]
+    if (dims$jScansPositively == 0) data <- data[,dims$Ny:1]
+    if (dims$alternativeRowScanning == 1) stop("alternativeRowScanning not supported")
 ### set the decimal precision
 ### if data is constant, this is reset to 0!
 ### for [0,1] : precision=4->14bits, 3->10bits, 5->17bits, 2->7bits
 ### alternatively, you may fix the number of bits per value
 ### if you do neither, the default is to set nbits=24
-    if(!is.null(precision)) .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
+    if (!is.null(precision)) .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
            StrPar=list(),IntPar=list(changeDecimalPrecision=as.integer(precision)),
            DblPar=list())
-    if(!is.null(nbits)) .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
+    if (!is.null(nbits)) .Call("Rgrib_handle_mod",attr(gribhandle,"gribhandle_ptr"),
            StrPar=list(),IntPar=list(bitsPerValue=as.integer(nbits)),
            DblPar=list())
     .Call("Rgrib_handle_enc",attr(gribhandle,"gribhandle_ptr"),as.numeric(as.vector(data)))
@@ -331,7 +323,7 @@ Gwrite <- function(gribhandle,filename,append=TRUE){
 ### Admin
 
 GhandleFree <- function(gribhandle){
-  if(!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle.")
+  if (!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle.")
   invisible(.Call("Rgrib_clear_handle",attr(gribhandle,"gribhandle_ptr")))
 }
 
@@ -352,11 +344,11 @@ GhandleList <- function(){
 
 print.GRIBhandle <- function(x,...){
   cat("GRIBhandle (ID=",as.integer(x),")\n")
-  if(!is.null(attr(x,"filename"))) {
+  if (!is.null(attr(x,"filename"))) {
     cat("from file",attr(x,"filename"),"\n")
     cat("message number",attr(x,"message"),"\n")
   }
-  if(!is.null(attr(x,"sample"))) {
+  if (!is.null(attr(x,"sample"))) {
     cat("from sample",attr(x,"sample"),"\n")
   }
 }
