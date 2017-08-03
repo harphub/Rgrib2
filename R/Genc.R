@@ -109,8 +109,8 @@ Gcreate <- function(gribformat=2,domain,sample)
       DblPar$latitudeOfFirstGridPointInDegrees <- domain$SW[2]
 
       if(is.null(domain$dx) | is.null(domain$dy)){
-        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
-        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
+        xy1 <- geogrid::project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- geogrid::project(domain$NE,proj=domain$projection,inv=FALSE)
 
         DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
         DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
@@ -139,8 +139,8 @@ Gcreate <- function(gribformat=2,domain,sample)
       DblPar$latitudeOfLastGridPointInDegrees <- domain$NE[2]
 
       if(is.null(domain$dx) | is.null(domain$dy)){
-        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
-        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
+        xy1 <- geogrid::project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- geogrid::project(domain$NE,proj=domain$projection,inv=FALSE)
         DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
         DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
       }
@@ -165,8 +165,8 @@ Gcreate <- function(gribformat=2,domain,sample)
       DblPar$LoVInDegrees <- domain$projection$"lon_0"
 
       if(is.null(domain$dx) | is.null(domain$dy)){
-        xy1 <- project(domain$SW,proj=domain$projection,inv=FALSE)
-        xy2 <- project(domain$NE,proj=domain$projection,inv=FALSE)
+        xy1 <- geogrid::project(domain$SW,proj=domain$projection,inv=FALSE)
+        xy2 <- geogrid::project(domain$NE,proj=domain$projection,inv=FALSE)
         DblPar$DxInMetres <- (xy2$x-xy1$x)/(domain$nx-1)
         DblPar$DyInMetres <- (xy2$y-xy1$y)/(domain$ny-1)
       }
@@ -190,9 +190,9 @@ Gcreate <- function(gribformat=2,domain,sample)
         IntPar$iScansNegatively <- 0
         IntPar$jScansPositively <- 1
 ### RLL is defined with SW and NE in the rotated co-ordinates!
-        SWr <- project(x=domain$SW[1],y=domain$SW[2],
+        SWr <- geogrid::project(x=domain$SW[1],y=domain$SW[2],
                     proj=domain$projection,inv=FALSE)/pi*180
-        NEr <- project(x=domain$NE[1],y=domain$NE[2],
+        NEr <- geogrid::project(x=domain$NE[1],y=domain$NE[2],
                     proj=domain$projection,inv=FALSE)/pi*180
 
         DblPar$longitudeOfFirstGridPointInDegrees <- SWr[1]
