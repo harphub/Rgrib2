@@ -352,7 +352,7 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   int nmesg,i,err,imulti;
   int *id;
   long int ttt;
-  grib_handle *h=NULL,*g=NULL;
+  grib_handle *h=NULL;
   RgribHandle *newhandle;
   SEXP output;
 
@@ -455,7 +455,7 @@ SEXP Rgrib_handle_new_sample(SEXP sample){
 
 SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
   grib_handle *h;
-  int i,irec,err,nIntPar,nDblPar,nStrPar,npar ;
+  int i,err,nIntPar,nDblPar,nStrPar,npar ;
   char   **StrAns;
   size_t vlen=MAX_VAL_LEN;
   char Str_value[MAX_VAL_LEN];
@@ -484,8 +484,8 @@ SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
     err=grib_get_string(h,CHAR(STRING_ELT(StrPar,i)),Str_value,&vlen);
 /* some error checking! but GRIB_CHECK exits R itself */
     if (err) {
-      StrAns[irec]=R_alloc(10,sizeof(char));
-      strncpy(StrAns[irec],"NA_STRING\0",10);
+      StrAns[i]=R_alloc(10,sizeof(char));
+      strncpy(StrAns[i],"NA_STRING\0",10);
     }
     else {
       StrAns[i]=R_alloc(vlen,sizeof(char));
@@ -536,7 +536,9 @@ SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
 
 SEXP Rgrib_handle_decode(SEXP gribhandle)
 {
+/* the length of a vector is "long int", of an array it's "size_t" */
   size_t dlen;
+  long lval;
   grib_handle *h;
   double *dres;
 /*  long nx,ny ;
@@ -550,9 +552,10 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   if(!h) error("Not a registered GRIBhandle.\n");
 
 /* Nx=-1 for gaussian. numberOfCodedValues or numberOfDataPoints may be better? */
-  grib_get_long(h,"numberOfDataPoints",&dlen);     
-  PROTECT(result=allocVector(REALSXP,dlen));
+  grib_get_long(h,"numberOfDataPoints",&lval);
+  PROTECT(result=allocVector(REALSXP,lval));
   dres=REAL(result);
+  dlen = (size_t) lval;
   grib_get_double_array(h,"values",dres,&dlen);
 
   UNPROTECT(1);
