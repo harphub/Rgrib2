@@ -27,21 +27,21 @@
  ))
   
   earthproj <- switch(as.character(earthshape$shapeOfTheEarth),
-  "0"=list(a=6367470.0,es=0.0), ### WMO standard for grib-1!
-  "1"=list(a=10^-earthshape$scaleFactorOfRadiusOfSphericalEarth * earthshape$scaledValueOfRadiusOfSphericalEarth,es=0.0),
-  "2"=list(a=6378160.0,b=6356775.0),
-  "3"=list(a=10^(3-earthshape$scaleFactorOfEarthMajorAxis) * 
-           earthshape$scaledValueOfEarthMajorAxis, 
-         b=10^(3-earthshape$scaleFactorOfEarthMinorAxis) * 
-           earthshape$scaledValueOfEarthMinorAxis),
-  "4"=list(ellps="GRS80"),
-  "5"=list(ellps="WGS84"),
-  "6"=list(a=6371229.0,es=0.0), ### as used e.g. by ALADIN
-  "7"=list(a=10^(-earthshape$scaleFactorOfEarthMajorAxis) * 
-             earthshape$scaledValueOfEarthMajorAxis,
-           b=10^(-earthshape$scaleFactorOfEarthMinorAxis) * 
+  "0"=list(R = 6367470), ### WMO standard for grib-1!
+  "1"=list(R = 10^-earthshape$scaleFactorOfRadiusOfSphericalEarth * earthshape$scaledValueOfRadiusOfSphericalEarth),
+  "2"=list(a = 6378160.0, b = 6356775.0),
+  "3"=list(a = 10^(3-earthshape$scaleFactorOfEarthMajorAxis) * 
+             earthshape$scaledValueOfEarthMajorAxis, 
+         b = 10^(3-earthshape$scaleFactorOfEarthMinorAxis) * 
              earthshape$scaledValueOfEarthMinorAxis),
-  list(a=6371200.0,es=0.0)
+  "4"=list(ellps = "GRS80"),
+  "5"=list(ellps = "WGS84"),
+  "6"=list(R = 6371229), ### as used e.g. by ALADIN
+  "7"=list(a = 10^(-earthshape$scaleFactorOfEarthMajorAxis) * 
+               earthshape$scaledValueOfEarthMajorAxis,
+           b = 10^(-earthshape$scaleFactorOfEarthMinorAxis) * 
+               earthshape$scaledValueOfEarthMinorAxis),
+  list(R = 6371200)
   )
   if(earthshape$shapeOfTheEarth>=8) warning(paste("This earth shape is not yet fully implemented. Defaulting to sphere with radius",6371200.0)) 
 
