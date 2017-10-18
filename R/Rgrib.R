@@ -35,21 +35,21 @@ function (filename,
 ##  if (dim(noresult)[1] > 0) {
   if (lextra) {
     if (is.element("unknown",result$shortName)) {
-      extratab <- get("extratab")
+#      extratab <- get("extratab")
       missing <- which(result$shortName=="unknown")
       zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
-                  with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+                  with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
 ### use as.character to fix for default stringsAsFactors in data()...
-      result$shortName[missing] <- as.character(extratab$shortName[zz])
+      result$shortName[missing] <- as.character(Rgrib2::extratab$shortName[zz])
 ## we may have created some NA's: switch them back to "unknown"
       result$shortName[which(is.na(result$shortName))] <- "unknown"
     }
 # EXTRA: should we try to get "2t" etc. 
-    specialnames <- get("specialnames")
+#    specialnames <- get("specialnames")
     zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
-                 with(specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
+                 with(Rgrib2::specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
     zz3 <- which(!is.na(zz2))
-    if (length(zz3)>0) result$shortName[zz3] <- as.character(specialnames$shortName[zz2[zz3]])
+    if (length(zz3)>0) result$shortName[zz3] <- as.character(Rgrib2::specialnames$shortName[zz2[zz3]])
 
   }
 ###
@@ -215,10 +215,10 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
          )
 ### a temporary fix for unconventional tables
   if (ggg$name=="unknown" & ggg$editionNumber==1){
-    extratab <- get("extratab")
+#    extratab <- get("extratab")
     zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
-                with(extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
-    if (!is.na(zz)) ggg$parameterName <- as.character(extratab$name[zz])
+                with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab$name[zz])
   }
 ### return
   return(list(name=ggg$parameterName,origin=ggg$centre,
