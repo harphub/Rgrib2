@@ -321,13 +321,13 @@ else if(gridtype=="rotated_ll") {
     SPlat <- ggg$latitudeOfSouthernPoleInDegrees
     SPlon <- ggg$longitudeOfSouthernPoleInDegrees
     SPangle <- ggg$angleOfRotationInDegrees
-    if(SPangle != 0) warning("Rotated LatLon with SPangle not supported yet.")
+    if (SPangle != 0) warning("Rotated LatLon with SPangle not supported yet.")
     projection <- list(proj = "ob_tran","o_proj" = "latlong",
                        "o_lat_p" = -SPlat,"o_lon_p" = 0,"lon_0" = SPlon)
 #    projection <- list(proj="rotlalo",SPlat=SPlat,SPlon=SPlon,SPangle=SPangle)
 # the proj4 interface expects latlong to be in radians FOR INVERSE PROJECTION ONLY.
-    RR=geogrid::project(list(x = c(Lon1,Lon2)*pi/180,
-                             y = c(Lat1,Lat2)*pi/180), proj=projection,inv=T)
+    RR <- geogrid::project(list(x = c(Lon1,Lon2)*pi/180,
+                                y = c(Lat1,Lat2)*pi/180), proj=projection,inv=T)
 # Note that this returns the actual SW and NE coordinates of the 2 boundary points
 # These are not equal to those in the rotated grid (which are coded into the GRIB file)
     SW <- c(RR$x[1],RR$y[1])
@@ -346,15 +346,16 @@ else if(gridtype=="rotated_ll") {
 #  }
   else if(gridtype=="reduced_gg"){
     info <- "Reduced gaussian grid (experimental!)"
-    ggg <- Ginfo(gribhandle,IntPar=c("Ny","N"))
+    N <- Ginfo(gribhandle,IntPar=c("N"))$N
 # this gives Nlon and the list of latitudes
-    N <- ggg$N
-    Nggg <- paste("N",N,sep="")
-    data(list=Nggg,package="Rgrib2",envir=environment(NULL))
-    assign("Ngg",eval(parse(text=Nggg)))
-    Nlon <- Ngg$reduced
+    Nggg <- paste0("N",N)
+    RGtable <- eval(parse(text=Nggg))
+#    data(list=Nggg,package="Rgrib2",envir=environment(NULL))
+#    assign("Ngg",eval(parse(text=Nggg)))
+#    Ngg <- eval(parse(text=Nggg))
+    nlon <- RGtable$reduced
 
-    result <- list(name=Nggg,nlon=Nlon,latlist=Ngg$latitude)
+    result <- list(name=Nggg,nlon=nlon,latlist=RGtable$latitude)
   }
 #  else if(gridtype=="sh"){
 #    info <- "Spectral harmonics! (experimental!)"

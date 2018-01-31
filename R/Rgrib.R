@@ -124,7 +124,7 @@ Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=
   }
   filename <- path.expand(x)
   if (!file.exists(filename)) stop(paste("File",filename,"not found."))
-  result <- .Call("Rgrib_parse",filename,IntPar,DblPar,StrPar,
+  result <- .Call("Rgrib_parse_file",filename,IntPar,DblPar,StrPar,
                as.integer(rList),multi=multi)
   result <- cbind(rList,data.frame(result,stringsAsFactors=FALSE))
   names(result) <- c("position",StrPar,DblPar,IntPar)
@@ -133,7 +133,7 @@ Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=
 
 #####################################
 "Gdec" <-
-function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
+function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
 {
 ### FIX ME: pos should point at the position in the file
 ### use field for the GRIB par number?
@@ -143,19 +143,19 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
   if (inherits(x,"GRIBhandle")) {
     gribhandle <- x
     freeHandle <- FALSE
-  }
-### allow asking a field by shortName
-### this may also require providing a level (model, pressure, height...)
-  else if (is.character(field)){
-    sel <- Gfind(x,shortName=field,levelType=levelType,level=level,all=TRUE)
+  } else if (is.character(field)) {
+    # allow asking a field by shortName
+    # this may also require providing a level (model, pressure, height...)
+    sel <- Gfind(x, shortName=field, levelType=levelType, level=level, all=TRUE)
     if (dim(sel)[1]!=1) {
       print(sel)
       stop("Need exactly 1 matching field!")
     }
     pos <- sel$position
-    gribhandle <- Ghandle(x,pos,multi=multi)
+    gribhandle <- Ghandle(x, pos, multi=multi)
   } else {
-    gribhandle <- Ghandle(x,field,multi=multi)
+    # x is a raw message or a GRIBlist
+    gribhandle <- Ghandle(x, field, multi=multi)
   }
   if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
 
@@ -176,9 +176,9 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     data(list=Nggg,package="Rgrib2",envir=environment(NULL))
     assign("Ngg",eval(parse(text=Nggg)))
 
-    result <- matrix(NA,ncol=2*N,nrow=4*N+1)
+    result <- matrix(NA, ncol=2*N, nrow=4*N+1)
     print(dim(result))
-    gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
+    gridtype <- Ginfo(gribhandle, StrPar="gridType")$gridType
     print(gridtype)
     if (gridtype=="reduced_gg") Nlon <- Ngg$reduced else Nlon <- rep(4*N,4*N)
     i <- 1
@@ -192,7 +192,7 @@ function (x,field=1,level=NULL,levelType="P",get.meta=TRUE,multi=FALSE)
     class(result) <- c(class(result),"gaussian")
   } else {
  # standard LAM grid
-    result <- matrix(data,nrow=scan$Nx,ncol=scan$Ny,byrow=(scan$jPointsAreConsecutive==1))
+    result <- matrix(data, nrow=scan$Nx, ncol=scan$Ny, byrow=(scan$jPointsAreConsecutive==1))
     if (scan$iScansNegatively==1) result <- result[scan$Nx:1,]
     if (scan$jScansPositively==0) result <- result[,scan$Ny:1]
     if (scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
@@ -262,15 +262,20 @@ Glevel <- function(gribhandle,...)
 ### GRIB handle -> use external pointers
 #########################################
 
-Ghandle <- function(x,message=1,multi=FALSE){
+Ghandle <- function(x, message=1, multi=FALSE){
 ### create a GRIBhandle from a file and message number
-  if (inherits(x,"GRIBlist")) filename <- attributes(x)$filename
-  else if (is.character(x)) filename <- path.expand(x)
-  else stop("Not a valid file name or GRIB handle.")
+  if (is.raw(x)) {
+    gribhandle <-  .Call("Rgrib_handle_new_msg",
+                         msg=x, msglen=as.integer(length(x)))
+  } else {
+    if (inherits(x,"GRIBlist")) filename <- attributes(x)$filename
+    else if (is.character(x)) filename <- path.expand(x)
+    else stop("Not a valid file name or GRIB handle.")
 
-  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
-  gribhandle <- .Call("Rgrib_handle_new_file",filename,as.integer(message),multi)
-
+    if (!file.exists(filename)) stop(paste("File",filename,"not found."))
+    gribhandle <- .Call("Rgrib_handle_new_file",
+                        filename, as.integer(message), multi)
+  }
   if (!is.null(gribhandle)) class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
   gribhandle
 }

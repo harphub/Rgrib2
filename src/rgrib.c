@@ -8,63 +8,28 @@
 #-------------------------------------------#
 */
 
-#include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "grib_api.h"
-#include "R.h"
-#include "Rinternals.h"
-
-#define MAX_KEY_LEN 255
-#define MAX_VAL_LEN 1024
-
-/******************************************************************************/
-/* This library links to grib_api. It uses the grib_handle structure.         */
-/* But there is an added complexity due to the R interface. Some handles      */
-/* must remain resident in R for analysis, while other are deleted on the fly.*/
-/* So we work with an array GRIBhandleList[MAX_HANDLE] of RgribHandle*        */
-/* which are structures with a pointer to the original grib_handle plus some  */
-/* extra stuff to keep R happy.                                               */
-
-
-
-
-
-/* prototypes */
-static void Rgrib_handleFinalizer(SEXP);
-
-/***************/
-/* bookkeeping */
-/***************/
-#define MAX_HANDLE 15
-
-static int RgribInitialised=0;
-
-typedef struct {
-    int *id ;
-    grib_handle *h;
-    void *ext_ptr;
-  } RgribHandle;
+#include "rgrib.h"
 
 static RgribHandle* GRIBhandleList[MAX_HANDLE];
 
-void Rgrib_init(){
-    int i;
-    for(i=0;i<MAX_HANDLE;i++) {
-      GRIBhandleList[i]=NULL;
-    }
-    RgribInitialised=1;
+void Rgrib_init_check() {
+  static int is_initialised=0;
+  int i;
+
+  if (!is_initialised) {
+    for (i=0;i<MAX_HANDLE;i++) GRIBhandleList[i]=NULL;
+    is_initialised=1;
+  }
 }
 
 RgribHandle* Rgrib_create_handle(){
   int j,id;
-  if(!RgribInitialised) Rgrib_init();
+  Rgrib_init_check();
 /* Call garbage collection to free any deleted GRIBhandles */
   R_gc();
-  for(j=0;GRIBhandleList[j] && j<MAX_HANDLE; j++){}
+  for (j=0;GRIBhandleList[j] && j<MAX_HANDLE; j++) {}
   id=j;
-  if(j>=MAX_HANDLE) {
+  if (j>=MAX_HANDLE) {
     Rprintf("Reached maximum open grib handles: %d\n",MAX_HANDLE);
     return(NULL);
   }
@@ -77,20 +42,23 @@ RgribHandle* Rgrib_create_handle(){
 }
 
 void Rgrib_GRIBhandle_destroy(int i){
-  if(i<0 || i>=MAX_HANDLE) return;
-  if(!GRIBhandleList[i]) return;
+  Rgrib_init_check();
+  if (i<0 || i>=MAX_HANDLE) return;
+  if (!GRIBhandleList[i]) return;
 
-  if(GRIBhandleList[i]->h) {
+  if (GRIBhandleList[i]->h) {
     grib_handle_delete(GRIBhandleList[i]->h);
     GRIBhandleList[i]->h=NULL;
   }
   else warning("Inexplicably, a GRIBhandle was found without a valid message pointer\n");
-  if(GRIBhandleList[i]->id){
+
+  if (GRIBhandleList[i]->id) {
     free(GRIBhandleList[i]->id);
     GRIBhandleList[i]->id=NULL;
   }
   else warning("Inexplicably, a GRIBhandle was found without a valid ID pointer\n");
-  if(GRIBhandleList[i]->ext_ptr){
+
+  if (GRIBhandleList[i]->ext_ptr) {
     R_ClearExternalPtr(GRIBhandleList[i]->ext_ptr);
   }
   else warning("Inexplicably, a GRIBhandle was found without a valid EXT pointer\n");
@@ -102,16 +70,15 @@ void Rgrib_GRIBhandle_destroy(int i){
 
 void Rgrib_clear_all_handles(){
   int i;
-  if(!RgribInitialised) return;
-  for(i=0;i<MAX_HANDLE;i++) Rgrib_GRIBhandle_destroy(i);
+  for (i=0;i<MAX_HANDLE;i++) Rgrib_GRIBhandle_destroy(i);
   return;
 }
 
 long Rgrib_count_handles_C(){
   int i;
   long result=0;
-  if(!RgribInitialised) Rgrib_init();
-  for(i=0;i<MAX_HANDLE;i++) if(GRIBhandleList[i]) result++;
+  Rgrib_init_check();
+  for (i=0;i<MAX_HANDLE;i++) if(GRIBhandleList[i]) result++;
   return(result);
 }
 
@@ -135,7 +102,7 @@ SEXP Rgrib_list_handles(){
 
   PROTECT(result=allocVector(INTSXP,cl));
   j=0;
-  for(i=0;i<MAX_HANDLE && j<cl ;i++) if(GRIBhandleList[i]) {
+  for (i=0;i<MAX_HANDLE && j<cl ;i++) if(GRIBhandleList[i]) {
     INTEGER(result)[j++]= i;
   }
   UNPROTECT(1);
@@ -146,9 +113,7 @@ SEXP Rgrib_clear_handle(SEXP gribhandle){
   int* id;
   int iid;
 
-  if(!RgribInitialised) error("GRIBhandleList not initialised!\n");
-
-  if( !(id=R_ExternalPtrAddr(gribhandle)) ) error("This is not an open GRIBhandle.\n");
+  if (!(id=R_ExternalPtrAddr(gribhandle))) error("This is not an open GRIBhandle.\n");
 
   iid=*id;
 
@@ -157,7 +122,7 @@ SEXP Rgrib_clear_handle(SEXP gribhandle){
   return(R_NilValue);
 }
 
-static void Rgrib_handleFinalizer(SEXP gribhandle)
+void Rgrib_handleFinalizer(SEXP gribhandle)
 {
   int *id;
   int iid;
@@ -211,7 +176,7 @@ void Rgrib_count_messages(char** filename, int* nfields,int* multi)  {
 
 /* Get parameter values for a list of records in a file */
 /* This is the main "info" routine */
-SEXP Rgrib_parse(SEXP filename,
+SEXP Rgrib_parse_file(SEXP filename,
         SEXP IntPar, SEXP DblPar, SEXP StrPar, SEXP rec, SEXP multi)  {
   FILE* infile ;
   int nmesg,i,j,irec,err,nIntPar,nDblPar,nStrPar,nrec,npar,imulti ;
@@ -412,12 +377,10 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   newhandle->ext_ptr = R_MakeExternalPtr(id, install("GRIBhandle"), R_NilValue);
 
   R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
-
-  R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
   PROTECT(output=allocVector(INTSXP,1));
   INTEGER(output)[0]= (long) *id;
   setAttrib(output, install("filename"), filename);
-  setAttrib(output,install("message"),message);
+  setAttrib(output, install("message"), message);
   setAttrib(output, install("gribhandle_ptr"), newhandle->ext_ptr);
   UNPROTECT(1);
   fclose(infile);
@@ -443,11 +406,37 @@ SEXP Rgrib_handle_new_sample(SEXP sample){
   R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
   PROTECT(output=allocVector(INTSXP,1));
   INTEGER(output)[0]=(long) *id;
-  setAttrib(output,install("sample"),sample);
+  setAttrib(output,install("sample"), sample);
   setAttrib(output, install("gribhandle_ptr"), newhandle->ext_ptr);
   UNPROTECT(1);
   return(output);
 }
+
+SEXP Rgrib_handle_new_msg(SEXP msg, SEXP msglen){
+  grib_handle *h;
+  int* id;
+  SEXP output;
+  RgribHandle *newhandle;
+
+  if(!(newhandle=Rgrib_create_handle()) )  {
+    Rprintf("Error creating the GRIBhandle.\n");
+    return(R_NilValue);
+  }
+
+  h = grib_handle_new_from_message(NULL, RAW(msg), INTEGER(msglen)[0]);
+  id = newhandle->id;
+  newhandle->h = h;
+
+  newhandle->ext_ptr = R_MakeExternalPtr(id, install("GRIBhandle"), R_NilValue);
+  R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
+  PROTECT(output=allocVector(INTSXP,1));
+  INTEGER(output)[0]=(long) *id;
+/*  setAttrib(output,install("sample"),sample); */
+  setAttrib(output, install("gribhandle_ptr"), newhandle->ext_ptr);
+  UNPROTECT(1);
+  return(output);
+}
+
 
 /***************************/
 /* DECODING HANDLES & INFO */
@@ -649,7 +638,7 @@ SEXP Rgrib_handle_write(SEXP gribhandle,SEXP filename,SEXP filemode){
 
 
 /*### GRIB PARSER: all keys*/
-SEXP Rgrib_handle_parse(SEXP gribhandle)
+SEXP Rgrib_handle_parse_all(SEXP gribhandle)
 {
 /* To skip read only and not coded keys
 unsigned long key_iterator_filter_flags=GRIB_KEYS_ITERATOR_SKIP_READ_ONLY ||
