@@ -16,10 +16,11 @@ function(x,...){
 "Gopen" <-
 function (filename,
           IntPar=c("editionNumber","dataDate","dataTime","validityDate","validityTime","Nx","Ny",
-                   "table2Version","indicatorOfParameter","indicatorOfTypeOfLevel","level"),
+                   "table2Version","indicatorOfParameter",
+                   "parameterCategory", "parameterNumber",
+                   "indicatorOfTypeOfLevel","level"),
           DblPar=c(), StrPar=c("shortName","gridType"), multi=FALSE,lextra=TRUE)
 {
-### FIX ME: the default choice of parameters is only OK for GRIB-1!
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
   filename <- path.expand(filename)
@@ -34,15 +35,25 @@ function (filename,
 ##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
 ##  if (dim(noresult)[1] > 0) {
   if (lextra) {
-    if (is.element("unknown",result$shortName)) {
-#      extratab <- get("extratab")
-      missing <- which(result$shortName=="unknown")
-      zz <- match(with(result[missing,],paste(table2Version,indicatorOfParameter,sep="\r")),
-                  with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+    if (is.element("unknown", result$shortName)) {
+      missing1 <- which(result$shortName=="unknown" & result$editionNumber==1)
+      missing2 <- which(result$shortName=="unknown" & result$editionNumber==2)
+      if (length(missing1) > 0) {
+        zz <- match(with(result[missing1,],paste(table2Version,indicatorOfParameter,sep="\r")),
+                    with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
 ### use as.character to fix for default stringsAsFactors in data()...
-      result$shortName[missing] <- as.character(Rgrib2::extratab$shortName[zz])
+        result$shortName[missing1] <- as.character(Rgrib2::extratab$shortName[zz])
 ## we may have created some NA's: switch them back to "unknown"
-      result$shortName[which(is.na(result$shortName))] <- "unknown"
+        result$shortName[which(is.na(result$shortName))] <- "unknown"
+      }
+      if (length(missing2) > 0) {
+        zz <- match(with(result[missing2,],paste(parameterCategory, parameterNumber,sep="\r")),
+                    with(Rgrib2::extratab2,paste(parameterCategory, parameterNumber,sep="\r")))
+### use as.character to fix for default stringsAsFactors in data()...
+        result$shortName[missing2] <- as.character(Rgrib2::extratab2$shortName[zz])
+## we may have created some NA's: switch them back to "unknown"
+        result$shortName[which(is.na(result$shortName))] <- "unknown"
+      }
     }
 # EXTRA: should we try to get "2t" etc. 
 #    specialnames <- get("specialnames")
@@ -211,14 +222,20 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
 {
   ggg <- Ginfo(gribhandle,
           StrPar=c("centre","subCentre","parameterName","levelType","name"),
-          IntPar=c("level","editionNumber","table2Version","indicatorOfParameter")
+          IntPar=c("level","editionNumber","table2Version","indicatorOfParameter",
+                   "parameterCategory", "parameterNumber")
          )
 ### a temporary fix for unconventional tables
-  if (ggg$name=="unknown" & ggg$editionNumber==1){
-#    extratab <- get("extratab")
+  if (ggg$name=="unknown") {
+    if (ggg$editionNumber==1) {
     zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
                 with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
     if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab$name[zz])
+    } else {
+    zz <- match(paste(ggg$parameterCategory, ggg$parameterNumber,sep="\r"),
+                with(Rgrib2::extratab2,paste(parameterCategory,parameterNumber,sep="\r")))
+    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab2$name[zz])
+    }
   }
 ### return
   return(list(name=ggg$parameterName,origin=ggg$centre,

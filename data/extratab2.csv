@@ -1,0 +1,3 @@
+parameterCategory;parameterNumber;shortName;name;unit
+128;169;strd;Long-wave radiation flux;W m-2
+128;175;srdr;Short-wave radiation flux;W m-2
