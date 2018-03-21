@@ -105,7 +105,7 @@
     projection$lon0 <- lon0
 
     if(abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
-          warning(paste("Longitudes inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
+          warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
                         "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
 ### In fact, this usually means that the value given in the file is rounded
           delx <- (Lon2-Lon1)/(ggg$Nx-1)
@@ -134,7 +134,7 @@
     }
     if (Lat1 > Lat2) warning(paste("Inconsistent Lat1=",Lat1,"Lat2=",Lat2))
     if (abs( (Lat2-Lat1)/(ggg$Ny-1) - ggg$jDirectionIncrementInDegrees) > LonEps){
-          warning(paste("Latitudes inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
+          warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
                         "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
           dely <- (Lat2-Lat1)/(ggg$Ny-1)
     }
@@ -176,15 +176,19 @@ else if(gridtype=="lambert"){
         rlon <-  ggg$LoVInDegrees
 
         projection <- c(list(proj="lcc",lon_0=rlon,lat_1=rlat1,lat_2=rlat2),earthproj)
-
-        xy <- geogrid::project(c(Lo1,La1), proj = projection,inv=FALSE)
-        x0 <- xy$x[1]
-        y0 <- xy$y[1]
-        x1 <- x0+(nx-1)*delx
-        y1 <- y0+(ny-1)*dely
-        xy <- geogrid::project(c(x1,y1), proj = projection,inv=TRUE)
-        NE <- c(xy$x,xy$y)
         SW <- c(Lo1,La1)
+        if (!requireNamespace("geogrid", quietly=TRUE)) {
+          warning("geogrid is not available! Some grid details can not be computed.")
+          NE <- NULL
+        } else {
+          xy <- geogrid::project(c(Lo1,La1), proj = projection, inv=FALSE)
+          x0 <- xy$x[1]
+          y0 <- xy$y[1]
+          x1 <- x0+(nx-1)*delx
+          y1 <- y0+(ny-1)*dely
+          xy <- geogrid::project(c(x1,y1), proj = projection, inv=TRUE)
+          NE <- c(xy$x,xy$y)
+        }
         result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
         class(result) <- "geodomain"
         result
@@ -217,14 +221,19 @@ else if(gridtype=="polar_stereographic"){ ### 20
 
         projection <- c(list(proj="stere",lon_0=rlon,lat_0=90),earthproj)
 
-        xy <- geogrid::project(x=Lo1,y=La1, proj = projection,inv=FALSE)
-        x0 <- xy$x[1]
-        y0 <- xy$y[1]
-        x1 <- x0+(nx-1)*delx
-        y1 <- y0+(ny-1)*dely
-        xy <- geogrid::project(list(x=x1,y=y1), proj = projection,inv=TRUE)
-        NE <- c(xy$x,xy$y)
         SW <- c(Lo1,La1)
+        if (!requireNamespace("geogrid", quietly=TRUE)) {
+          warning("geogrid is not available! Some grid details can not be computed.")
+          NE <- NULL
+        } else {
+          xy <- geogrid::project(x=Lo1,y=La1, proj = projection, inv=FALSE)
+          x0 <- xy$x[1]
+          y0 <- xy$y[1]
+          x1 <- x0+(nx-1)*delx
+          y1 <- y0+(ny-1)*dely
+          xy <- geogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+          NE <- c(xy$x,xy$y)
+        }
         result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
         class(result) <- "geodomain"
         result
@@ -254,14 +263,19 @@ else if(gridtype=="mercator"){
 
         projection <- c(list(proj="merc",lat_ts=rlat),earthproj)
 
-        xy <- geogrid::project(list(x=Lo1,y=La1), proj = projection,inv=FALSE)
-        x0 <- xy$x[1]
-        y0 <- xy$y[1]
-        x1 <- x0+(nx-1)*delx
-        y1 <- y0+(ny-1)*dely
-        xy <- geogrid::project(list(x=x1,y=y1), proj = projection,inv=TRUE)
-        NE <- c(xy$x,xy$y)
         SW <- c(Lo1,La1)
+        if (!requireNamespace("geogrid", quietly=TRUE)) {
+          warning("geogrid is not available! Some grid details can not be computed.")
+          NE <- NULL
+        } else {
+          xy <- geogrid::project(list(x=Lo1,y=La1), proj = projection, inv=FALSE)
+          x0 <- xy$x[1]
+          y0 <- xy$y[1]
+          x1 <- x0+(nx-1)*delx
+          y1 <- y0+(ny-1)*dely
+          xy <- geogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+          NE <- c(xy$x,xy$y)
+        }
 ### FIX ME: for global data you should also set the central meridian lon_0 !
 ### this is either Lon1 + 180 or Lon1 -dx/2 + 180
         result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
@@ -326,13 +340,18 @@ else if(gridtype=="rotated_ll") {
                        "o_lat_p" = -SPlat,"o_lon_p" = 0,"lon_0" = SPlon)
 #    projection <- list(proj="rotlalo",SPlat=SPlat,SPlon=SPlon,SPangle=SPangle)
 # the proj4 interface expects latlong to be in radians FOR INVERSE PROJECTION ONLY.
-    RR <- geogrid::project(list(x = c(Lon1,Lon2)*pi/180,
-                                y = c(Lat1,Lat2)*pi/180), proj=projection,inv=T)
+    if (!requireNamespace("geogrid", quietly=TRUE)) {
+      warning("geogrid is not available! Some grid details can not be computed.")
+      SW <- NULL
+      NE <- NULL
+    } else {
+      RR <- geogrid::project(list(x = c(Lon1,Lon2)*pi/180,
+                                y = c(Lat1,Lat2)*pi/180), proj=projection, inv=TRUE)
 # Note that this returns the actual SW and NE coordinates of the 2 boundary points
 # These are not equal to those in the rotated grid (which are coded into the GRIB file)
-    SW <- c(RR$x[1],RR$y[1])
-    NE <- c(RR$x[2],RR$y[2])
-
+      SW <- c(RR$x[1],RR$y[1])
+      NE <- c(RR$x[2],RR$y[2])
+    }
     result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,
                    dx=ggg$iDirectionIncrementInDegrees,
                    dy=ggg$jDirectionIncrementInDegrees )

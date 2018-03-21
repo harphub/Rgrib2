@@ -1,10 +1,10 @@
 Package: Rgrib2
-Version: 1.2.7-9003
-Date: 2018-02-27
+Version: 1.2.7-9004
+Date: 2018-03-21
 Title: Read and work with GRIB binary files
 Author: Alex Deckmyn (Royal Meteorological Institute of Belgium) <Alex.Deckmyn@meteo.be>.
 Maintainer: Alex Deckmyn <Alex.Deckmyn@meteo.be>
-Depends: geogrid (>= 3.4.0)
+Imports: geogrid (>= 3.4.0)
 Description: An R interface to the GRIB_API library developed by ECMWF. Decoding and encoding of GRIB files. 
 LazyData: yes
 License: GPL-3
