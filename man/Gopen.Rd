@@ -8,7 +8,8 @@
 \usage{
   Gopen(filename,IntPar = c("editionNumber", "dataDate", "dataTime", 
     "validityDate", "validityTime", "Nx", "Ny", "table2Version", 
-    "indicatorOfParameter", "indicatorOfTypeOfLevel", "level"), 
+    "indicatorOfParameter", "parameterCategory", "parameterNumber",
+    "indicatorOfTypeOfLevel", "level"), 
     DblPar = c(), StrPar = c("shortName", "gridType"),
     multi = FALSE,lextra=TRUE) 
 }

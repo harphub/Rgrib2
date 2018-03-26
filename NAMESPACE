@@ -1,4 +1,3 @@
-import("geogrid")
 useDynLib("Rgrib2")
 exportPattern("^G")
 S3method(print,GRIBhandle)
