@@ -33,7 +33,7 @@ RgribHandle* Rgrib_create_handle(){
     Rprintf("Reached maximum open grib handles: %d\n",MAX_HANDLE);
     return(NULL);
   }
-  GRIBhandleList[id]=(RgribHandle*) malloc(sizeof(RgribHandle*));
+  GRIBhandleList[id]=(RgribHandle*) malloc(sizeof(RgribHandle));
   GRIBhandleList[id]->id = malloc(sizeof(int));
   *GRIBhandleList[id]->id = id;
   GRIBhandleList[id]->ext_ptr = NULL;
