@@ -10,7 +10,7 @@
        get.meta = TRUE, multi = FALSE)
 }
 \arguments{
-  \item{x}{An object of class "GRIBhandle" (or a file name or a GRIBlist, in which case field must be specified as an integer or a name.)}
+  \item{x}{An object of class "GRIBhandle", a file name or a GRIBlist, in which case field must be specified as an integer or a name. x can also be a GRIB message in raw (byte) format.}
   \item{field}{An integer indicating the
   position of the field in the file or list. Not used if x is a GRIBhandle.}
   \item{level, levelType}{Possibly add a level (pressure, height above surface).}

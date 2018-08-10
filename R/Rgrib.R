@@ -245,24 +245,26 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
 #####################################
 Gtime <- function(gribhandle,...)
 {
-  ggg <- Ginfo(gribhandle,IntPar=c("startStep","endStep","timeRangeIndicator"),
-            StrPar=c("dataDate","dataTime","stepUnits"),...)
+# grib_api bug: gives error message if timeUnit is not "h"
+# try to avoid by calling in 2 steps -> no difference
+  ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate","dataTime","stepUnits"))
+  ggg2 <- Ginfo(gribhandle, IntPar=c("startStep","endStep","timeRangeIndicator"), ...)
 ### Initial date
 ### this is why it's best to ask dataDate as a string, not integer
 #  initdate <- as.Date(ggg$dataDate,"%Y%m%d")
 
-  inityear <- substring(ggg$dataDate,1,4)
-  initmonth<- substring(ggg$dataDate,5,6)
-  initday  <- substring(ggg$dataDate,7,8)
-  inithour <- substring(ggg$dataTime,1,2)
-  initmin  <- substring(ggg$dataTime,3,4)
+  inityear <- substring(ggg1$dataDate,1,4)
+  initmonth<- substring(ggg1$dataDate,5,6)
+  initday  <- substring(ggg1$dataDate,7,8)
+  inithour <- substring(ggg1$dataTime,1,2)
+  initmin  <- substring(ggg1$dataTime,3,4)
 # for backward compatibility (temporary)
-  anatime <- paste(inityear,"/",initmonth,"/",initday," z",inithour,":",initmin,sep="")
+  anatime <- paste0(inityear,"/",initmonth,"/",initday," z",inithour,":",initmin)
 
 ### Is it a forecast or what...
 
-  if (ggg$timeRangeIndicator==10) fcrange <- paste("+",ggg$startStep,ggg$stepUnits,sep="")
-  else fcrange <- paste(ggg$startStep,"-",ggg$endStep," ",ggg$stepUnits,sep="")
+  if (ggg2$timeRangeIndicator==10) fcrange <- paste0("+", ggg2$startStep, ggg2$stepUnits)
+  else fcrange <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
 
   paste(anatime,fcrange)
 }
@@ -279,15 +281,52 @@ Glevel <- function(gribhandle,...)
 ### GRIB handle -> use external pointers
 #########################################
 
+
+### if the grib message is in memory, not in a file:
+find_in_raw <- function(msg, pattern="GRIB") {
+  b <- charToRaw(pattern)
+  n <- length(b)
+  z <- which(msg==b[1])
+  
+  z[vapply(z, function(x) all(b==msg[x:(x+n-1)]), FUN.VAL=TRUE)]
+}
+ 
+grib_raw_find <- function(msg) {
+  l1 <- find_in_raw(msg, "GRIB")
+  l2 <- find_in_raw(msg, "7777")
+  if (length(l1)==length(l2) && all(l1<l2)) {
+    len1 <- vapply(l1, function(x) sum(as.integer(msg[(x+4):(x+6)])*256^(2:0)), FUN.VALUE=1)
+    len2 <- l2 -l1 +4
+    if (any(len1 != len2)) stop("inconsistent GRIB messages?")
+    return(data.frame("begin"=l1, "end"=l2+3, "length"=len1))
+  } else {
+    stop("inconsistent GRIB messages?")
+  }
+}
+
+grib_raw_split <- function(msg) {
+  glist <- grib_raw_find(msg)
+  lapply(1:dim(glist)[1], function(i) msg[glist$begin[i]:glist$end[i]])
+}
+
 Ghandle <- function(x, message=1, multi=FALSE){
 ### create a GRIBhandle from a file and message number
   if (is.raw(x)) {
+    if (message > 1) {
+      gloc <- grib_raw_find(x)
+      if (message > dim(gloc)[1]) stop("Only",dim(gloc)[1],"GRIB records available.")
+      x <- x[gloc$first[message]:gloc$last[message]]
+    }
     gribhandle <-  .Call("Rgrib_handle_new_msg",
                          msg=x, msglen=as.integer(length(x)))
   } else {
-    if (inherits(x,"GRIBlist")) filename <- attributes(x)$filename
-    else if (is.character(x)) filename <- path.expand(x)
-    else stop("Not a valid file name or GRIB handle.")
+    if (inherits(x,"GRIBlist")) {
+      filename <- attributes(x)$filename
+    } else if (is.character(x)) {
+      filename <- path.expand(x)
+    } else {
+      stop("Not a valid file name or GRIB handle.")
+    }
 
     if (!file.exists(filename)) stop(paste("File",filename,"not found."))
     gribhandle <- .Call("Rgrib_handle_new_file",

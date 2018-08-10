@@ -338,7 +338,8 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   }
 
   if(INTEGER(message)[0]>nmesg && !imulti)  {
-    Rprintf("Only %d GRIB messages in file %s. Maybe set multi=TRUE?\n",nmesg,CHAR(STRING_ELT(filename,0)));
+    Rprintf("Only %d GRIB messages in file %s. Maybe set multi=TRUE?\n",
+            nmesg,CHAR(STRING_ELT(filename,0)));
     fclose(infile);
     return(R_NilValue);
   }
@@ -354,7 +355,7 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
 /* should I delete the handle at every iteration to stop memory leakage? */
 /* It isn't done in the examples, but I think it is necessary. */
 
-    GRIB_CHECK(grib_get_long(h,"validityTime",&ttt),0);
+/*    GRIB_CHECK(grib_get_long(h,"validityTime",&ttt),0); */
 
     grib_handle_delete(h);
 
@@ -436,7 +437,6 @@ SEXP Rgrib_handle_new_msg(SEXP msg, SEXP msglen){
   UNPROTECT(1);
   return(output);
 }
-
 
 /***************************/
 /* DECODING HANDLES & INFO */
