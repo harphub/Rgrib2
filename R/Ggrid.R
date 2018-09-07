@@ -177,16 +177,16 @@ else if(gridtype=="lambert"){
 
         projection <- c(list(proj="lcc",lon_0=rlon,lat_1=rlat1,lat_2=rlat2),earthproj)
         SW <- c(Lo1,La1)
-        if (!requireNamespace("geogrid", quietly=TRUE)) {
-          warning("geogrid is not available! Some grid details can not be computed.")
+        if (!requireNamespace("meteogrid", quietly=TRUE)) {
+          warning("meteogrid is not available! Some grid details can not be computed.")
           NE <- NULL
         } else {
-          xy <- geogrid::project(c(Lo1,La1), proj = projection, inv=FALSE)
+          xy <- meteogrid::project(c(Lo1,La1), proj = projection, inv=FALSE)
           x0 <- xy$x[1]
           y0 <- xy$y[1]
           x1 <- x0+(nx-1)*delx
           y1 <- y0+(ny-1)*dely
-          xy <- geogrid::project(c(x1,y1), proj = projection, inv=TRUE)
+          xy <- meteogrid::project(c(x1,y1), proj = projection, inv=TRUE)
           NE <- c(xy$x,xy$y)
         }
         result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
@@ -222,16 +222,16 @@ else if(gridtype=="polar_stereographic"){ ### 20
         projection <- c(list(proj="stere",lon_0=rlon,lat_0=90),earthproj)
 
         SW <- c(Lo1,La1)
-        if (!requireNamespace("geogrid", quietly=TRUE)) {
-          warning("geogrid is not available! Some grid details can not be computed.")
+        if (!requireNamespace("meteogrid", quietly=TRUE)) {
+          warning("meteogrid is not available! Some grid details can not be computed.")
           NE <- NULL
         } else {
-          xy <- geogrid::project(x=Lo1,y=La1, proj = projection, inv=FALSE)
+          xy <- meteogrid::project(x=Lo1,y=La1, proj = projection, inv=FALSE)
           x0 <- xy$x[1]
           y0 <- xy$y[1]
           x1 <- x0+(nx-1)*delx
           y1 <- y0+(ny-1)*dely
-          xy <- geogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+          xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
           NE <- c(xy$x,xy$y)
         }
         result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
@@ -264,16 +264,16 @@ else if(gridtype=="mercator"){
         projection <- c(list(proj="merc",lat_ts=rlat),earthproj)
 
         SW <- c(Lo1,La1)
-        if (!requireNamespace("geogrid", quietly=TRUE)) {
-          warning("geogrid is not available! Some grid details can not be computed.")
+        if (!requireNamespace("meteogrid", quietly=TRUE)) {
+          warning("meteogrid is not available! Some grid details can not be computed.")
           NE <- NULL
         } else {
-          xy <- geogrid::project(list(x=Lo1,y=La1), proj = projection, inv=FALSE)
+          xy <- meteogrid::project(list(x=Lo1,y=La1), proj = projection, inv=FALSE)
           x0 <- xy$x[1]
           y0 <- xy$y[1]
           x1 <- x0+(nx-1)*delx
           y1 <- y0+(ny-1)*dely
-          xy <- geogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+          xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
           NE <- c(xy$x,xy$y)
         }
 ### FIX ME: for global data you should also set the central meridian lon_0 !
@@ -340,12 +340,12 @@ else if(gridtype=="rotated_ll") {
                        "o_lat_p" = -SPlat,"o_lon_p" = 0,"lon_0" = SPlon)
 #    projection <- list(proj="rotlalo",SPlat=SPlat,SPlon=SPlon,SPangle=SPangle)
 # the proj4 interface expects latlong to be in radians FOR INVERSE PROJECTION ONLY.
-    if (!requireNamespace("geogrid", quietly=TRUE)) {
-      warning("geogrid is not available! Some grid details can not be computed.")
+    if (!requireNamespace("meteogrid", quietly=TRUE)) {
+      warning("meteogrid is not available! Some grid details can not be computed.")
       SW <- NULL
       NE <- NULL
     } else {
-      RR <- geogrid::project(list(x = c(Lon1,Lon2)*pi/180,
+      RR <- meteogrid::project(list(x = c(Lon1,Lon2)*pi/180,
                                 y = c(Lat1,Lat2)*pi/180), proj=projection, inv=TRUE)
 # Note that this returns the actual SW and NE coordinates of the 2 boundary points
 # These are not equal to those in the rotated grid (which are coded into the GRIB file)

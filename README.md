@@ -5,7 +5,7 @@ This R package is an api to the *grib_api* library developed by ECMWF, with seve
 
 The data fields are coded as matrices with attributes to describe projection and grid specifications.
 
-Usually, this package will be used together with the companion package *geogrid*.
+Usually, this package will be used together with the companion package *meteogrid*.
 
 ##C CODE
 
