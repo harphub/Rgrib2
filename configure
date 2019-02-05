@@ -2635,6 +2635,96 @@ else
 $as_echo "$as_me: WARNING: Neither eccodes nor grib_api found." >&2;}
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for jas_stream_memopen in -ljasper" >&5
+$as_echo_n "checking for jas_stream_memopen in -ljasper... " >&6; }
+if ${ac_cv_lib_jasper_jas_stream_memopen+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ljasper  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char jas_stream_memopen ();
+int
+main ()
+{
+return jas_stream_memopen ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_jasper_jas_stream_memopen=yes
+else
+  ac_cv_lib_jasper_jas_stream_memopen=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_jasper_jas_stream_memopen" >&5
+$as_echo "$ac_cv_lib_jasper_jas_stream_memopen" >&6; }
+if test "x$ac_cv_lib_jasper_jas_stream_memopen" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBJASPER 1
+_ACEOF
+
+  LIBS="-ljasper $LIBS"
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for opj_image_create in -lopenjp2" >&5
+$as_echo_n "checking for opj_image_create in -lopenjp2... " >&6; }
+if ${ac_cv_lib_openjp2_opj_image_create+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lopenjp2  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char opj_image_create ();
+int
+main ()
+{
+return opj_image_create ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_openjp2_opj_image_create=yes
+else
+  ac_cv_lib_openjp2_opj_image_create=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_openjp2_opj_image_create" >&5
+$as_echo "$ac_cv_lib_openjp2_opj_image_create" >&6; }
+if test "x$ac_cv_lib_openjp2_opj_image_create" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBOPENJP2 1
+_ACEOF
+
+  LIBS="-lopenjp2 $LIBS"
+
+fi
+
 ac_config_files="$ac_config_files src/Makevars"
 
 cat >confcache <<\_ACEOF
