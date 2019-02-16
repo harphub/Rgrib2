@@ -38,7 +38,7 @@ Gtime <- function(gribhandle,...)
   ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate", "dataTime", "stepUnits"))
   ggg2 <- Ginfo(gribhandle, IntPar=c("startStep", "endStep", "timeRangeIndicator"), ...)
 ### Initial date
-  basedate  <- as.POSIXct(paste(gg1$dataDate, gg1$dataTime),
+  basedate  <- as.POSIXct(paste(ggg1$dataDate, ggg1$dataTime),
                           format="%Y%m%d %H%M", tz="UTC")
   
   result <- format(basedate, "%Y/%m/%d %H:%M")
