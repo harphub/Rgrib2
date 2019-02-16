@@ -1,6 +1,6 @@
 #-------------------------------------------#
 # Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2016 Alex Deckmyn      #
+# Copyright (c) 2003-2019 Alex Deckmyn      #
 #   Royal Meteorological Institute, Belgium #
 # alex.deckmyn@meteo.be                     #
 # Released under GPL-3 license              #
@@ -9,68 +9,10 @@
 
 "print.GRIBlist" <-
 function(x,...){
-  cat("File",attributes(x)$filename,":","\n")
-  cat("containing ",attributes(x)$nfields,"fields.","\n")
+  cat("File", attr(x, "filename"), ":", "\n")
+  cat("containing ", attr(x, "nfields"), "fields.\n")
 }
 ####################################
-"Gopen" <-
-function (filename,
-          IntPar=c("editionNumber","dataDate","dataTime","validityDate","validityTime","Nx","Ny",
-                   "table2Version","indicatorOfParameter",
-                   "parameterCategory", "parameterNumber",
-                   "indicatorOfTypeOfLevel","level"),
-          DblPar=c(), StrPar=c("shortName","gridType"), multi=FALSE,lextra=TRUE)
-{
-### passing a logical only works on recent installations, I think
-### so passing multi as an integer is safer
-  filename <- path.expand(filename)
-  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
-  nmessages <- .C("Rgrib_count_messages",filename=filename,nrec=integer(1),
-                 multi=as.integer(multi))$nrec
-
-  if (is.na(nmessages)) stop("Error opening file.")
-
-  result <- Ginfo(filename,IntPar,DblPar,StrPar,rList=as.integer(1:nmessages),multi=multi)
-### a patch for tables that are missing in grib_api
-##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
-##  if (dim(noresult)[1] > 0) {
-  if (lextra) {
-    if (is.element("unknown", result$shortName)) {
-      missing1 <- which(result$shortName=="unknown" & result$editionNumber==1)
-      missing2 <- which(result$shortName=="unknown" & result$editionNumber==2)
-      if (length(missing1) > 0) {
-        zz <- match(with(result[missing1,],paste(table2Version,indicatorOfParameter,sep="\r")),
-                    with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
-### use as.character to fix for default stringsAsFactors in data()...
-        result$shortName[missing1] <- as.character(Rgrib2::extratab$shortName[zz])
-## we may have created some NA's: switch them back to "unknown"
-        result$shortName[which(is.na(result$shortName))] <- "unknown"
-      }
-      if (length(missing2) > 0) {
-        zz <- match(with(result[missing2,],paste(parameterCategory, parameterNumber,sep="\r")),
-                    with(Rgrib2::extratab2,paste(parameterCategory, parameterNumber,sep="\r")))
-### use as.character to fix for default stringsAsFactors in data()...
-        result$shortName[missing2] <- as.character(Rgrib2::extratab2$shortName[zz])
-## we may have created some NA's: switch them back to "unknown"
-        result$shortName[which(is.na(result$shortName))] <- "unknown"
-      }
-    }
-# EXTRA: should we try to get "2t" etc. 
-#    specialnames <- get("specialnames")
-    zz2 <- match(with(result,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")),
-                 with(Rgrib2::specialnames,paste(table2Version,indicatorOfParameter,indicatorOfTypeOfLevel,level,sep="\r")))
-    zz3 <- which(!is.na(zz2))
-    if (length(zz3)>0) result$shortName[zz3] <- as.character(Rgrib2::specialnames$shortName[zz2[zz3]])
-
-  }
-###
-  attributes(result)$filename <- filename
-  attributes(result)$nmessages <- nmessages
-  class(result) <- c(class(result),"GRIBlist")
-  result
-}
-
-################################
 ### find a specific message
 ### this is the "easy but slow" implementation: first get a complete table and then search in R
 Glocate <- function(filename,IntPar=list(),DblPar=list(),StrPar=list(),...){
@@ -106,182 +48,6 @@ Gfind <- function(griblist, shortName="t", level=NULL, levelType="P",
   if (!all) pos else griblist[pos,]
 }
 
-###
-### The main routine for getting parameters from a GRIB file or record
-###
-Ginfo <- function(x,...){
-  UseMethod("Ginfo")
-}
-
-Ginfo.GRIBhandle <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),...){
-  result <- .Call("Rgrib_handle_info",attr(x,"gribhandle_ptr"),StrPar,IntPar,DblPar)
-  if (length(result)>0) {
-    result <- data.frame(result,stringsAsFactors=FALSE)
-    names(result) <- c(StrPar,DblPar,IntPar)
-  }
-  result
-}
-
-Ginfo.GRIBlist <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE,...){
-  filename <- attributes(x)$filename
-  Ginfo.character(filename,IntPar,DblPar,StrPar,rList,multi)
-}
-
-Ginfo.character <- function(x,IntPar=c(),DblPar=c(),StrPar=c(),rList=NULL,multi=FALSE,...){
-  if (is.null(rList) ) {
-    nmessages <- .C("Rgrib_count_messages",filename=x,nmessages=integer(1),
-                 multi=as.integer(multi))$nmessages
-    rList <- 1:nmessages
-  }
-  filename <- path.expand(x)
-  if (!file.exists(filename)) stop(paste("File",filename,"not found."))
-  result <- .Call("Rgrib_parse_file",filename,IntPar,DblPar,StrPar,
-               as.integer(rList),multi=multi)
-  result <- cbind(rList,data.frame(result,stringsAsFactors=FALSE))
-  names(result) <- c("position",StrPar,DblPar,IntPar)
-  result
-}
-
-#####################################
-"Gdec" <-
-function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
-{
-### FIX ME: pos should point at the position in the file
-### use field for the GRIB par number?
-# Decode a grib record (call to C routine)
-# return data
-  freeHandle <- TRUE
-  if (inherits(x,"GRIBhandle")) {
-    gribhandle <- x
-    freeHandle <- FALSE
-  } else if (is.character(field)) {
-    # allow asking a field by shortName
-    # this may also require providing a level (model, pressure, height...)
-    sel <- Gfind(x, shortName=field, levelType=levelType, level=level, all=TRUE)
-    if (dim(sel)[1]!=1) {
-      print(sel)
-      stop("Need exactly 1 matching field!")
-    }
-    pos <- sel$position
-    gribhandle <- Ghandle(x, pos, multi=multi)
-  } else {
-    # x is a raw message or a GRIBlist
-    gribhandle <- Ghandle(x, field, multi=multi)
-  }
-  if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
-
-  data <- .Call("Rgrib_handle_decode",attr(gribhandle,"gribhandle_ptr"))
-#  cat("data length:",length(data),"\n")
-  scan <- Ginfo(gribhandle,IntPar=c("Nx","Ny","iScansNegatively","jScansPositively",
-                                     "jPointsAreConsecutive","alternativeRowScanning",
-                                     "missingValue","numberOfMissing" ) )
-  if (scan$numberOfMissing > 0) data[which(data==scan$missingValue)] <- NA
-  if (is.na(scan$Nx) | is.na(scan$Ny)) {
-    warning("Spectral harmonics data not yet supported")
-    return(data)
-  } else if (scan$Nx<=0 | scan$Ny <= 0) {
-    warning("(reduced) gaussian grid is experimental!")
-    N <- Ginfo(gribhandle,IntPar="N")$N
-    Nggg <- paste("N",N,sep="")
-    cat("N=",N,"loading",Nggg,"\n")
-    data(list=Nggg,package="Rgrib2",envir=environment(NULL))
-    assign("Ngg",eval(parse(text=Nggg)))
-
-    result <- matrix(NA, ncol=2*N, nrow=4*N+1)
-    print(dim(result))
-    gridtype <- Ginfo(gribhandle, StrPar="gridType")$gridType
-    print(gridtype)
-    if (gridtype=="reduced_gg") Nlon <- Ngg$reduced else Nlon <- rep(4*N,4*N)
-    i <- 1
-# ECMWF: iScansNeg=0,jScansPos=0,jPointsConsec=0
-# so the points start NE, go by longitude
-    for (lat in (2*N):1){
-      result[1:Nlon[lat],lat] <- data[i:(i+Nlon[lat]-1)]
-      result[(Nlon[lat]+1),lat] <- result[1,lat] # for periodicity: much easier this way
-      i <- i+Nlon[lat]
-    }
-    class(result) <- c(class(result),"gaussian")
-  } else {
- # standard LAM grid
-    result <- matrix(data, nrow=scan$Nx, ncol=scan$Ny, byrow=(scan$jPointsAreConsecutive==1))
-    if (scan$iScansNegatively==1) result <- result[scan$Nx:1,]
-    if (scan$jScansPositively==0) result <- result[,scan$Ny:1]
-    if (scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
-  }
-  if (get.meta){
-    attributes(result)$domain <- Gdomain(gribhandle)
-    attributes(result)$info <- Gdescribe(gribhandle)
-    attributes(result)$time <- Gtime(gribhandle)
-    class(result) <- c(class(result),"geofield")
-  }
-  if (freeHandle)GhandleFree(gribhandle)  # not really necessary: garbage collection does this
-  result
-}
-####################################
-"Gdescribe" <- function(gribhandle)
-{
-  ggg <- Ginfo(gribhandle,
-          StrPar=c("centre","subCentre","parameterName","levelType","name"),
-          IntPar=c("level","editionNumber","table2Version","indicatorOfParameter",
-                   "parameterCategory", "parameterNumber")
-         )
-### a temporary fix for unconventional tables
-  if (ggg$name=="unknown") {
-    if (ggg$editionNumber==1) {
-    zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
-                with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
-    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab$name[zz])
-    } else {
-    zz <- match(paste(ggg$parameterCategory, ggg$parameterNumber,sep="\r"),
-                with(Rgrib2::extratab2,paste(parameterCategory,parameterNumber,sep="\r")))
-    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab2$name[zz])
-    }
-  }
-### return
-  return(list(name=ggg$parameterName,origin=ggg$centre,
-              level=ggg$level,leveltype=ggg$levelType))
-}
-
-#####################################
-Gtime <- function(gribhandle,...)
-{
-# grib_api bug: gives error message if timeUnit is not "h"
-# try to avoid by calling in 2 steps -> no difference
-  ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate","dataTime","stepUnits"))
-  ggg2 <- Ginfo(gribhandle, IntPar=c("startStep","endStep","timeRangeIndicator"), ...)
-### Initial date
-### this is why it's best to ask dataDate as a string, not integer
-#  initdate <- as.Date(ggg$dataDate,"%Y%m%d")
-
-  inityear <- substring(ggg1$dataDate,1,4)
-  initmonth<- substring(ggg1$dataDate,5,6)
-  initday  <- substring(ggg1$dataDate,7,8)
-  inithour <- substring(ggg1$dataTime,1,2)
-  initmin  <- substring(ggg1$dataTime,3,4)
-# for backward compatibility (temporary)
-  anatime <- paste0(inityear,"/",initmonth,"/",initday," z",inithour,":",initmin)
-
-### Is it a forecast or what...
-
-  if (ggg2$timeRangeIndicator==10) fcrange <- paste0("+", ggg2$startStep, ggg2$stepUnits)
-  else fcrange <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
-
-  paste(anatime,fcrange)
-}
-
-Glevel <- function(gribhandle,...)
-{
-  ggg <- Ginfo(gribhandle,IntPar=c("indicatorOfTypeOfLevel","topLevel",
-            "bottomLevel"),
-            StrPar=c("stepUnits"),...)
-}
-
-
-#########################################
-### GRIB handle -> use external pointers
-#########################################
-
-
 ### if the grib message is in memory, not in a file:
 find_in_raw <- function(msg, pattern="GRIB") {
   b <- charToRaw(pattern)
@@ -290,7 +56,8 @@ find_in_raw <- function(msg, pattern="GRIB") {
   
   z[vapply(z, function(x) all(b==msg[x:(x+n-1)]), FUN.VAL=TRUE)]
 }
- 
+
+## find a grib message in a raw data stream
 grib_raw_find <- function(msg) {
   l1 <- find_in_raw(msg, "GRIB")
   l2 <- find_in_raw(msg, "7777")
@@ -307,33 +74,6 @@ grib_raw_find <- function(msg) {
 grib_raw_split <- function(msg) {
   glist <- grib_raw_find(msg)
   lapply(1:dim(glist)[1], function(i) msg[glist$begin[i]:glist$end[i]])
-}
-
-Ghandle <- function(x, message=1, multi=FALSE){
-### create a GRIBhandle from a file and message number
-  if (is.raw(x)) {
-    if (message > 1) {
-      gloc <- grib_raw_find(x)
-      if (message > dim(gloc)[1]) stop("Only",dim(gloc)[1],"GRIB records available.")
-      x <- x[gloc$first[message]:gloc$last[message]]
-    }
-    gribhandle <-  .Call("Rgrib_handle_new_msg",
-                         msg=x, msglen=as.integer(length(x)))
-  } else {
-    if (inherits(x,"GRIBlist")) {
-      filename <- attributes(x)$filename
-    } else if (is.character(x)) {
-      filename <- path.expand(x)
-    } else {
-      stop("Not a valid file name or GRIB handle.")
-    }
-
-    if (!file.exists(filename)) stop(paste("File",filename,"not found."))
-    gribhandle <- .Call("Rgrib_handle_new_file",
-                        filename, as.integer(message), multi)
-  }
-  if (!is.null(gribhandle)) class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
-  gribhandle
 }
 
 Gmod <- function(gribhandle,IntPar=list(),DblPar=list(),StrPar=list(),
@@ -379,38 +119,5 @@ Gwrite <- function(gribhandle,filename,append=TRUE){
   filename <- path.expand(filename)
   .Call("Rgrib_handle_write",attr(gribhandle,"gribhandle_ptr"),filename,filemode)
   invisible(NULL)
-}
-
-### Admin
-
-GhandleFree <- function(gribhandle){
-  if (!inherits(gribhandle,"GRIBhandle")) stop("Not a GRIBhandle.")
-  invisible(.Call("Rgrib_clear_handle",attr(gribhandle,"gribhandle_ptr")))
-}
-
-close.GRIBhandle <- GhandleFree
-
-GhandleFreeAll <- function(){
-  .Call("Rgrib_clear_all_handles")
-  invisible(NULL)
-}
-
-GhandleCount <- function(){
-  .Call("Rgrib_count_handles")
-}
-
-GhandleList <- function(){
-  .Call("Rgrib_list_handles")
-}
-
-print.GRIBhandle <- function(x,...){
-  cat("GRIBhandle (ID=",as.integer(x),")\n")
-  if (!is.null(attr(x,"filename"))) {
-    cat("from file",attr(x,"filename"),"\n")
-    cat("message number",attr(x,"message"),"\n")
-  }
-  if (!is.null(attr(x,"sample"))) {
-    cat("from sample",attr(x,"sample"),"\n")
-  }
 }
 

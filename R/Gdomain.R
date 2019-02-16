@@ -6,7 +6,9 @@
 # Released under GPL-3 license              #
 #-------------------------------------------#
 
-"Gdomain" <- function(gribhandle){
+# derive the geodomain specifications from a grib record
+# only a limited number of projections are supported
+"Gdomain" <- function(gribhandle) {
 #####################################################
 ### input is a GRIBhandle
 ### output is a "geodomain" with grid description
@@ -16,19 +18,22 @@
 ### tolerance for (Nx-1)*dx ~ Lx
   LonEps <- 10^(-5)
 
-  gridtype <- Ginfo(gribhandle,StrPar="gridType")$gridType
+  gridtype <- Ginfo(gribhandle, StrPar="gridType")$gridType
 
-  earthshape <- Ginfo(gribhandle,IntPar=c("editionNumber","shapeOfTheEarth","scaledValueOfRadiusOfSphericalEarth",
-                         "scaleFactorOfRadiusOfSphericalEarth",
-                         "scaleFactorOfEarthMajorAxis",
-                         "scaledValueOfEarthMajorAxis",
-                         "scaleFactorOfEarthMinorAxis",
-                         "scaledValueOfEarthMinorAxis"
- ))
+  earthshape <- Ginfo(gribhandle, 
+                      IntPar=c("editionNumber","shapeOfTheEarth",
+                               "scaledValueOfRadiusOfSphericalEarth",
+                               "scaleFactorOfRadiusOfSphericalEarth",
+                               "scaleFactorOfEarthMajorAxis",
+                               "scaledValueOfEarthMajorAxis",
+                               "scaleFactorOfEarthMinorAxis",
+                               "scaledValueOfEarthMinorAxis"
+                   ))
   
   earthproj <- switch(as.character(earthshape$shapeOfTheEarth),
   "0"=list(R = 6367470), ### WMO standard for grib-1!
-  "1"=list(R = 10^-earthshape$scaleFactorOfRadiusOfSphericalEarth * earthshape$scaledValueOfRadiusOfSphericalEarth),
+  "1"=list(R = 10^-earthshape$scaleFactorOfRadiusOfSphericalEarth * 
+               earthshape$scaledValueOfRadiusOfSphericalEarth),
   "2"=list(a = 6378160.0, b = 6356775.0),
   "3"=list(a = 10^(3-earthshape$scaleFactorOfEarthMajorAxis) * 
              earthshape$scaledValueOfEarthMajorAxis, 
@@ -57,17 +62,17 @@
 
 
 # LATLON
-  if(gridtype=="regular_ll"){
+  if (gridtype=="regular_ll") {
     info <- gridtype
     projection <- list(proj="latlong")
 
     ggg <- Ginfo(gribhandle,
-              IntPar=c("Nx","Ny",
-                       "iScansNegatively","jScansPositively",
-                       "jPointsAreConsecutive","alternativeRowScanning"),
-              DblPar=c("latitudeOfFirstGridPointInDegrees","longitudeOfFirstGridPointInDegrees",
-                       "latitudeOfLastGridPointInDegrees","longitudeOfLastGridPointInDegrees",
-                       "iDirectionIncrementInDegrees","jDirectionIncrementInDegrees")
+              IntPar=c("Nx", "Ny",
+                       "iScansNegatively", "jScansPositively",
+                       "jPointsAreConsecutive", "alternativeRowScanning"),
+              DblPar=c("latitudeOfFirstGridPointInDegrees", "longitudeOfFirstGridPointInDegrees",
+                       "latitudeOfLastGridPointInDegrees", "longitudeOfLastGridPointInDegrees",
+                       "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees")
               )
 ### Read the corners of the domain.
 ### Make sure to read them correctly
@@ -84,9 +89,9 @@
     }
 ### set longitudes to ]-180,180]
     Lon1 <- Lon1%%360
-    if(Lon1>180) Lon1 <- Lon1 - 360
+    if (Lon1>180) Lon1 <- Lon1 - 360
     Lon2 <- Lon2%%360
-    if(Lon2>180) Lon2 <- Lon2 - 360
+    if (Lon2>180) Lon2 <- Lon2 - 360
 ### ...unless the domain crosses the 180/-180 meridian:
 ### in that case, we want it to be somewhere within ]-360,360[
 ### but we will have to change the central meridian of the map!
@@ -100,17 +105,20 @@
       if (Lon1>=0 ) lon0 <- 180
       else if ( Lon2<=0) lon0 <- -180
       else lon0 <- (Lon1+Lon2)/2
+
+    } else {
+      lon0 <- 0
     }
-    else lon0 <- 0
     projection$lon0 <- lon0
 
-    if(abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
-          warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
+    if (abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
+      warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
                         "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
 ### In fact, this usually means that the value given in the file is rounded
-          delx <- (Lon2-Lon1)/(ggg$Nx-1)
+      delx <- (Lon2-Lon1)/(ggg$Nx-1)
+    } else {
+      delx <- ggg$iDirectionIncrementInDegrees
     }
-    else delx <- ggg$iDirectionIncrementInDegrees
 ### FIX ME
 #    if (Lon1 + (ggg$nx +1) * delx == Lon2) {
 #       periodic <- TRUE
@@ -127,8 +135,7 @@
     if (ggg$jScansPositively) {
       Lat1 <- ggg$latitudeOfFirstGridPointInDegrees
       Lat2 <- ggg$latitudeOfLastGridPointInDegrees
-    }
-    else{
+    } else {
       Lat2 <- ggg$latitudeOfFirstGridPointInDegrees
       Lat1 <- ggg$latitudeOfLastGridPointInDegrees
     }
@@ -137,64 +144,63 @@
           warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
                         "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
           dely <- (Lat2-Lat1)/(ggg$Ny-1)
+    } else {
+      dely <- ggg$jDirectionIncrementInDegrees
     }
-    else dely <- ggg$jDirectionIncrementInDegrees
-
     SW <- c(Lon1,Lat1)
     NE <- c(Lon2,Lat2)
 
-    result <- list(projection=projection,nx=ggg$Nx,ny=ggg$Ny,SW=SW,NE=NE,
+    result <- list(projection=projection, nx=ggg$Nx, ny=ggg$Ny,
+                   SW=SW, NE=NE,
                    dx=delx, dy=dely )
     class(result) <- "geodomain"
     result
 
-  }
+  } else if (gridtype=="lambert") {
 ### LAMBERT
-else if(gridtype=="lambert"){
     info <- gridtype
 
     ggg <- Ginfo(gribhandle,
-              IntPar=c("Nx","Ny",
-                       "iScansNegatively","jScansPositively",
-                       "jPointsAreConsecutive","alternativeRowScanning"),
-              DblPar=c("Latin1InDegrees","Latin2InDegrees","LoVInDegrees",
-                       "DxInMetres","DyInMetres",
+              IntPar=c("Nx", "Ny",
+                       "iScansNegatively", "jScansPositively",
+                       "jPointsAreConsecutive", "alternativeRowScanning"),
+              DblPar=c("Latin1InDegrees", "Latin2InDegrees", "LoVInDegrees",
+                       "DxInMetres", "DyInMetres",
                        "latitudeOfFirstGridPointInDegrees",
                        "longitudeOfFirstGridPointInDegrees")
            )
-        La1 <-  ggg$latitudeOfFirstGridPointInDegrees
-        Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
-        delx <- ggg$DxInMetres
-        dely <- ggg$DyInMetres
-        nx <- ggg$Nx
-        ny <- ggg$Ny
+    La1 <-  ggg$latitudeOfFirstGridPointInDegrees
+    Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
+    delx <- ggg$DxInMetres
+    dely <- ggg$DyInMetres
+    nx <- ggg$Nx
+    ny <- ggg$Ny
 
-        if(Lo1 > 180) Lo1 <- Lo1-360
+    if(Lo1 > 180) Lo1 <- Lo1-360
 
-        rlat1 <-  ggg$Latin1InDegrees
-        rlat2 <-  ggg$Latin2InDegrees
-        rlon <-  ggg$LoVInDegrees
+    rlat1 <-  ggg$Latin1InDegrees
+    rlat2 <-  ggg$Latin2InDegrees
+    rlon <-  ggg$LoVInDegrees
 
-        projection <- c(list(proj="lcc",lon_0=rlon,lat_1=rlat1,lat_2=rlat2),earthproj)
-        SW <- c(Lo1,La1)
-        if (!requireNamespace("meteogrid", quietly=TRUE)) {
-          warning("meteogrid is not available! Some grid details can not be computed.")
-          NE <- NULL
-        } else {
-          xy <- meteogrid::project(c(Lo1,La1), proj = projection, inv=FALSE)
-          x0 <- xy$x[1]
-          y0 <- xy$y[1]
-          x1 <- x0+(nx-1)*delx
-          y1 <- y0+(ny-1)*dely
-          xy <- meteogrid::project(c(x1,y1), proj = projection, inv=TRUE)
-          NE <- c(xy$x,xy$y)
-        }
-        result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
-        class(result) <- "geodomain"
-        result
-        }
+    projection <- c(list(proj="lcc", lon_0=rlon, lat_1=rlat1, lat_2=rlat2), earthproj)
+    SW <- c(Lo1,La1)
+    if (!requireNamespace("meteogrid", quietly=TRUE)) {
+      warning("meteogrid is not available! Some grid details can not be computed.")
+      NE <- NULL
+    } else {
+      xy <- meteogrid::project(c(Lo1,La1), proj = projection, inv=FALSE)
+      x0 <- xy$x[1]
+      y0 <- xy$y[1]
+      x1 <- x0+(nx-1)*delx
+      y1 <- y0+(ny-1)*dely
+      xy <- meteogrid::project(c(x1,y1), proj = projection, inv=TRUE)
+      NE <- c(xy$x,xy$y)
+    }
+    result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
+    class(result) <- "geodomain"
+    result
+  } else if (gridtype=="polar_stereographic") { ### 20
 ### POLAR STEREOGRAPHIC
-else if(gridtype=="polar_stereographic"){ ### 20
     info <- gridtype
 
     ggg <- Ginfo(gribhandle,
@@ -206,40 +212,39 @@ else if(gridtype=="polar_stereographic"){ ### 20
                        "longitudeOfFirstGridPointInDegrees",
                        "DxInDegrees","DyInDegrees")
               )
-        La1 <-  ggg$latitudeOfFirstGridPointInDegrees
-        Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
-        Lo1 <- Lo1 %% 360
-        if (Lo1 > 180) Lo1 <- Lo1 - 360
+    La1 <-  ggg$latitudeOfFirstGridPointInDegrees
+    Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
+    Lo1 <- Lo1 %% 360
+    if (Lo1 > 180) Lo1 <- Lo1 - 360
 
-        nx <- ggg$Nx
-        ny <- ggg$Ny
+    nx <- ggg$Nx
+    ny <- ggg$Ny
 
-        rlon <-  ggg$LoVInDegrees
+    rlon <-  ggg$LoVInDegrees
 
-        delx <- ggg$DxInMetres
-        dely <- ggg$DyInMetres
+    delx <- ggg$DxInMetres
+    dely <- ggg$DyInMetres
 
-        projection <- c(list(proj="stere",lon_0=rlon,lat_0=90),earthproj)
+    projection <- c(list(proj="stere",lon_0=rlon,lat_0=90),earthproj)
 
-        SW <- c(Lo1,La1)
-        if (!requireNamespace("meteogrid", quietly=TRUE)) {
-          warning("meteogrid is not available! Some grid details can not be computed.")
-          NE <- NULL
-        } else {
-          xy <- meteogrid::project(x=Lo1,y=La1, proj = projection, inv=FALSE)
-          x0 <- xy$x[1]
-          y0 <- xy$y[1]
-          x1 <- x0+(nx-1)*delx
-          y1 <- y0+(ny-1)*dely
-          xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
-          NE <- c(xy$x,xy$y)
-        }
-        result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
-        class(result) <- "geodomain"
-        result
-        }
+    SW <- c(Lo1,La1)
+    if (!requireNamespace("meteogrid", quietly=TRUE)) {
+      warning("meteogrid is not available! Some grid details can not be computed.")
+      NE <- NULL
+    } else {
+      xy <- meteogrid::project(x=Lo1,y=La1, proj = projection, inv=FALSE)
+      x0 <- xy$x[1]
+      y0 <- xy$y[1]
+      x1 <- x0+(nx-1)*delx
+      y1 <- y0+(ny-1)*dely
+      xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+      NE <- c(xy$x,xy$y)
+    }
+    result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
+    class(result) <- "geodomain"
+    result
+  } else if(gridtype=="mercator") {
 ### MERCATOR
-else if(gridtype=="mercator"){
     info <- gridtype
 
     ggg <- Ginfo(gribhandle,
@@ -249,42 +254,41 @@ else if(gridtype=="mercator"){
               DblPar=c("latitudeOfFirstGridPointInDegrees","longitudeOfFirstGridPointInDegrees",
                        "DxInMetres","DyInMetres","LaDInDegrees")
               )
-        La1 <-  ggg$latitudeOfFirstGridPointInDegrees
-        Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
-        if(Lo1 > 180) Lo1 <- Lo1-360
+    La1 <-  ggg$latitudeOfFirstGridPointInDegrees
+    Lo1 <-  ggg$longitudeOfFirstGridPointInDegrees
+    if(Lo1 > 180) Lo1 <- Lo1-360
 
-        nx <- ggg$Nx
-        ny <- ggg$Ny
+    nx <- ggg$Nx
+    ny <- ggg$Ny
 
-        delx <- ggg$DxInMetres
-        dely <- ggg$DyInMetres
+    delx <- ggg$DxInMetres
+    dely <- ggg$DyInMetres
 
-        rlat <- ggg$LaDInDegrees
+    rlat <- ggg$LaDInDegrees
 
-        projection <- c(list(proj="merc",lat_ts=rlat),earthproj)
+    projection <- c(list(proj="merc",lat_ts=rlat),earthproj)
 
-        SW <- c(Lo1,La1)
-        if (!requireNamespace("meteogrid", quietly=TRUE)) {
-          warning("meteogrid is not available! Some grid details can not be computed.")
-          NE <- NULL
-        } else {
-          xy <- meteogrid::project(list(x=Lo1,y=La1), proj = projection, inv=FALSE)
-          x0 <- xy$x[1]
-          y0 <- xy$y[1]
-          x1 <- x0+(nx-1)*delx
-          y1 <- y0+(ny-1)*dely
-          xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
-          NE <- c(xy$x,xy$y)
-        }
+    SW <- c(Lo1,La1)
+    if (!requireNamespace("meteogrid", quietly=TRUE)) {
+      warning("meteogrid is not available! Some grid details can not be computed.")
+      NE <- NULL
+    } else {
+      xy <- meteogrid::project(list(x=Lo1,y=La1), proj = projection, inv=FALSE)
+      x0 <- xy$x[1]
+      y0 <- xy$y[1]
+      x1 <- x0+(nx-1)*delx
+      y1 <- y0+(ny-1)*dely
+      xy <- meteogrid::project(list(x=x1,y=y1), proj = projection, inv=TRUE)
+      NE <- c(xy$x,xy$y)
+    }
 ### FIX ME: for global data you should also set the central meridian lon_0 !
 ### this is either Lon1 + 180 or Lon1 -dx/2 + 180
-        result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
-        class(result) <- "geodomain"
-        result
+    result <- list(projection=projection,nx=nx,ny=ny,SW=SW,NE=NE,dx=delx,dy=dely )
+    class(result) <- "geodomain"
+    result
 
-               }
+  } else if (gridtype=="rotated_ll") {
 ### ROTATED LATLON (for Hirlam & GLAMEPS output)
-else if(gridtype=="rotated_ll") {
     info <- gridtype
     ggg <- Ginfo(gribhandle,
               IntPar=c("Nx","Ny",
@@ -306,23 +310,21 @@ else if(gridtype=="rotated_ll") {
     if (ggg$iScansNegatively) {
       Lon2 <- ggg$longitudeOfFirstGridPointInDegrees
       Lon1 <- ggg$longitudeOfLastGridPointInDegrees
-    }
-    else
-      {
+    } else {
       Lon1 <- ggg$longitudeOfFirstGridPointInDegrees
       Lon2 <- ggg$longitudeOfLastGridPointInDegrees
-      }
+    }
 ### this check is useless for longitude: periodicity !
 #    if (Lon1 > Lon2) warning(paste("Inconsistent Lon1=",Lon1,"Lon2=",Lon2))
 
     if (ggg$jScansPositively) {
       Lat1 <- ggg$latitudeOfFirstGridPointInDegrees
       Lat2 <- ggg$latitudeOfLastGridPointInDegrees
-    }
-    else{
+    } else {
       Lat2 <- ggg$latitudeOfFirstGridPointInDegrees
       Lat1 <- ggg$latitudeOfLastGridPointInDegrees
     }
+
     if (Lat1 > Lat2) warning(paste("Inconsistent Lat1=",Lat1,"Lat2=",Lat2))
 
     SW <- c(Lon1,Lat1)
@@ -358,14 +360,9 @@ else if(gridtype=="rotated_ll") {
     class(result) <- "geodomain"
     result
 
-  }
-### rotated mercator: no official support in grib_api yet!
-#  else if(gridtype == "11"){
-#     warning("Rotated Mercator projection is not officially part of the GRIB definition!")
-#  }
-  else if(gridtype=="reduced_gg"){
+  } else if (gridtype=="reduced_gg"){
     info <- "Reduced gaussian grid (experimental!)"
-    N <- Ginfo(gribhandle,IntPar=c("N"))$N
+    N <- Ginfo(gribhandle, IntPar=c("N"))$N
 # this gives Nlon and the list of latitudes
     Nggg <- paste0("N",N)
     RGtable <- eval(parse(text=Nggg))
@@ -376,6 +373,10 @@ else if(gridtype=="rotated_ll") {
 
     result <- list(name=Nggg,nlon=nlon,latlist=RGtable$latitude)
   }
+#  else if(gridtype == "11"){
+### rotated mercator: no official support in grib_api yet!
+#     warning("Rotated Mercator projection is not officially part of the GRIB definition!")
+#  }
 #  else if(gridtype=="sh"){
 #    info <- "Spectral harmonics! (experimental!)"
 #  }
@@ -403,7 +404,4 @@ else if(gridtype=="rotated_ll") {
                 nx=nx,ny=ny,x0=0,y0=0,x1=1,y1=1,delx=delx,dely=dely))
   }
 }
-
-### OBSOLETE
-Ggrid <- Gdomain
 
