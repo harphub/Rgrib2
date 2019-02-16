@@ -38,24 +38,22 @@ Gtime <- function(gribhandle,...)
   ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate", "dataTime", "stepUnits"))
   ggg2 <- Ginfo(gribhandle, IntPar=c("startStep", "endStep", "timeRangeIndicator"), ...)
 ### Initial date
-### this is why it's best to ask dataDate as a string, not integer
-#  initdate <- as.Date(ggg$dataDate,"%Y%m%d")
-
-  inityear  <- substring(ggg1$dataDate, 1, 4)
-  initmonth <- substring(ggg1$dataDate, 5, 6)
-  initday   <- substring(ggg1$dataDate, 7, 8)
-  inithour  <- substring(ggg1$dataTime, 1, 2)
-  initmin   <- substring(ggg1$dataTime, 3, 4)
-# for backward compatibility (temporary)
-  anatime   <- paste0(inityear,"/",initmonth,"/",initday," z",inithour,":",initmin)
+  basedate  <- as.POSIXct(paste(gg1$dataDate, gg1$dataTime),
+                          format="%Y%m%d %H%M", tz="UTC")
+  
+  result <- format(basedate, "%Y/%m/%d %H:%M")
 
 ### Is it a forecast or what...
 
-  if (ggg2$timeRangeIndicator==10) fcrange <- paste0("+", ggg2$startStep, ggg2$stepUnits)
-  else fcrange <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
+  if (ggg2$timeRangeIndicator==10) {
+#    leadtime <- as.numeric(ggg2$startStep)
+    fcrange <- paste0("+", ggg2$startStep, ggg2$stepUnits)
+  } else {
+    fcrange <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
+  }
 
-  result <- paste(anatime, fcrange)
-  attr(result, "basedate") <- as.POSIXct(anatime, format="%Y/%m/%d %H:%M", tz="UTC")
+  result <- paste(result, fcrange)
+  attr(result, "basedate") <- basedate
 #  attr(result, "leadtime") <- fcrange * 3600
 #  attr(result, "validdate") <- basedate + fcrange
   result

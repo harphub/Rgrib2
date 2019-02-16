@@ -10,6 +10,7 @@
 function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
 {
 ### FIX ME: pos should point at the position in the file
+### TODO: often, domain and time meta-data are already available from Gopen
 ### use field for the GRIB par number?
 # Decode a grib record (call to C routine)
 # return data
@@ -72,10 +73,11 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
     if (scan$alternativeRowScanning == 1) warning("Alternative Row Scanning not supported!")
   }
   if (get.meta){
+    ## TODO: domain & time are (usually) known from Gopen
     attr(result, "domain") <- Gdomain(gribhandle)
     attr(result, "info") <- Gdescribe(gribhandle)
-    attr(result, "basedate") <- Gtime(gribhandle)
-    class(result) <- c(class(result),"geofield")
+    attr(result, "time") <- Gtime(gribhandle)
+    class(result) <- "geofield"
   }
   # not really necessary: garbage collection does this:
   if (freeHandle) GhandleFree(gribhandle)
