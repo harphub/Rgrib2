@@ -75,8 +75,7 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
   if (get.meta){
     ## TODO: domain & time are (usually) known from Gopen
     attr(result, "domain") <- Gdomain(gribhandle)
-    attr(result, "info") <- Gdescribe(gribhandle)
-    attr(result, "time") <- Gtime(gribhandle)
+    attr(result, "info") <- c(Gdescribe(gribhandle), Gtime(gribhandle))
     class(result) <- "geofield"
   }
   # not really necessary: garbage collection does this:

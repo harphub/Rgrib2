@@ -26,12 +26,14 @@
     }
   }
 ### return
-  return(list(name=ggg$parameterName,origin=ggg$centre,
-              level=ggg$level,leveltype=ggg$levelType))
+  return(list(name = ggg$parameterName,
+              origin = ggg$centre,
+              level = ggg$level,
+              leveltype = ggg$levelType))
 }
 
 #####################################
-Gtime <- function(gribhandle,...)
+Gtime <- function(gribhandle, ...)
 {
 # grib_api bug: gives error message if timeUnit is not "h"
 # try to avoid by calling in 2 steps -> no difference
@@ -47,16 +49,18 @@ Gtime <- function(gribhandle,...)
 
   if (ggg2$timeRangeIndicator==10) {
 #    leadtime <- as.numeric(ggg2$startStep)
-    fcrange <- paste0("+", ggg2$startStep, ggg2$stepUnits)
+    leadtime <- paste0("+", ggg2$startStep, ggg2$stepUnits)
   } else {
-    fcrange <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
+    leadtime <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
   }
 
   result <- paste(result, fcrange)
   attr(result, "basedate") <- basedate
 #  attr(result, "leadtime") <- fcrange * 3600
 #  attr(result, "validdate") <- basedate + fcrange
-  result
+  list(basedate = basedate,
+       leadtime = leadtime,
+       validdate = basedate + leadtime * 3600)
 }
 
 Glevel <- function(gribhandle,...)
