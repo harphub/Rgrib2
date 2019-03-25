@@ -1,12 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2019 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
-
 "print.GRIBlist" <-
 function(x,...){
   cat("File", attr(x, "filename"), ":", "\n")

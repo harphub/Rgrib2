@@ -1,11 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2016 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 # derive the geodomain specifications from a grib record
 # only a limited number of projections are supported
 "Gdomain" <- function(gribhandle) {

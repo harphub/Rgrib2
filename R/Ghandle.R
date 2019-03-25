@@ -1,11 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2019 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 Ghandle <- function(x, message=1, multi=FALSE){
 ### create a GRIBhandle from a file and message number
   ### TODO: if the GRIBlist has bit location/length -> read msg directly
@@ -19,7 +11,7 @@ Ghandle <- function(x, message=1, multi=FALSE){
                          msg=x, msglen=as.integer(length(x)))
   } else {
     if (inherits(x, "GRIBlist")) {
-      filename <- attributes(x)$filename
+      filename <- attr(x, "filename")
     } else if (is.character(x)) {
       filename <- path.expand(x)
     } else {

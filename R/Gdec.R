@@ -1,11 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2019 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 "Gdec" <-
 function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
 {
@@ -74,9 +66,8 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
   }
   if (get.meta){
     ## TODO: domain & time are (usually) known from Gopen
-    attr(result, "domain") <- Gdomain(gribhandle)
-    attr(result, "info") <- c(Gdescribe(gribhandle), Gtime(gribhandle))
-    class(result) <- "geofield"
+    result <- meteogrid::as.geofield(result, domain=Gdomain(gribhandle),
+                          info = c(describe(gribhandle), time=list(Gtime(gribhandle))))
   }
   # not really necessary: garbage collection does this:
   if (freeHandle) GhandleFree(gribhandle)

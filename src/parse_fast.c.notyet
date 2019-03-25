@@ -1,0 +1,28 @@
+#include "rgrib.h"
+#define BUFLEN 100
+SEXP Rgrib_index_file(char** filename, int* nmsg) {
+  FILE* infile;
+  long int loc, len;
+  unsigned char buf1[BUFLEN];
+  if( !(infile = fopen(*filename, "r")) ) {
+    Rprintf("Could not open file %s\n",*filename);
+    *nfields=NA_INTEGER;
+    return;
+  }
+  loc = 0;
+  fread(buf1, 1, BUFLEN - 16, infile);
+  for (i=0 ; i<BUFLEN ; i++) {
+    if (strstr(buf1+i, "GRIB", 4)) {
+        pos[n] = loc + i;
+        len[n] = buf1[i+4]*256*256 + buf1[i+5]*256 + buf1[i+6];
+        n++;
+        // check finalisation
+        break;
+    }
+  }
+  fseek(infile, loc + i + len - 4);
+  fread(buf1, 1, 4, infile);
+  if (strstr(buf1, "7777", 4)) 
+}
+
+

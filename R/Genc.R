@@ -1,11 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2016 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 ###########################################
 ### encode a geofield into a GRIBhandle ###
 ### - create new handle from sample     ###
@@ -17,7 +9,7 @@
 ###########################################
 
 Genc <- function(geofield,gribformat=2,precision=4){
-  gribhandle <- Gcreate(gribformat,attributes(geofield)$domain)
+  gribhandle <- Gcreate(gribformat,attr(geofield, "domain"))
   Gmod(gribhandle,IntPar=list(changeDecimalPrecision=as.integer(precision)) )
   Gmod(gribhandle,data=geofield)
 
@@ -40,7 +32,7 @@ Gcreate <- function(gribformat=2,domain,sample)
   class(gribhandle) <- c(class(gribhandle),"GRIBhandle")
 
   if (!missing(domain)){
-    if (!inherits(domain,"geodomain")) domain <- attributes(domain)$domain
+    if (!inherits(domain,"geodomain")) domain <- attr(domain, "domain")
 ### start building the modifications
     IntPar <- list()
     DblPar <- list()

@@ -1,35 +1,34 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2016 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 "Gdescribe" <- function(gribhandle)
 {
   ggg <- Ginfo(gribhandle,
-          StrPar=c("centre", "subCentre", "parameterName", "levelType", "name"),
+          StrPar=c("centre", "subCentre", "parameterName", "levelType", "name", "units"),
           IntPar=c("level", "editionNumber", "table2Version", "indicatorOfParameter",
                    "parameterCategory", "parameterNumber")
          )
 ### a temporary fix for unconventional tables
   if (ggg$name=="unknown") {
     if (ggg$editionNumber==1) {
-    zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
-                with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
-    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab$name[zz])
+      zz <- match(paste(ggg$table2Version,ggg$indicatorOfParameter,sep="\r"),
+                  with(Rgrib2::extratab,paste(table2Version,indicatorOfParameter,sep="\r")))
+      if (!is.na(zz)) {
+        ggg$parameterName <- as.character(Rgrib2::extratab$name[zz])
+        ggg$unit <- as.character(Rgrib2::extratab$unit[zz])
+      }
     } else {
-    zz <- match(paste(ggg$parameterCategory, ggg$parameterNumber,sep="\r"),
-                with(Rgrib2::extratab2,paste(parameterCategory,parameterNumber,sep="\r")))
-    if (!is.na(zz)) ggg$parameterName <- as.character(Rgrib2::extratab2$name[zz])
+      zz <- match(paste(ggg$parameterCategory, ggg$parameterNumber,sep="\r"),
+                  with(Rgrib2::extratab2,paste(parameterCategory,parameterNumber,sep="\r")))
+      if (!is.na(zz)) {
+        ggg$parameterName <- as.character(Rgrib2::extratab2$name[zz])
+        ggg$unit <- as.character(Rgrib2::extratab2$unit[zz])
+      }
     }
   }
 ### return
   return(list(name = ggg$parameterName,
               origin = ggg$centre,
               level = ggg$level,
-              leveltype = ggg$levelType))
+              leveltype = ggg$levelType,
+              unit = ggg$units))
 }
 
 #####################################
@@ -40,27 +39,28 @@ Gtime <- function(gribhandle, ...)
   ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate", "dataTime", "stepUnits"))
   ggg2 <- Ginfo(gribhandle, IntPar=c("startStep", "endStep", "timeRangeIndicator"), ...)
 ### Initial date
-  basedate  <- as.POSIXct(paste(ggg1$dataDate, ggg1$dataTime),
-                          format="%Y%m%d %H%M", tz="UTC")
+  result <- list(basedate = as.POSIXct(paste(ggg1$dataDate, ggg1$dataTime),
+                                        format="%Y%m%d %H%M", tz="UTC"))
   
-  result <- format(basedate, "%Y/%m/%d %H:%M")
+#  result <- format(basedate, "%Y/%m/%d %H:%M")
 
 ### Is it a forecast or what...
-
   if (ggg2$timeRangeIndicator==10) {
-#    leadtime <- as.numeric(ggg2$startStep)
-    leadtime <- paste0("+", ggg2$startStep, ggg2$stepUnits)
+    scale <- switch(ggg1$stepUnits,
+                    "h"=1,
+                    "m"=60,
+                    "s"=3600,
+                    1)
+    result$leadtime <- as.numeric(ggg2$startStep)
+    result$validdate <- result$basedate + result$leadtime / scale
+    result$stepUnit <- ggg1$stepUnits
   } else {
-    leadtime <- paste0(ggg2$startStep,"-",ggg2$endStep," ",ggg1$stepUnits)
+    ## result$leadtime <- as.numeric(ggg2$endStep)/scale
+    result$start <- ggg2$startStep
+    result$end <-    ggg2$endStep
+    result$stepUnit <- ggg1$stepUnits
   }
-
-  result <- paste(result, fcrange)
-  attr(result, "basedate") <- basedate
-#  attr(result, "leadtime") <- fcrange * 3600
-#  attr(result, "validdate") <- basedate + fcrange
-  list(basedate = basedate,
-       leadtime = leadtime,
-       validdate = basedate + leadtime * 3600)
+  result
 }
 
 Glevel <- function(gribhandle,...)

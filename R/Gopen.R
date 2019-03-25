@@ -1,11 +1,3 @@
-#-------------------------------------------#
-# Part of R-package Rgrib2                  #
-# Copyright (c) 2003-2019 Alex Deckmyn      #
-#   Royal Meteorological Institute, Belgium #
-# alex.deckmyn@meteo.be                     #
-# Released under GPL-3 license              #
-#-------------------------------------------#
-
 "Gopen" <-
 function (filename,
           IntPar=c("editionNumber",
@@ -16,7 +8,7 @@ function (filename,
                    "indicatorOfParameter",
                    "parameterCategory", "parameterNumber",
                    "indicatorOfTypeOfLevel", "level"),
-          DblPar=c(), StrPar=c("shortName", "gridType"),
+          DblPar=c(), StrPar=c("shortName", "gridType", "units"),
           multi=FALSE, lextra=TRUE,
           meta_from=1)
 {
