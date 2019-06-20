@@ -5,6 +5,7 @@ Title: Read and work with GRIB binary files
 Author: Alex Deckmyn (Royal Meteorological Institute of Belgium) <Alex.Deckmyn@meteo.be>.
 Maintainer: Alex Deckmyn <Alex.Deckmyn@meteo.be>
 Depends: meteogrid (>= 3.4.0)
+Remotes: adeckmyn/meteogrid
 Description: An R interface to the GRIB_API library developed by ECMWF. Decoding and encoding of GRIB files. 
 LazyData: yes
 License: MIT + file
