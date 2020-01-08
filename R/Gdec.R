@@ -1,5 +1,5 @@
 "Gdec" <-
-function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
+function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE, ...)
 {
 ### FIX ME: pos should point at the position in the file
 ### TODO: often, domain and time meta-data are already available from Gopen
@@ -67,7 +67,7 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
   if (get.meta){
     ## TODO: domain & time are (usually) known from Gopen
     result <- meteogrid::as.geofield(result, domain=Gdomain(gribhandle),
-                          info = c(describe(gribhandle), time=list(Gtime(gribhandle))))
+                          info = c(Gdescribe(gribhandle), time=list(Gtime(gribhandle))))
   }
   # not really necessary: garbage collection does this:
   if (freeHandle) GhandleFree(gribhandle)
