@@ -1,5 +1,5 @@
 "Gdec" <-
-function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE)
+function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE, ...)
 {
 ### FIX ME: pos should point at the position in the file
 ### TODO: often, domain and time meta-data are already available from Gopen
