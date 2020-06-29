@@ -9,6 +9,7 @@
 #define MAX_KEY_LEN 255
 #define MAX_VAL_LEN 1024
 #define MAX_HANDLE 15
+#define MAX_INDEX 15
 
 /******************************************************************************/
 /* This library links to grib_api (eccodes) and uses grib_handle structures.  */
@@ -21,9 +22,15 @@
 
 typedef struct {
     int *id ;
+    grib_index *h;
+    void *ext_ptr;
+} RgribIndex;
+
+typedef struct {
+    int *id ;
     grib_handle *h;
     void *ext_ptr;
-  } RgribHandle;
+} RgribHandle;
 
 // extern RgribHandle* GRIBhandleList[MAX_HANDLE];
 
@@ -33,6 +40,7 @@ typedef struct {
 /* bookkeeping */
 /***************/
 void Rgrib_init_check();
+
 RgribHandle* Rgrib_create_handle();
 void Rgrib_GRIBhandle_destroy(int i);
 void Rgrib_clear_all_handles();
@@ -42,6 +50,15 @@ SEXP Rgrib_list_handles();
 SEXP Rgrib_clear_handle(SEXP gribhandle);
 void Rgrib_handleFinalizer(SEXP gribhandle);
 
+RgribIndex* Rgrib_create_index();
+void Rgrib_GRIBindex_destroy(int i);
+void Rgrib_clear_all_indices();
+long Rgrib_count_indices_C();
+SEXP Rgrib_count_indices();
+SEXP Rgrib_list_indices();
+SEXP Rgrib_clear_index(SEXP gribindex);
+void Rgrib_indexFinalizer(SEXP gribindex);
+
 /*************************/
 /* BASIC FILE OPERATIONS */
 /*************************/
@@ -49,12 +66,23 @@ void Rgrib_handleFinalizer(SEXP gribhandle);
 void Rgrib_count_messages(char** filename, int* nfields,int* multi);
 SEXP Rgrib_parse_file(SEXP filename,
         SEXP IntPar, SEXP DblPar, SEXP StrPar, SEXP rec, SEXP multi);
+SEXP Rgrib_index_file(SEXP filename, SEXP nmsg) ;
+
+
 
 /***************************/
-/*  creating GRIBhandle's  */
+/*  creating GRIBindex's   */
 /***************************/
+
+SEXP Rgrib_index_new_file(SEXP filename, SEXP keylist, SEXP multi); 
+
+
+/**************************/
+/*  creating GRIBhandles  */
+/**************************/
 
 SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi);
+SEXP Rgrib_handle_new_file2(SEXP filename, SEXP loc, SEXP message,SEXP multi);
 SEXP Rgrib_handle_new_sample(SEXP sample);
 SEXP Rgrib_handle_new_msg(SEXP msg, SEXP msglen);
 

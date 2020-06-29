@@ -1,129 +1,7 @@
 #include "rgrib.h"
 
-static RgribHandle* GRIBhandleList[MAX_HANDLE];
-
-void Rgrib_init_check() {
-  static int is_initialised=0;
-  int i;
-
-  if (!is_initialised) {
-    for (i=0;i<MAX_HANDLE;i++) GRIBhandleList[i]=NULL;
-    is_initialised=1;
-  }
-}
-
-RgribHandle* Rgrib_create_handle(){
-  int j,id;
-  Rgrib_init_check();
-/* Call garbage collection to free any deleted GRIBhandles */
-  R_gc();
-  for (j=0;GRIBhandleList[j] && j<MAX_HANDLE; j++) {}
-  id=j;
-  if (j>=MAX_HANDLE) {
-    Rprintf("Reached maximum open grib handles: %d\n",MAX_HANDLE);
-    return(NULL);
-  }
-  GRIBhandleList[id]=(RgribHandle*) malloc(sizeof(RgribHandle));
-  GRIBhandleList[id]->id = malloc(sizeof(int));
-  *GRIBhandleList[id]->id = id;
-  GRIBhandleList[id]->ext_ptr = NULL;
-/*  GRIBhandleList[id]->h = h;*/
-  return(GRIBhandleList[id]);
-}
-
-void Rgrib_GRIBhandle_destroy(int i){
-  Rgrib_init_check();
-  if (i<0 || i>=MAX_HANDLE) return;
-  if (!GRIBhandleList[i]) return;
-
-  if (GRIBhandleList[i]->h) {
-    grib_handle_delete(GRIBhandleList[i]->h);
-    GRIBhandleList[i]->h=NULL;
-  }
-  else warning("Inexplicably, a GRIBhandle was found without a valid message pointer\n");
-
-  if (GRIBhandleList[i]->id) {
-    free(GRIBhandleList[i]->id);
-    GRIBhandleList[i]->id=NULL;
-  }
-  else warning("Inexplicably, a GRIBhandle was found without a valid ID pointer\n");
-
-  if (GRIBhandleList[i]->ext_ptr) {
-    R_ClearExternalPtr(GRIBhandleList[i]->ext_ptr);
-  }
-  else warning("Inexplicably, a GRIBhandle was found without a valid EXT pointer\n");
-
-  free(GRIBhandleList[i]);
-  GRIBhandleList[i]=NULL;
-  return;
-}
-
-void Rgrib_clear_all_handles(){
-  int i;
-  for (i=0;i<MAX_HANDLE;i++) Rgrib_GRIBhandle_destroy(i);
-  return;
-}
-
-long Rgrib_count_handles_C(){
-  int i;
-  long result=0;
-  Rgrib_init_check();
-  for (i=0;i<MAX_HANDLE;i++) if(GRIBhandleList[i]) result++;
-  return(result);
-}
-
-SEXP Rgrib_count_handles(){
-  SEXP result;
-  PROTECT(result=allocVector(INTSXP,1));
-  INTEGER(result)[0]= Rgrib_count_handles_C();
-  UNPROTECT(1);
-  return(result);
-}
-
-SEXP Rgrib_list_handles(){
-  int i,j;
-  long cl;
-  SEXP result;
-  cl= Rgrib_count_handles_C();
-  if (cl==0){
-    Rprintf("There are no open GRIBhandles.\n");
-    return(R_NilValue);
-  }
-
-  PROTECT(result=allocVector(INTSXP,cl));
-  j=0;
-  for (i=0;i<MAX_HANDLE && j<cl ;i++) if(GRIBhandleList[i]) {
-    INTEGER(result)[j++]= i;
-  }
-  UNPROTECT(1);
-  return(result);
-}
-
-SEXP Rgrib_clear_handle(SEXP gribhandle){
-  int* id;
-  int iid;
-
-  if (!(id=R_ExternalPtrAddr(gribhandle))) error("This is not an open GRIBhandle.\n");
-
-  iid=*id;
-
-  Rgrib_GRIBhandle_destroy(iid);
-  R_ClearExternalPtr(gribhandle); /* should be taken care of by the destroy function */
-  return(R_NilValue);
-}
-
-void Rgrib_handleFinalizer(SEXP gribhandle)
-{
-  int *id;
-  int iid;
-
-  id=R_ExternalPtrAddr(gribhandle);
-  if(!id) return;
-  iid=*id;
-  Rgrib_GRIBhandle_destroy(iid);
-
-  R_ClearExternalPtr(gribhandle); /* it may already be clear */
-}
+extern RgribHandle* GRIBhandleList[MAX_HANDLE];
+extern RgribIndex* GRIBindexList[MAX_INDEX];
 
 /*************************/
 /* BASIC FILE OPERATIONS */
@@ -378,6 +256,73 @@ SEXP Rgrib_handle_new_file(SEXP filename, SEXP message,SEXP multi){
   return(output);
 }
 
+// new version: with byte location
+// fseek to location (check for 0 or NA!), then read message(s), e.g. multi!
+SEXP Rgrib_handle_new_file2(SEXP filename, SEXP loc, SEXP message, SEXP multi){
+  FILE* infile ;
+  int nmesg,i,err,imulti;
+  int *id;
+  double location;
+  int sub_location;
+  grib_handle *h=NULL;
+  RgribHandle *newhandle;
+  SEXP output;
+
+  imulti = asLogical(multi);
+  if(imulti == NA_LOGICAL) error("'multi' must be TRUE or FALSE");
+  if(imulti) grib_multi_support_on(0);
+  else grib_multi_support_off(0);
+
+  if( !(infile = fopen(CHAR(STRING_ELT(filename,0)),"r")) ) {
+    Rprintf("Problem opening file %s\n",CHAR(STRING_ELT(filename,0)));
+    return(R_NilValue);
+  }
+
+  // Note that we pass the byte location as a double (64bit), not as an integer (32bit)
+  if ((location=REAL(loc)[0]) != NA_REAL && location > 0) {
+    fseek(infile, location, SEEK_SET);
+  }
+
+  if(!(newhandle=Rgrib_create_handle()) )  {
+    Rprintf("Error creating the GRIBhandle.\n");
+    fclose(infile);
+    return(R_NilValue);
+  }
+
+  i=0;
+  // message will usually be 1
+  // unless we have a sub-message 
+  sub_location = INTEGER(message)[0];
+//  if (multi && sub_location > 1)
+  while( (h = grib_handle_new_from_file(0,infile,&err))!=NULL 
+          && ++i < sub_location ){
+/* should I delete the handle at every iteration to stop memory leakage? */
+/* It isn't done in the examples, but I think it is necessary. */
+/*    GRIB_CHECK(grib_get_long(h,"validityTime",&ttt),0); */
+    grib_handle_delete(h);
+  }
+  if(h==NULL) {
+    Rprintf("Error: reached end of file.\n");
+    fclose(infile);
+    return(R_NilValue);
+  }
+
+  id = newhandle->id;
+  newhandle->h = grib_handle_clone(h);
+  grib_handle_delete(h);
+  newhandle->ext_ptr = R_MakeExternalPtr(id, install("GRIBhandle"), R_NilValue);
+
+  R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
+  PROTECT(output=allocVector(INTSXP,1));
+  INTEGER(output)[0]= (long) *id;
+  setAttrib(output, install("filename"), filename);
+  setAttrib(output, install("message"), message);
+  setAttrib(output, install("gribhandle_ptr"), newhandle->ext_ptr);
+  UNPROTECT(1);
+  fclose(infile);
+  return(output);
+}
+
 SEXP Rgrib_handle_new_sample(SEXP sample){
   grib_handle *h;
   int* id;
@@ -531,7 +476,7 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   if(!h) error("Not a registered GRIBhandle.\n");
 
 /* Nx=-1 for gaussian. numberOfCodedValues or numberOfDataPoints may be better? */
-  grib_get_long(h,"numberOfDataPoints",&lval);
+  grib_get_long(h, "numberOfDataPoints", &lval);
   PROTECT(result=allocVector(REALSXP,lval));
   dres=REAL(result);
   dlen = (size_t) lval;
@@ -541,89 +486,88 @@ SEXP Rgrib_handle_decode(SEXP gribhandle)
   return(result);
 }
 
-/************/
-/* ENCODING */
-/************/
-
-SEXP Rgrib_handle_mod(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar){
-  int i,nIntPar,nDblPar,nStrPar,err ;
+SEXP Rgrib_handle_decode_2(SEXP gribhandle)
+{
+/* the length of a vector is "long int", of an array it's "size_t" */
+  size_t dlen;
+  long lval;
   grib_handle *h;
-  size_t vlen;
+  double *dval;
+  long nx, ny, iscan, jscan, jcons, altrow, missval, nmiss;
+/*  long nx,ny ;
+*/
+  SEXP result;
   int *id;
+  int i, j, istride, jstride, n;
+  double *origin, *orig;
 
-  id=R_ExternalPtrAddr(gribhandle);
-  if(!id) error("Not a valid GRIBhandle.\n");
-  h=GRIBhandleList[*id]->h;
-  if(!h) error("Not a registered GRIBhandle.\n");
+  id = R_ExternalPtrAddr(gribhandle);
+  if (!id) error("Not a valid GRIBhandle.\n");
+  h = GRIBhandleList[*id]->h;
+  if (!h) error("Not a registered GRIBhandle.\n");
 
-  nIntPar=length(IntPar);
-  nDblPar=length(DblPar);
-  nStrPar=length(StrPar);
+/* Nx=-1 for gaussian. numberOfCodedValues or numberOfDataPoints may be better? */
+  grib_get_long(h, "numberOfDataPoints", &lval);
+  dval = (double*) R_alloc(lval, sizeof(double));
 
-  for(i=0;i<nStrPar;i++) {
-     vlen=MAX_VAL_LEN;
-     err=grib_set_string(h,CHAR(STRING_ELT(getAttrib(StrPar, R_NamesSymbol),i)),
-                           CHAR(STRING_ELT(VECTOR_ELT(StrPar,i),0)),&vlen);
-   }
+  dlen = (size_t) lval;
+  grib_get_double_array(h, "values", dval, &dlen);
 
-   for(i=0;i<nIntPar;i++) {
-     err=grib_set_long(h,CHAR(STRING_ELT(getAttrib(IntPar, R_NamesSymbol),i)),
-                         INTEGER(VECTOR_ELT(IntPar,i))[0]);
-   }
+  // now figure out how to organise this in a matrix
+  grib_get_long(h, "Nx", &nx);
+  grib_get_long(h, "Ny", &ny);
+  grib_get_long(h, "iScansNegatively", &iscan);
+  grib_get_long(h, "jScansPositively", &jscan);
+  grib_get_long(h, "jPointsAreConsecutive", &jcons);
+  grib_get_long(h, "alternativeRowScanning", &altrow);
+  grib_get_long(h, "missingValue", &missval);
+  grib_get_long(h, "numberOfMissing", &nmiss);
 
-   for(i=0;i<nDblPar;i++) {
-     err=grib_set_double(h,CHAR(STRING_ELT(getAttrib(DblPar, R_NamesSymbol),i)),
-                           REAL(VECTOR_ELT(DblPar,i))[0]);
-   }
+  // iscan or jscan < 0 signifies reduced Gaussian grid
+  // nx or ny == NA signifies spectral harmonics
 
-  return(R_NilValue);
-}
-
-SEXP Rgrib_handle_enc(SEXP gribhandle,SEXP fieldvalues){
-  double * values;
-  size_t values_len;
-  grib_handle *h;
-  int *id;
-
-  id=R_ExternalPtrAddr(gribhandle);
-  if(!id) error("Not a valid GRIBhandle.\n");
-  h=GRIBhandleList[*id]->h;
-  if(!h) error("Not a registered GRIBhandle.\n");
-
-  grib_get_size(h,"values",&values_len);
-  if(values_len != length(fieldvalues)) {
-    Rprintf("The number of values in the array doesn\'t fit: %d vs %d \n",(int)length(fieldvalues),(int)values_len);
+  if (altrow) {
+    Rprintf("Alternative Row Scanning not supported!\n");
     return(R_NilValue);
   }
-  values=REAL(fieldvalues);
+  if (nmiss) for (i = 0; i < dlen; i++) if (dval[i] == missval) dval[i] = NA_REAL;
 
-  grib_set_double_array(h,"values",values,values_len);
-  return(R_NilValue);
-}
-
-SEXP Rgrib_handle_write(SEXP gribhandle,SEXP filename,SEXP filemode){
-  grib_handle *h;
-  FILE* outfile ;
-  const void* buffer = NULL;
-  size_t size;
-  int *id;
-
-  id=R_ExternalPtrAddr(gribhandle);
-  if(!id) error("Not a valid GRIBhandle.\n");
-  h=GRIBhandleList[*id]->h;
-  if(!h) error("Not a registered GRIBhandle.\n");
-
-  if( !(outfile = fopen(CHAR(STRING_ELT(filename,0)),CHAR(STRING_ELT(filemode,0)))) ) {
-    Rprintf("Problem opening file %s\n",CHAR(STRING_ELT(filename,0)));
-    return(R_NilValue);
+  // now create the final matrix   
+  PROTECT(result=allocVector(REALSXP,lval));
+  SEXP dim = PROTECT(allocVector(REALSXP, 2));
+  REAL(dim)[0] = nx;
+  REAL(dim)[1] = ny;
+  setAttrib(result, R_DimSymbol, dim);
+  UNPROTECT(1);
+  // now we must get the values in the right matrix order for R 
+  // iscan, jscan and jcons give 8 combinations...
+  // FIXME!!!
+  // Currently this is not faster than doing it in R...
+  if (!jcons) {
+    istride = (iscan) ? -ny : ny;
+    jstride = (jscan) ? 1 : -1;
+  } else {
+    istride = (iscan) ? -1 : 1;
+    jstride = (jscan) ? nx : -nx;
   }
-  grib_get_message(h,&buffer,&size);
-  if(fwrite(buffer,1,size,outfile) != size)
-  {
-    Rprintf("oops\n");
+
+  origin = dval ;
+  if (iscan) origin -= (nx-1)*istride;
+  if (!jscan) origin -= (ny-1)*jstride;
+// Rprintf("istride=%i, jstride=%i\n", istride, jstride);
+  n=0;
+  for (i=0; i<nx; i++) {
+//    orig = origin;
+    for (j=0; j<ny ; j++) {
+      REAL(result)[n++] = *origin;
+      origin += jstride;
+      //REAL(result)[n++] = *orig;
+      //orig += jstride;
+    }
+    origin += istride - (ny)*jstride;
   }
-  fclose(outfile);
-  return(R_NilValue);
+  UNPROTECT(1);
+  return(result);
 }
 
 

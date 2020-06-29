@@ -104,8 +104,9 @@
     projection$lon0 <- lon0
 
     if (abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
-      warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
-                        "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
+    # this warning is so annoying...
+#      warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
+#                        "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
 ### In fact, this usually means that the value given in the file is rounded
       delx <- (Lon2-Lon1)/(ggg$Nx-1)
     } else {
@@ -133,8 +134,8 @@
     }
     if (Lat1 > Lat2) warning(paste("Inconsistent Lat1=",Lat1,"Lat2=",Lat2))
     if (abs( (Lat2-Lat1)/(ggg$Ny-1) - ggg$jDirectionIncrementInDegrees) > LonEps){
-          warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
-                        "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
+#          warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
+#                        "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
           dely <- (Lat2-Lat1)/(ggg$Ny-1)
     } else {
       dely <- ggg$jDirectionIncrementInDegrees
