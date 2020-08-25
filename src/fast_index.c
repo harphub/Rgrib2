@@ -8,6 +8,7 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
   FILE* infile;
   int *len, *edition;
   int i, n, found, nread, max_msg;
+  int n_len, b_len, k;
   unsigned char buf1[BUFLEN];
   double *pos;
   long int loc;
@@ -38,8 +39,17 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
     }  
     if (found) {
       pos[n] = loc + i;
-      len[n] = buf1[i+4]*256*256 + buf1[i+5]*256 + buf1[i+6];
       edition[n] = buf1[i+7];
+      if (edition[n] == 1) {
+        b_len = 4;
+        n_len = 3;
+//        len[n] = buf1[i+4]*256*256 + buf1[i+5]*256 + buf1[i+6];
+      } else {
+        b_len = 8;
+        n_len = 8;
+      }
+      len[n] = 0;
+      for (k = 0; k < n_len; k++) len[n] = 256*len[n] + buf1[i+(b_len++)];
 //      Rprintf("%i : loc=%ld len=%i\n", n, (long int) pos[n], len[n]);
       // TODO: read other meta data ? Search for sub-messages?
       // jump to end of message. check for '7777'.
