@@ -1,10 +1,11 @@
 
 "Gdec" <-
-function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE, ...)
+function (x, field=NULL, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE, ...)
 {
 ### FIX ME: pos should point at the position in the file
-### TODO: often, domain and time meta-data are already available from Gopen
+### TODO: - often, domain and time meta-data are already available from Gopen
 ### use field for the GRIB par number?
+###       - level and levelType shoud become part of the new "keys" argument
 # Decode a grib record (call to C routine)
 # return data
   freeHandle <- TRUE
@@ -14,16 +15,17 @@ function (x, field=1, level=NULL, levelType="P", get.meta=TRUE, multi=FALSE, ...
   } else if (is.character(field)) {
     # allow asking a field by shortName
     # this may also require providing a level (model, pressure, height...)
+    # THIS WILL BE OBSOLETE SOON: message can be list of key values
+    # 
     sel <- Gfind(x, shortName=field, levelType=levelType, level=level, all=TRUE)
     if (dim(sel)[1]!=1) {
       print(sel)
       stop("Need exactly 1 matching field!")
     }
     pos <- sel$position
-    gribhandle <- Ghandle(x, pos, multi=multi)
+    gribhandle <- Ghandle(x, message=pos, multi=multi)
   } else {
-    # x is a raw message or a GRIBlist
-    gribhandle <- Ghandle(x, field, multi=multi)
+    gribhandle <- Ghandle(x, message=field, multi=multi)
   }
   if (is.null(gribhandle)) stop("Could not create GRIBhandle.")
 

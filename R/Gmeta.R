@@ -36,6 +36,8 @@ Gtime <- function(gribhandle, ...)
 {
 # grib_api bug: gives error message if timeUnit is not "h"
 # try to avoid by calling in 2 steps -> no difference
+  # FIXME: grib2 does not have timeRangeIndicator (so it returns 0)
+  # you need typeOfProcessedData
   ggg1 <- Ginfo(gribhandle, StrPar=c("dataDate", "dataTime", "stepUnits"))
   ggg2 <- Ginfo(gribhandle, IntPar=c("startStep", "endStep", "timeRangeIndicator"), ...)
 ### Initial date
@@ -45,7 +47,8 @@ Gtime <- function(gribhandle, ...)
 #  result <- format(basedate, "%Y/%m/%d %H:%M")
 
 ### Is it a forecast or what...
-  if (ggg2$timeRangeIndicator==10) {
+  ### FIXME: this should also deal with accumulations (4) ...
+  if (ggg2$timeRangeIndicator %in% c(0, 10)) {
     scale <- switch(ggg1$stepUnits,
                     "h"=1,
                     "m"=60,

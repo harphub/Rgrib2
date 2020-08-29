@@ -1,8 +1,14 @@
 Ghandle <- function(x, message=1, multi=FALSE){
-### create a GRIBhandle from a file and message number
+### create a GRIBhandle from a file and message number (or a key list)
   ### TODO: if the GRIBlist has bit location/length -> read msg directly
   ### raw GRIB data: what if it's multi-message???
-  if (is.raw(x)) {
+  if (is.list(message)) {
+    if (inherits(x, "GRIBlist")) x <- attr(x, "filename")
+    if (!is.character(x)) {
+      stop("Key search only for filename and a list of keys")
+    }
+    gribhandle <- .Call("Rgrib_fast_find", filename=x, keys=message, multi=multi)
+  } else if (is.raw(x)) {
     if (message > 1) {
       gloc <- grib_raw_find(x)
       if (message > dim(gloc)[1]) stop("Only",dim(gloc)[1],"GRIB records available.")

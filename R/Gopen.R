@@ -4,15 +4,13 @@ function (filename,
                    "dataDate", "dataTime",
                    "validityDate", "validityTime",
                    "Nx", "Ny",
-                   "table2Version",
-                   "indicatorOfParameter",
+                   "table2Version", "indicatorOfParameter",
                    "parameterCategory", "parameterNumber",
-                   "indicatorOfTypeOfLevel", "level"),
+                   "indicatorOfTypeOfLevel", "typeOfFirstFixedSurface",                   "level"),
           DblPar=c(), StrPar=c("shortName", "gridType", "units"),
           multi=FALSE, lextra=TRUE,
           meta_from=1)
 {
-  ### TODO: add an index (byte locations of records or pointer to ecCodes index)
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
   filename <- path.expand(filename)
@@ -106,7 +104,6 @@ function (filename,
                    "parameterCategory", "parameterNumber",
                    "indicatorOfTypeOfLevel", "level", "shortName")
 
-  ### TODO: add an index (byte locations of records or pointer to ecCodes index)
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
   filename <- path.expand(filename)
