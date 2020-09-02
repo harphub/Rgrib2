@@ -1,3 +1,7 @@
+# FIXME:
+# The chosen parameter keys can be changed,
+# but some are mandatory!!!
+# There is some duplication (grib 1/2)
 "Gopen" <-
 function (filename,
           IntPar=c("editionNumber",
@@ -6,11 +10,28 @@ function (filename,
                    "Nx", "Ny",
                    "table2Version", "indicatorOfParameter",
                    "parameterCategory", "parameterNumber",
-                   "indicatorOfTypeOfLevel", "typeOfFirstFixedSurface",                   "level"),
+                   "levelType", "level"),
           DblPar=c(), StrPar=c("shortName", "gridType", "units"),
           multi=FALSE, lextra=TRUE,
           meta_from=1)
 {
+  # mandatory intries:
+  # NOTE: we could thus set the function argument defaults to c()
+  #       but we'll wait a bit
+  IntPar_main <- c("editionNumber",
+                   "dataDate", "dataTime",
+                   "validityDate", "validityTime",
+                   "Nx", "Ny",
+                   "table2Version", "indicatorOfParameter",
+                   "parameterCategory", "parameterNumber",
+                   "levelType", "level")
+  DblPar_main <- c()
+  StrPar_main <- c("shortName", "gridType", "units")
+
+  IntPar <- union(IntPar_main, IntPar)
+  DblPar <- union(IntPar_main, IntPar)
+  StrPar <- union(IntPar_main, IntPar)
+
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
   filename <- path.expand(filename)
@@ -25,6 +46,12 @@ function (filename,
 ### a patch for tables that are missing in grib_api
 ##  noresult <- result[result$shortName=="unknown" & resutl$table2Version==1,]
 ##  if (dim(noresult)[1] > 0) {
+  ## TODO: a user should have the possibility to add table entries without
+  ##       re-compiling Rgrib2. Basically, there should be a way to "override"
+  ##       the eccodes shortName (even if it is not "unknown")
+  ##       because in real life, there are a lot of non-complient GRIB files
+  ##       *but* maybe Rgrib2 is not the place for that, it's just an eccodes interface
+  ##       it could (and already can) be in e.g. harpIO
   if (lextra) {
     if (is.element("unknown", result$shortName)) {
       missing1 <- which(result$shortName=="unknown" & result$editionNumber==1)
@@ -48,8 +75,8 @@ function (filename,
     }
 # EXTRA: should we try to get "2t" etc. 
 #    specialnames <- get("specialnames")
-    zz2 <- match(with(result, paste(table2Version, indicatorOfParameter, indicatorOfTypeOfLevel, level, sep="\r")),
-                 with(Rgrib2::specialnames, paste(table2Version, indicatorOfParameter, indicatorOfTypeOfLevel, level, sep="\r")))
+    zz2 <- match(with(result, paste(table2Version, indicatorOfParameter, levelType, level, sep="\r")),
+                 with(Rgrib2::specialnames, paste(table2Version, indicatorOfParameter, levelType, level, sep="\r")))
     zz3 <- which(!is.na(zz2))
     if (length(zz3)>0) result$shortName[zz3] <- as.character(Rgrib2::specialnames$shortName[zz2[zz3]])
 
@@ -90,7 +117,7 @@ function (filename,
                    "table2Version",
                    "indicatorOfParameter",
                    "parameterCategory", "parameterNumber",
-                   "indicatorOfTypeOfLevel", "level"),
+                   "levelType", "level"),
           DblPar=c(), StrPar=c("shortName", "gridType", "units"),
           multi=FALSE, lextra=TRUE,
           meta_from=1)
@@ -102,7 +129,7 @@ function (filename,
   index_keys <- c("table2Version",
                    "indicatorOfParameter",
                    "parameterCategory", "parameterNumber",
-                   "indicatorOfTypeOfLevel", "level", "shortName")
+                   "levelType", "level", "shortName")
 
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer
@@ -140,8 +167,8 @@ function (filename,
     }
 # EXTRA: should we try to get "2t" etc. 
 #    specialnames <- get("specialnames")
-    zz2 <- match(with(result, paste(table2Version, indicatorOfParameter, indicatorOfTypeOfLevel, level, sep="\r")),
-                 with(Rgrib2::specialnames, paste(table2Version, indicatorOfParameter, indicatorOfTypeOfLevel, level, sep="\r")))
+    zz2 <- match(with(result, paste(table2Version, indicatorOfParameter, levelType, level, sep="\r")),
+                 with(Rgrib2::specialnames, paste(table2Version, indicatorOfParameter, levelType, level, sep="\r")))
     zz3 <- which(!is.na(zz2))
     if (length(zz3)>0) result$shortName[zz3] <- as.character(Rgrib2::specialnames$shortName[zz2[zz3]])
 
