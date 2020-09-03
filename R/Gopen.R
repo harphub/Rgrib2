@@ -84,8 +84,8 @@ function (filename,
   names(g_index) <- c("msg_loc", "msg_len", "msg_ed")
   g_index <- data.frame(g_index)
   if (dim(g_index)[1] != dim(result)[1]) {
-    cat("index: ", dim(g_index)[1], "list: ", dim(result)[1], "\n")
-    warning("Multi-field messages not yet supported by byte location index.")
+#    cat("index: ", dim(g_index)[1], "list: ", dim(result)[1], "\n")
+#    warning("Multi-field messages not yet supported by byte location index.")
   } else {
     result <- cbind(result, g_index)
   }

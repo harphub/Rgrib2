@@ -1,5 +1,9 @@
 "Gdescribe" <- function(gribhandle)
 {
+  ## NOTE: in grib1&2, parameter.name is an alias for name
+  ##                 parameterName is almost identical, but somehow can differ (even with typos)
+  ##                 parameterName="Wind speed", but name="10 metre wind speed"
+  ## So which should be used?
   ggg <- Ginfo(gribhandle,
           StrPar=c("centre", "subCentre", "parameterName", "levelType", "name", "units"),
           IntPar=c("level", "editionNumber", "table2Version", "indicatorOfParameter",

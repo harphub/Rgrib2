@@ -27,10 +27,16 @@ Ghandle <- function(x, message=1, multi=FALSE){
   } else {
     if (inherits(x, "GRIBlist")) {
       filename <- attr(x, "filename")
-      if ("msg_loc" %in% names(x)) msg_loc <- x$msg_loc[message]
+      if ("msg_loc" %in% names(x)) {
+        msg_loc <- x$msg_loc[message]
       # we are skipping to right place in the file
       # it may be a sub_field, but that is not yet supported
-      sub_message <- 1
+        sub_message <- 1
+      } else {
+        # no bit location given: just go to start of file and count...
+        msg_loc <- 0
+        sub_message <- message
+      }
     } else if (is.character(x)) {
       filename <- path.expand(x)
       msg_loc <- 0

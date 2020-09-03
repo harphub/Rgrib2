@@ -28,7 +28,7 @@ void Rgrib_count_messages(char** filename, int* nfields,int* multi)  {
       (*nfields)++;
       grib_handle_delete(h);
     }
-    Rprintf("MULTI: found %d message(s) and %d field(s).\n",nmess,*nfields);
+//    Rprintf("MULTI: found %d message(s) and %d field(s).\n",nmess,*nfields);
   }
   else{
     *nfields=nmess;
@@ -62,15 +62,15 @@ SEXP Rgrib_parse_file(SEXP filename,
   nDblPar=length(DblPar);
   nStrPar=length(StrPar);
   npar=nStrPar+nDblPar+nIntPar;
-/*  Rprintf("Asking for %d int, %d double, %d char.\n",nIntPar,nDblPar,nStrPar);
-*/
+//  Rprintf("Asking for %d int, %d double, %d char.\n",nIntPar,nDblPar,nStrPar);
+
 
   imulti = asLogical(multi);
   if(imulti == NA_LOGICAL) error("'multi' must be TRUE or FALSE");
 
   if(imulti){
     grib_multi_support_on(0);
-    warning("MULTI is still buggy!\n");
+//    warning("MULTI is still buggy!\n");
   }
   else grib_multi_support_off(0);
 
