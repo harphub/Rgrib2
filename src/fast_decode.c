@@ -36,7 +36,7 @@ SEXP Rgrib_fast_find(SEXP filename, SEXP keys, SEXP multi) {
   found = 0;
   while ( (h = grib_handle_new_from_file(0,infile,&err))!=NULL ){
     count++;
-    Rprintf("message %i\n", count);
+//    Rprintf("message %i\n", count);
     OK = 1;
     // check all keys for this message, untill it fails
     for (i=0; i<nkeys; i++) {
@@ -45,7 +45,7 @@ SEXP Rgrib_fast_find(SEXP filename, SEXP keys, SEXP multi) {
       strncpy(key_name, CHAR(STRING_ELT(key_names, i)), MAX_KEY_LEN);
       key_val = VECTOR_ELT(keys, i);
       if (isReal(key_val)) {
-        Rprintf("%s : %lf\n", key_name, REAL(key_val)[0]);
+//        Rprintf("%s : %lf\n", key_name, REAL(key_val)[0]);
         err=grib_get_double(h, key_name, &DblAns);
         if (err) {
           DblAns = NA_REAL;
