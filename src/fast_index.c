@@ -31,8 +31,8 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
     nread = fread(buf1, 1, BUFLEN, infile);
     if (nread == 0) break;
     found=0;
-    for (i=0 ; i < nread-8 ; i++) {
-      if (strstr(buf1+i, "GRIB")) {
+    for (i=0 ; i < nread-16 ; i++) { // for GRIB2: need at least 16 bytes
+      if (buf1[i]=='G' && buf1[i+1]=='R' && buf1[i+2]=='I' && buf1[i+3]=='B') {
         found=1;
         break;
       }
@@ -57,8 +57,10 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
       // jump to end of message. check for '7777'.
       fseek(infile, loc + i + len[n] - 4, SEEK_SET);
       fread(buf1, 1, 4, infile);
-      if (!strstr(buf1, "7777")) {
+      if (buf1[0] != '7' || buf1[1] != '7' || buf1[2] != '7' || buf1[3] != '7') {
         Rprintf("Inconsistency in GRIB message %i \n", n+1);
+        Rprintf("%i : ed=%i loc=%ld len=%i\n", n, edition[n], (long int) pos[n], len[n]);
+        Rprintf("%s\n", buf1);
         break;
       }
       loc += i + len[n];
@@ -70,7 +72,7 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
       }
     }
     else {
-      loc += BUFLEN - 8;
+      loc += BUFLEN - 16;
     }
   }
 
