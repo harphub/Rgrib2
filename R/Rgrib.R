@@ -34,7 +34,7 @@ Gfind <- function(griblist, shortName="t", level=NULL, levelType="P",
               "S"=109,
               levelType)
     ttt <- paste(shortName,levelType,level,sep="\r")
-    pos <- which(with(griblist,paste(shortName,indicatorOfTypeOfLevel,level,sep="\r")) == ttt)        
+    pos <- which(with(griblist, paste(shortName, levelType, level, sep="\r")) == ttt)        
   } else pos <- which(griblist$shortName==shortName)
   if (!all) pos else griblist[pos,]
 }

@@ -4,20 +4,17 @@
 # There is some duplication (grib 1/2)
 "Gopen" <-
 function (filename,
-          IntPar=c("editionNumber",
-                   "dataDate", "dataTime",
-                   "validityDate", "validityTime",
-                   "Nx", "Ny",
-                   "table2Version", "indicatorOfParameter",
-                   "parameterCategory", "parameterNumber",
-                   "levelType", "level"),
-          DblPar=c(), StrPar=c("shortName", "gridType", "units"),
+          IntPar=c(),
+          DblPar=c(),
+          StrPar=c(),
           multi=FALSE, lextra=TRUE,
           meta_from=1)
 {
-  # mandatory intries:
-  # NOTE: we could thus set the function argument defaults to c()
-  #       but we'll wait a bit
+  # mandatory entries:
+  # NOTE: levelType is an alias for indicatorOfTypeOfLevel AND typeOfFirstFixedSurface
+  #       but there is no common alias for parameterNumber & indicatorOfParameter
+  #          (parameter stands for paramId, a unique number given by ECMWF to all possible
+  #           parameters that exist somewhere in an eccodes table)
   IntPar_main <- c("editionNumber",
                    "dataDate", "dataTime",
                    "validityDate", "validityTime",
@@ -29,8 +26,8 @@ function (filename,
   StrPar_main <- c("shortName", "gridType", "units")
 
   IntPar <- union(IntPar_main, IntPar)
-  DblPar <- union(IntPar_main, IntPar)
-  StrPar <- union(IntPar_main, IntPar)
+  DblPar <- union(DblPar_main, DblPar)
+  StrPar <- union(StrPar_main, StrPar)
 
 ### passing a logical only works on recent installations, I think
 ### so passing multi as an integer is safer

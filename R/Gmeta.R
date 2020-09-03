@@ -68,7 +68,7 @@ Gtime <- function(gribhandle, ...)
 
 Glevel <- function(gribhandle,...)
 {
-  ggg <- Ginfo(gribhandle,IntPar=c("indicatorOfTypeOfLevel","topLevel",
+  ggg <- Ginfo(gribhandle,IntPar=c("levelType","topLevel",
             "bottomLevel"),
             StrPar=c("stepUnits"),...)
 }
