@@ -116,4 +116,118 @@ void Rgrib_indexFinalizer(SEXP gribindex)
   R_ClearExternalPtr(gribindex); /* it may already be clear */
 }
 
+SEXP Rgrib_index_from_file(SEXP filename, SEXP keylist, SEXP multi) {
 
+  FILE* infile ;
+  grib_index *gi=NULL;
+  RgribIndex *newindex;
+  int err, *id, imulti;
+  SEXP output;
+  char str_val[MAX_FILE_NAME];
+
+//  Rprintf("%s\n%s\n", CHAR(STRING_ELT(filename,0)), CHAR(STRING_ELT(keylist,0)));
+  imulti = asLogical(multi);
+  if (imulti == NA_INTEGER) error("'multi' must be TRUE or FALSE");
+  if (imulti) grib_multi_support_on(0);
+  else grib_multi_support_off(0);
+
+  if(!(newindex=Rgrib_create_index()) )  {
+    Rprintf("Error creating the GRIBindex.\n");
+    fclose(infile);
+    return(R_NilValue);
+  }
+
+  //comma separated list of keys for the index. The type of the key can be explicitly declared appending :l for long, (or alternatively :i) :d for double, :s for string to the key name. If the type is not declared explicitly, the native type is assumed.
+  id = newindex->id;
+//  Rprintf("Creating new index %i : %li.\n", *id, (long int) id);
+  // NOTE: index is created using a file name (char*), not a FILE object!
+  // to avoid a warning, we copy it to a local (non-const) string
+  strncpy(str_val, CHAR(STRING_ELT(filename,0)), MAX_FILE_NAME);
+  gi = grib_index_new_from_file(NULL, str_val,
+      CHAR(STRING_ELT(keylist,0)), &err);
+  newindex->h = gi;
+  newindex->ext_ptr = R_MakeExternalPtr(id, install("GRIBindex"), R_NilValue);
+
+  R_RegisterCFinalizerEx(newindex->ext_ptr, Rgrib_indexFinalizer, TRUE);
+
+  PROTECT(output=allocVector(INTSXP,1));
+  INTEGER(output)[0]= (long) *id;
+  setAttrib(output, install("filename"), filename);
+  setAttrib(output, install("keylist"), keylist);
+  setAttrib(output, install("multi"), multi);
+  setAttrib(output, install("gribindex_ptr"), newindex->ext_ptr);
+  UNPROTECT(1);
+  return(output);
+
+}
+
+// set (all!) keys of an index and return handle for first message
+// NOTE: if all keys are already set, you can iterate over messages
+//       by calling this function with keys=list() (empty list)
+SEXP Rgrib_handle_from_index(SEXP gribindex, SEXP keys, SEXP multi){
+
+  grib_index *gi=NULL;
+  grib_handle *h;
+  int err, *id, imulti, count, i, nkeys;
+  SEXP output;
+  SEXP key_names = getAttrib(keys, R_NamesSymbol);
+  SEXP key_val;
+  char key_name[MAX_KEY_LEN];
+  RgribHandle *newhandle;
+  size_t vlen=MAX_VAL_LEN;
+  char str_val[MAX_VAL_LEN];
+  double dbl_val;
+  long int int_val;
+
+  imulti = asLogical(multi);
+  if (imulti == NA_INTEGER) error("'multi' must be TRUE or FALSE");
+  if (imulti) grib_multi_support_on(0);
+  else grib_multi_support_off(0);
+
+  id = (int*) R_ExternalPtrAddr(gribindex);
+//  Rprintf("Got index pointer %li.\n", (long int) id);
+  if (!id) error("Not a valid GRIBindex.\n");
+//  Rprintf("id=%i\n", *id);
+  gi=GRIBindexList[*id]->h;
+  if(!gi) error("Not a registered GRIBindex.\n");
+
+  if(!(newhandle=Rgrib_create_handle()) )  {
+    Rprintf("Error creating the GRIBhandle.\n");
+    return(R_NilValue);
+  }
+  
+  nkeys = length(keys);
+//  Rprintf("Setting %i keys.\n", nkeys);
+
+  for (i=0 ; i<nkeys ; i++) {
+    strncpy(key_name, CHAR(STRING_ELT(key_names, i)), MAX_KEY_LEN);
+    key_val = VECTOR_ELT(keys, i);
+    Rprintf("Setting %s\n", key_name);
+    if (isReal(key_val)) {
+      dbl_val = REAL(key_val)[0];
+      grib_index_select_double(gi, key_name, dbl_val);
+    }
+    else if (isInteger(key_val)) {
+      int_val = INTEGER(key_val)[0];
+      grib_index_select_long(gi, key_name, int_val);
+    }
+    else if (isString(key_val)) {
+      strncpy(str_val, CHAR(STRING_ELT(key_val, 0)), MAX_VAL_LEN);
+      grib_index_select_string(gi, key_name, str_val);
+    }
+    else Rprintf("Warning: key %s has an unknown type.\n", key_name);
+  }
+    
+  h = grib_handle_new_from_index (gi, &err);
+  id = newhandle->id;
+  newhandle->h = h;
+
+  newhandle->ext_ptr = R_MakeExternalPtr(id, install("GRIBhandle"), R_NilValue);
+  R_RegisterCFinalizerEx(newhandle->ext_ptr, Rgrib_handleFinalizer, TRUE);
+  PROTECT(output=allocVector(INTSXP,1));
+  INTEGER(output)[0]=(long) *id;
+/*  setAttrib(output,install("sample"),sample); */
+  setAttrib(output, install("gribhandle_ptr"), newhandle->ext_ptr);
+  UNPROTECT(1);
+  return(output);
+}

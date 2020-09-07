@@ -24,6 +24,12 @@ Ghandle <- function(x, message=1, multi=FALSE){
     msg <- readBin(gfile, "raw", x$len[message])
     gribhandle <-  .Call("Rgrib_handle_new_msg",
                          msg=msg, msglen=as.integer(x$len[message]))
+  } else if (inherits(x, "GRIBindex")) {
+    if (!is.list(message)) {
+      stop("For handle from a GRIBindex, you must pass a list of key values.")
+    }
+    gribhandle <- .Call("Rgrib_handle_from_index",
+                        attr(x, "gribindex_ptr"), message, as.integer(multi))
   } else {
     if (inherits(x, "GRIBlist")) {
       filename <- attr(x, "filename")

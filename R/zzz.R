@@ -7,6 +7,7 @@
 ####################################
 ".onUnload" <- function (libpath){
   GhandleFreeAll();
+  GindexFreeAll();
   library.dynam.unload("Rgrib2",libpath)
 }
 

@@ -32,6 +32,8 @@ SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
     if (nread == 0) break;
     found=0;
     for (i=0 ; i < nread-16 ; i++) { // for GRIB2: need at least 16 bytes
+      // buf1 = strstr(buf1, "GRIB");
+      // that would be safe as long as buf1 ends with \0
       if (buf1[i]=='G' && buf1[i+1]=='R' && buf1[i+2]=='I' && buf1[i+3]=='B') {
         found=1;
         break;

@@ -8,6 +8,7 @@
 
 #define MAX_KEY_LEN 255
 #define MAX_VAL_LEN 1024
+#define MAX_FILE_NAME 1024
 #define MAX_HANDLE 15
 #define MAX_INDEX 15
 
@@ -23,7 +24,7 @@
 typedef struct {
     int *id ;
     grib_index *h;
-    void *ext_ptr;
+    SEXP ext_ptr;
 } RgribIndex;
 
 typedef struct {
