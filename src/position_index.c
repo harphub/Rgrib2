@@ -4,7 +4,7 @@
 //   return all byte addresses as double (int is only 32bit)
 //   also check GRIB version (1 or 2)
 //   multi_message flag would be useful
-SEXP Rgrib_fast_index(SEXP filename, SEXP nmsg) {
+SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
   FILE* infile;
   int *len, *edition;
   int i, n, found, nread, max_msg;

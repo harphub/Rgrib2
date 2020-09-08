@@ -67,16 +67,19 @@ void Rgrib_indexFinalizer(SEXP gribindex);
 void Rgrib_count_messages(char** filename, int* nfields,int* multi);
 SEXP Rgrib_parse_file(SEXP filename,
         SEXP IntPar, SEXP DblPar, SEXP StrPar, SEXP rec, SEXP multi);
-SEXP Rgrib_index_file(SEXP filename, SEXP nmsg) ;
-
+SEXP Rgrib_position_index(SEXP filename, SEXP nmsg);
 
 
 /***************************/
 /*  creating GRIBindex's   */
 /***************************/
 
-SEXP Rgrib_index_new_file(SEXP filename, SEXP keylist, SEXP multi); 
-
+SEXP Rgrib_index_from_file(SEXP filename, SEXP keylist, SEXP multi);
+void Rgrib_index_select(SEXP gribindex, SEXP keylist);
+SEXP Rgrib_handle_from_index(SEXP gribindex);
+SEXP Rgrib_index_info(SEXP gribindex,
+        SEXP IntPar, SEXP DblPar, SEXP StrPar);
+SEXP Rgrib_index_get(SEXP gribindex, SEXP keylist);
 
 /**************************/
 /*  creating GRIBhandles  */
@@ -90,7 +93,6 @@ SEXP Rgrib_handle_new_msg(SEXP msg, SEXP msglen);
 /***************************/
 /* DECODING HANDLES & INFO */
 /***************************/
-
 SEXP Rgrib_handle_parse_all(SEXP gribhandle);
 SEXP Rgrib_handle_info(SEXP gribhandle,SEXP StrPar, SEXP IntPar, SEXP DblPar);
 SEXP Rgrib_handle_decode(SEXP gribhandle);

@@ -2,13 +2,8 @@ Ghandle <- function(x, message=1, multi=FALSE){
 ### create a GRIBhandle from a file and message number (or a key list)
   ### TODO: if the GRIBlist has bit location/length -> read msg directly
   ### raw GRIB data: what if it's multi-message???
-  if (is.list(message)) {
-    if (inherits(x, "GRIBlist")) x <- attr(x, "filename")
-    if (!is.character(x)) {
-      stop("Key search only for filename and a list of keys")
-    }
-    gribhandle <- .Call("Rgrib_fast_find", filename=x, keys=message, multi=multi)
-  } else if (is.raw(x)) {
+  if (is.raw(x)) {
+  # RAW GRIB MESSAGE
     if (message > 1) {
       gloc <- grib_raw_find(x)
       if (message > dim(gloc)[1]) stop("Only",dim(gloc)[1],"GRIB records available.")
@@ -16,7 +11,8 @@ Ghandle <- function(x, message=1, multi=FALSE){
     }
     gribhandle <-  .Call("Rgrib_handle_new_msg",
                          msg=x, msglen=as.integer(length(x)))
-  } else if (inherits(x, "grib_index")) {
+  } else if (inherits(x, "grib_position_index")) {
+  # a grib_position list
     if (message > dim(x)[1]) stop("Only ", dim(x)[1], " messages in file.")
     gfile <- file(attr(x, "filename"), open="rb") # file(attr(x, "filename"), open="rb")
     on.exit(try(close(gfile), silent=TRUE))
@@ -25,15 +21,21 @@ Ghandle <- function(x, message=1, multi=FALSE){
     gribhandle <-  .Call("Rgrib_handle_new_msg",
                          msg=msg, msglen=as.integer(x$len[message]))
   } else if (inherits(x, "GRIBindex")) {
-    if (!is.list(message)) {
-      stop("For handle from a GRIBindex, you must pass a list of key values.")
-    }
-    gribhandle <- .Call("Rgrib_handle_from_index",
-                        attr(x, "gribindex_ptr"), message, as.integer(multi))
+    # a GRIBindex
+#    if (!is.list(message)) {
+#      stop("For handle from a GRIBindex, you must pass a list of key values.")
+#    }
+#    x <- Gselect(attr(x, gribindex_ptr"), keylist=message)
+    gribhandle <- .Call("Rgrib_handle_from_index", attr(x, "gribindex_ptr"))
+  } else if (is.list(message) && (is.character(x) || inherits(x, "GRIBlist"))) {
+    if (inherits(x, "GRIBlist")) x <- attr(x, "filename")
+    gribhandle <- .Call("Rgrib_fast_find", filename=x, keys=message, multi=multi)
   } else {
     if (inherits(x, "GRIBlist")) {
+
       filename <- attr(x, "filename")
       if ("msg_loc" %in% names(x)) {
+        # there is a byte position index for this file
         msg_loc <- x$msg_loc[message]
       # we are skipping to right place in the file
       # it may be a sub_field, but that is not yet supported

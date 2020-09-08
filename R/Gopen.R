@@ -80,7 +80,7 @@ function (filename,
   }
 ### NEW: a byte index
 #  cat("Adding fast index.\n")
-  g_index <- .Call("Rgrib_fast_index", filename, max_msg=as.integer(2000))
+  g_index <- .Call("Rgrib_position_index", filename, max_msg=as.integer(2000))
   names(g_index) <- c("msg_loc", "msg_len", "msg_ed")
   g_index <- data.frame(g_index)
   if (dim(g_index)[1] != dim(result)[1]) {
