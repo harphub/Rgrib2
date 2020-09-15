@@ -1,6 +1,6 @@
 # return a data.frame with byte addresses of all GRIB messages
 # The code only looks at the first sector.
-position_index <- function(filename, max_msg=2000) {
+grib_position_index <- function(filename, max_msg=2000) {
   filename <- path.expand(filename)
   if (!file.exists(filename)) stop("File ", filename, "not found.")
 

@@ -1,5 +1,5 @@
 Package: Rgrib2
-Version: 1.4.0
+Version: 1.4.0.9001
 Date: 2020-09-08
 Title: Read and work with GRIB binary files
 Author: Alex Deckmyn (Royal Meteorological Institute of Belgium) <Alex.Deckmyn@meteo.be>.
