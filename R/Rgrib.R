@@ -48,18 +48,25 @@ find_in_raw <- function(msg, pattern="GRIB") {
   z[vapply(z, function(x) all(b==msg[x:(x+n-1)]), FUN.VAL=TRUE)]
 }
 
-## find a grib message in a raw data stream
+## find grib messages in a raw data stream
+## NOTE: there can be random sequences that happen to fit!
+###      so we try to be careful
+###      But it may be best to parse explicitly (find "GRIB", check the length)
 grib_raw_find <- function(msg) {
   l1 <- find_in_raw(msg, "GRIB")
   l2 <- find_in_raw(msg, "7777")
-  if (length(l1)==length(l2) && all(l1<l2)) {
-    len1 <- vapply(l1, function(x) sum(as.integer(msg[(x+4):(x+6)])*256^(2:0)), FUN.VALUE=1)
-    len2 <- l2 -l1 +4
-    if (any(len1 != len2)) stop("inconsistent GRIB messages?")
-    return(data.frame("begin"=l1, "end"=l2+3, "length"=len1))
-  } else {
-    stop("inconsistent GRIB messages?")
-  }
+
+  len1 <- vapply(l1, function(x) sum(as.integer(msg[(x+4):(x+6)])*256^(2:0)), FUN.VALUE=1)
+  
+#  l2 <- sort(intersect(l2, l1 + len1 - 4))
+  # if there are "accidental" "GRIB" sequences, length(l2) < length(l1)
+  sel <- (l1 + len1 - 4) %in% l2
+  l1 <- l1[sel]
+  len1 <- len1[sel]
+
+  # at this point we know that we only have messages where begin and end match.
+
+  return(data.frame("begin" = l1, "end" = l1 + len1 - 1, "length" = len1))
 }
 
 grib_raw_split <- function(msg) {
