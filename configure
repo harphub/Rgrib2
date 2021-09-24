@@ -614,7 +614,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -637,9 +636,9 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+with_eccodes
 with_eccodes_include
 with_eccodes_lib
-with_eccodes
 '
       ac_precious_vars='build_alias
 host_alias
@@ -688,7 +687,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -941,15 +939,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1087,7 +1076,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1240,7 +1229,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1269,12 +1257,12 @@ if test -n "$ac_init_help"; then
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-eccodes=PROJ_PATH
+                          the location of eccodes
   --with-eccodes-include=INCLUDE_PATH
                           the location of the eccodes header files
   --with-eccodes-lib=LIB_PATH
                           the location of the eccodes libraries
-  --with-eccodes=PROJ_PATH
-                          the location of eccodes
 
 Some influential environment variables:
   CC          C compiler command
@@ -2779,37 +2767,9 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+
 # check for user-specified ECCODES
-
-# Check whether --with-eccodes-include was given.
-if test "${with_eccodes_include+set}" = set; then :
-  withval=$with_eccodes_include; eccodes_include_path=$withval
-fi
-
-ECCODES_CPPFLAGS="-I."
-if test  -n "$eccodes_include_path"  ; then
-  ECCODES_CPPFLAGS="-I. -I${eccodes_include_path}"
-else
-  if test  -n "$ECCODES_INCLUDE"  ; then
-    ECCODES_CPPFLAGS="-I. -I${ECCODES_INCLUDE}"
-  fi
-fi
-
-
-# Check whether --with-eccodes-lib was given.
-if test "${with_eccodes_lib+set}" = set; then :
-  withval=$with_eccodes_lib; eccodes_lib_path=$withval
-fi
-
-if test  -n "$eccodes_lib_path"  ; then
-  LIBS="-L${eccodes_lib_path} -Wl,-rpath,${eccodes_lib_path} ${LIBS}"
-else
-  if test  -n "${ECCODES_LIBS}"  ; then
-    LIBS="-L${ECCODES_LIBS} -Wl,-rpath,${ECCODES_LIBS} ${LIBS}"
-  fi
-fi
-
-# both combined in a single --with-eccodes statement:
+# FIRST: both combined in a single --with-eccodes statement:
 
 # Check whether --with-eccodes was given.
 if test "${with_eccodes+set}" = set; then :
@@ -2817,12 +2777,60 @@ if test "${with_eccodes+set}" = set; then :
 fi
 
 if test  -n "$eccodes_path"  ; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: Using eccodes_path=${eccodes_path}" >&5
+$as_echo "$as_me: Using eccodes_path=${eccodes_path}" >&6;}
   LIBS="-L${eccodes_path}/lib -Wl,-rpath,${eccodes_path}/lib ${LIBS}"
   ECCODES_CPPFLAGS="-I. -I${eccodes_path}/include"
 else
   if test  -n "${ECCODES_DIR}"  ; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Using ECCODES_DIR=${ECCODES_DIR}" >&5
+$as_echo "$as_me: Using ECCODES_DIR=${ECCODES_DIR}" >&6;}
+  # as defined in the ECMWF modules
+  # TODO: should we also check for ".../lib64" ?
     LIBS="-L${ECCODES_DIR}/lib -Wl,-rpath,${ECCODES_DIR}/lib ${LIBS}"
     ECCODES_CPPFLAGS="-I. -I${ECCODES_DIR}/include"
+  else
+    # separate --with-eccodes-include (or ECCODES_INCLUDE)
+
+# Check whether --with-eccodes-include was given.
+if test "${with_eccodes_include+set}" = set; then :
+  withval=$with_eccodes_include; eccodes_include_path=$withval
+fi
+
+    ECCODES_CPPFLAGS="-I."
+    if test  -n "$eccodes_include_path"  ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Using eccodes_include_path=${eccodes_include_path}" >&5
+$as_echo "$as_me: Using eccodes_include_path=${eccodes_include_path}" >&6;}
+      ECCODES_CPPFLAGS="-I. -I${eccodes_include_path}"
+    else
+      if test  -n "$ECCODES_INCLUDE"  ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: Using ECCODES_INCLUDE=${ECCODES_INCLUDE}" >&5
+$as_echo "$as_me: Using ECCODES_INCLUDE=${ECCODES_INCLUDE}" >&6;}
+        # NOTE: ECCODES_INCLUDE already contains the "-I"
+        ECCODES_CPPFLAGS="-I. ${ECCODES_INCLUDE}"
+      fi
+    fi
+
+    # separate --with-eccodes-lib (or ECCODES_LIB)
+
+# Check whether --with-eccodes-lib was given.
+if test "${with_eccodes_lib+set}" = set; then :
+  withval=$with_eccodes_lib; eccodes_lib_path=$withval
+fi
+
+    if test  -n "$eccodes_lib_path"  ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Using eccodes_lib_path=${eccodes_lib_path}" >&5
+$as_echo "$as_me: Using eccodes_lib_path=${eccodes_lib_path}" >&6;}
+      LIBS="-L${eccodes_lib_path} -Wl,-rpath,${eccodes_lib_path} ${LIBS}"
+    else
+      if test  -n "${ECCODES_LIB}"  ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: Using ECCODES_LIB=${ECCODES_LIB}" >&5
+$as_echo "$as_me: Using ECCODES_LIB=${ECCODES_LIB}" >&6;}
+        # NOTE: ECCODES_LIB includes the "-Wl,-rpath,....." part!
+        LIBS="${ECCODES_LIB} ${LIBS}"
+      fi
+    fi
+
   fi
 fi
 
@@ -2967,7 +2975,8 @@ else
   as_fn_error $? "eccodes not found.
 *** Install ECCODES or add --with-eccodes=<path/to/eccodes>
 *** or --with-eccodes-include=<path/to/eccodes/include> --with-eccodes-lib=<path/to/eccodes/lib>
-*** or set environment variables ECCODES_DIR or ECCODES_INCLUDE and ECCODES_LIBS" "$LINENO" 5
+*** or set environment variables eccodes_path, eccodes_lib_path & eccodes_include_path
+*** or (like at ECMWF) ECCODES_DIR or ECCODES_INCLUDE and ECCODES_LIB" "$LINENO" 5
 fi
 
 CPPFLAGS="${CPPFLAGS} ${ECCODES_CPPFLAGS}"
