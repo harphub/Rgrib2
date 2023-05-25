@@ -111,6 +111,8 @@ SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
       loc += BUFLEN - 16;
     }
   }
+// at this point, we have finished with the file itself
+  fclose(infile);
 
 // now prepare the output : a list of loc, len, edition
   if (n==0) {
