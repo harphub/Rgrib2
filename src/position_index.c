@@ -4,11 +4,14 @@
 //   return all byte addresses as double (int is only 32bit)
 //   also check GRIB version (1 or 2)
 //   multi_message flag would be useful
+#define int3(buf) ((buf)==NULL ? 0 : (int) ((buf[0]<<16)+(buf[1]<<8)+buf[2]))
+
 SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
   FILE* infile;
   int *len, *edition;
   int i, n, found, nread, max_msg;
   int n_len, k;
+  int len_pds, len_gds, len_bms, len_bds, lgds, lbms ;
   unsigned char buf1[BUFLEN], *b_len;
   double *pos;
   long int loc;
@@ -43,20 +46,51 @@ SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
       pos[n] = loc + i;
       edition[n] = buf1[i+7];
       if (edition[n] == 1) {
-        // message length is last 3 bytes of 8.
-        b_len = buf1 + i + 4;
+        // message length is in bytes 5-7
+        //b_len = buf1 + i + 4;
         n_len = 3;
+        len[n] = int3( (buf1+i+4) ) ;
 //        len[n] = buf1[i+4]*256*256 + buf1[i+5]*256 + buf1[i+6];
       } else {
         // message length is last 8 bytes of 16.
+        // So you *should* store it in a long int !!!
+        // But for now lets pretend the grib record is < 2GB
         b_len = buf1 + i + 8;
         n_len = 8;
+        len[n] = 0;
+        for (k = 0; k < n_len; k++) len[n] = (len[n]<<8) + *(b_len++);
       }
-      len[n] = 0;
-      for (k = 0; k < n_len; k++) len[n] = 256*len[n] + *(b_len++);
 //      Rprintf("%i : loc=%ld len=%i\n", n, (long int) pos[n], len[n]);
       // TODO: read other meta data ? Search for sub-messages?
       // jump to end of message. check for '7777'.
+      // FIX: ECMWF has modified behaviour for very large data sections in grib-1
+      //  ref. wgrib.c, find "echack"
+      if (edition[n] == 1 && len[n] >=  2^23) {  // if highest bit set
+        lgds = buf1[i+7] & 128 ;
+        lbms = buf1[i+7] & 64 ;
+        //b_len = buf1 + 8;
+        len_pds = int3((buf1+8)) ;
+        if (lgds) {
+          fseek(infile, loc + i + len_pds, SEEK_SET) ;
+          fread(buf1, 1, 4, infile) ;
+          len_gds = int3(buf1) ;
+        } else {
+          len_gds = 0 ;
+        }
+        if (lbms) {
+          fseek(infile, loc + i + len_pds + len_gds, SEEK_SET) ;
+          fread(buf1, 1, 4, infile) ;
+          len_bms = int3(buf1) ;
+        } else {
+          len_bms = 0 ;
+        }
+        fseek(infile, loc + i + len_pds + len_gds + len_bms, SEEK_SET) ;
+        fread(buf1, 1, 4, infile) ;
+        len_bds = int3(buf1) ;
+        if (len_bds < 120) {
+          len[n] = (len[n] & 0x7fffff)*120 - len_bds + 4 ;
+        }
+      }
       fseek(infile, loc + i + len[n] - 4, SEEK_SET);
       fread(buf1, 1, 4, infile);
       if (buf1[0] != '7' || buf1[1] != '7' || buf1[2] != '7' || buf1[3] != '7') {
