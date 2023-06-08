@@ -1,20 +1,844 @@
-#Total precipitation
-'mm' = {
-     table2Version = 228 ;
-     indicatorOfParameter = 216 ;
-    }
-#10 metre wind gust
-'m s**-1' = {
-     table2Version = 1 ;
-     indicatorOfParameter = 228 ;
-    }
-#convective available potential energy
-'J kg**-1' = {
-     table2Version = 1 ;
-     indicatorOfParameter = 225 ;
-    }
-#Convective inhibition
-'J kg**-1' = {
-     table2Version = 1 ;
-     indicatorOfParameter = 224 ;
-    }
+'m**2 s**-2 m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 1 ;
+  }
+'0/1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 2 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 3 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 4 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 5 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 6 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 7 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 8 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 9 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 10 ;
+  }
+'% pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 11 ;
+  }
+'% pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 12 ;
+  }
+'(1-4)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 13 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 14 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 15 ;
+  }
+'?' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 16 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 17 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 18 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 19 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 20 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 21 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 22 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 23 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 24 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 25 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 26 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 27 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 28 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 29 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 30 ;
+  }
+'?' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 31 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 32 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 33 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 34 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 35 ;
+  }
+'Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 40 ;
+  }
+'Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 41 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 42 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 43 ;
+  }
+'Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 44 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 45 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 46 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 47 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 48 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 49 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 50 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 51 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 52 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 53 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 54 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 55 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 56 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 76 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 77 ;
+  }
+'kg m**-3' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 78 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 79 ;
+  }
+'Pa/s Kg/(s m**2)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 80 ;
+  }
+'Pa/s Kg/(s m**2)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 81 ;
+  }
+'Pa/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 82 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 83 ;
+  }
+'Pa/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 84 ;
+  }
+'pu' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 85 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 86 ;
+  }
+'K/Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 87 ;
+  }
+'K/Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 88 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 89 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 90 ;
+  }
+'s**-2 10**-9 /s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 91 ;
+  }
+'s**-2 10**-9 /s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 92 ;
+  }
+'1.E6PVU/s PVU /s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 93 ;
+  }
+'K/h' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 94 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 95 ;
+  }
+'m**2 s**-2 dam' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 96 ;
+  }
+'Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 97 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 98 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 99 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 100 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 101 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 102 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 103 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 104 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 105 ;
+  }
+'%' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 106 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 107 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 108 ;
+  }
+'Pa/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 109 ;
+  }
+'10**-5/sec' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 110 ;
+  }
+'s**-1  10**-5/sec' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 111 ;
+  }
+'s**-1 10**-5/sec' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 112 ;
+  }
+'1.E6 PVU PVU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 113 ;
+  }
+'m**2 s**-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 114 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 115 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 116 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 117 ;
+  }
+'-' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 118 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 119 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 120 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 122 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 123 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 127 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 128 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 129 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 130 ;
+  }
+'m (water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 131 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 132 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 133 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 134 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 135 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 136 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 137 ;
+  }
+'(0-9)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 138 ;
+  }
+'(0-1)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 139 ;
+  }
+'m (of water)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 140 ;
+  }
+'J/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 141 ;
+  }
+'kg/m**2 kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 142 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 143 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 144 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 145 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 146 ;
+  }
+'J/ m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 147 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 148 ;
+  }
+'J' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 149 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 150 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 151 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 152 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 153 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 154 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 155 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 156 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 157 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 158 ;
+  }
+'flx J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 159 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 160 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 161 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 162 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 163 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 164 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 165 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 166 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 167 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 168 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 169 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 170 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 171 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 172 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 173 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 174 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 175 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 176 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 177 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 178 ;
+  }
+'N/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 179 ;
+  }
+'N/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 180 ;
+  }
+'N/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 181 ;
+  }
+'N/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 182 ;
+  }
+'J/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 183 ;
+  }
+'Pa/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 184 ;
+  }
+'J*s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 185 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 186 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 187 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 191 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 192 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 193 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 194 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 195 ;
+  }
+'%' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 196 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 197 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 198 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 199 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 200 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 201 ;
+  }
+'?' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 202 ;
+  }
+'?' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 203 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 204 ;
+  }
+'m/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 205 ;
+  }
+'K' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 206 ;
+  }
+'kg/kg' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 207 ;
+  }
+'m**2/s**2 dam' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 208 ;
+  }
+'kg/m**2 s mm/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 209 ;
+  }
+'kg/m**2 s mm/s(water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 210 ;
+  }
+'kg/m**2 s mm/s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 211 ;
+  }
+'kg/m**2 s mm/s(water equiv)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 212 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 213 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 214 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 215 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 216 ;
+  }
+'0-1' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 217 ;
+  }
+'(0-9)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 218 ;
+  }
+'kg/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 219 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 220 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 221 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 222 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 223 ;
+  }
+'m/s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 224 ;
+  }
+'m/s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 225 ;
+  }
+'kg/m**2 s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 226 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 227 ;
+  }
+'m/s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 228 ;
+  }
+'m/s**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 229 ;
+  }
+'kg/m**2 s' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 230 ;
+  }
+'W/m**2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 231 ;
+  }
+'[0-1]' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 232 ;
+  }
+'Pa' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 233 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 235 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 236 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 237 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 238 ;
+  }
+'' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 239 ;
+  }
+'J' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 240 ;
+  }
+'(g/kg s^-1)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 241 ;
+  }
+'m' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 242 ;
+  }
