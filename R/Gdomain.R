@@ -154,8 +154,9 @@
     class(result) <- "geodomain"
     result
 
-  } else if (gridtype=="lambert") {
+  } else if (gridtype %in% c("lambert", "lambert_lam")) {
 ### LAMBERT
+    # TODO: lambert_lam has additional info on coupling zone (Ncx & Ncy)
     info <- gridtype
 
     ggg <- Ginfo(gribhandle,

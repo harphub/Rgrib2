@@ -1,0 +1,844 @@
+'Surface orography' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 1 ;
+  }
+'Land-Sea Mask' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 2 ;
+  }
+'Land Fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 3 ;
+  }
+'Std dev of orography' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 4 ;
+  }
+'Anisotropy sbgrd orog' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 5 ;
+  }
+'Angle sbgrd orog' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 6 ;
+  }
+'Slope sbgrd orog' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 7 ;
+  }
+'Orography roughness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 8 ;
+  }
+'Surface roughness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 9 ;
+  }
+'Thermal roughness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 10 ;
+  }
+'Clay fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 11 ;
+  }
+'Sand fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 12 ;
+  }
+'Veg Type' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 13 ;
+  }
+'L.A.I.' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 14 ;
+  }
+'Root Depth' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 15 ;
+  }
+'Stomatal min Resistance' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 16 ;
+  }
+'Vegetation fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 17 ;
+  }
+'Urbanisation frctn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 18 ;
+  }
+'Albedo' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 19 ;
+  }
+'Emissivity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 20 ;
+  }
+'Clim Surf Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 21 ;
+  }
+'Clim Deep Soil Temp' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 22 ;
+  }
+'Relax Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 23 ;
+  }
+'Clim Surface Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 24 ;
+  }
+'Clim Deep Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 25 ;
+  }
+'Relax Deep Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 26 ;
+  }
+'Surf Water Reservoir' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 27 ;
+  }
+'Deep Water Reservoir' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 28 ;
+  }
+'Clim Snow Reservoir' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 29 ;
+  }
+'Interception Reservoir' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 30 ;
+  }
+'Res to Evapotranspirn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 31 ;
+  }
+'Compl. Albedo' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 32 ;
+  }
+'Max Veg fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 33 ;
+  }
+'Max Root Depth' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 34 ;
+  }
+'Vegtn roughness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 35 ;
+  }
+'Surface pressure' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 40 ;
+  }
+'Mean sea level pressure' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 41 ;
+  }
+'ICAO zonal Jet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 42 ;
+  }
+'ICAO meridian Jet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 43 ;
+  }
+'Tropopause Pressure' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 44 ;
+  }
+'ICAO Tropopause Temper' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 45 ;
+  }
+'Tropopause Fold Indic' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 46 ;
+  }
+'Surf vertical velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 47 ;
+  }
+'Surface Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 48 ;
+  }
+'Deep Soil Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 49 ;
+  }
+'Interpolated Surf. Temp.' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 50 ;
+  }
+'Surface Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 51 ;
+  }
+'Deep Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 52 ;
+  }
+'Frozen Surface Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 53 ;
+  }
+'Frozen Deep Soil Wetness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 54 ;
+  }
+'Surface Relative Moisture' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 55 ;
+  }
+'Soil Moisture' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 56 ;
+  }
+'Updraught pron Velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 76 ;
+  }
+'Downdraught pron Velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 77 ;
+  }
+'Density' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 78 ;
+  }
+'Convective Activity Mask' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 79 ;
+  }
+'Updraught pron mass flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 80 ;
+  }
+'Dndraught pron mass flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 81 ;
+  }
+'Updraught pron velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 82 ;
+  }
+'Updraught mesh fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 83 ;
+  }
+'Downdraught pron velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 84 ;
+  }
+'Downdraught mesh fraction' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 85 ;
+  }
+'(RMI) Last hour Precipit' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 86 ;
+  }
+'(RMI) Pot Temp Vert grad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 87 ;
+  }
+'(RMI) Vertic Temp Grad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 88 ;
+  }
+'(RMI) Sect Tangent wind' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 89 ;
+  }
+'(RMI) Sect Normal wind' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 90 ;
+  }
+'Absolute Vorticity Adv' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 91 ;
+  }
+'Relative Vorticity Adv' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 92 ;
+  }
+'Potential Vorticity Adv' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 93 ;
+  }
+'Temperature Advection' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 94 ;
+  }
+'Height (geopotential)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 95 ;
+  }
+'Geopotential' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 96 ;
+  }
+'Pressure' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 97 ;
+  }
+'Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 98 ;
+  }
+'Dewpoint Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 99 ;
+  }
+'Potential Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 100 ;
+  }
+'Wet Bulb Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 101 ;
+  }
+'Wet Bulb Poten Temper' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 102 ;
+  }
+'Equiv Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 103 ;
+  }
+'Equiv Poten Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 104 ;
+  }
+'Specific humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 105 ;
+  }
+'Relative humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 106 ;
+  }
+'U-velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 107 ;
+  }
+'V-velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 108 ;
+  }
+'Vertical velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 109 ;
+  }
+'Divergence per sec' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 110 ;
+  }
+'Vorticity (relative)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 111 ;
+  }
+'Absolute Vorticity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 112 ;
+  }
+'Potential Vorticity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 113 ;
+  }
+'Velocity potential' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 114 ;
+  }
+'Stream Function' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 115 ;
+  }
+'Shearing strain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 116 ;
+  }
+'Stretching strain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 117 ;
+  }
+'NH Pressure departure' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 118 ;
+  }
+'NH Vertical Divergence' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 119 ;
+  }
+'NH Vertical velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 120 ;
+  }
+'Cloud liquid water cnt' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 122 ;
+  }
+'Cloud solid water cnt' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 123 ;
+  }
+'reserved for gribex' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 127 ;
+  }
+'Large scale rain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 128 ;
+  }
+'Large scale snow' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 129 ;
+  }
+'Convective rain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 130 ;
+  }
+'Convective snow' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 131 ;
+  }
+'Total precipitation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 132 ;
+  }
+'Convective Cloud Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 133 ;
+  }
+'Low Cloud Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 134 ;
+  }
+'Medium Cloud Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 135 ;
+  }
+'High Cloud Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 136 ;
+  }
+'Total cloud cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 137 ;
+  }
+'Cloudiness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 138 ;
+  }
+'Soil moisture' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 139 ;
+  }
+'Water evaporation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 140 ;
+  }
+'Latent heat evaporation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 141 ;
+  }
+'Snow mass' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 142 ;
+  }
+'Snow sublimation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 143 ;
+  }
+'Latent heat sublimation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 144 ;
+  }
+'Snow melting' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 145 ;
+  }
+'Surf Sensible heat flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 146 ;
+  }
+'Surf Latent heat flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 147 ;
+  }
+'PBL dissipation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 148 ;
+  }
+'Top mesospheric enthalpy' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 149 ;
+  }
+'Surf Solar radiation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 150 ;
+  }
+'Surf Thermal radiation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 151 ;
+  }
+'Top Solar radiation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 152 ;
+  }
+'Top Thermal radiation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 153 ;
+  }
+'Clear sky Shrt Wv rad flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 154 ;
+  }
+'Clear sky Long Wv rad flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 155 ;
+  }
+'Surf Parall Solar flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 156 ;
+  }
+'Top Parall Solar flx' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 157 ;
+  }
+'Surf Downward Solar flux' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 158 ;
+  }
+'Surf Downward Thermal' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 159 ;
+  }
+'Soil heat flux' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 160 ;
+  }
+'Soil water flux' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 161 ;
+  }
+'Surface runoff' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 162 ;
+  }
+'Deep soil runoff' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 163 ;
+  }
+'Interception res runoff' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 164 ;
+  }
+'Evapotranspiration' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 165 ;
+  }
+'Transpiration' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 166 ;
+  }
+'Total Ozone' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 167 ;
+  }
+'Tot Precipitable Water' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 168 ;
+  }
+'Solid specific moisture' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 169 ;
+  }
+'Liquid specific moisture' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 170 ;
+  }
+'Convective flux of U' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 171 ;
+  }
+'Convective flux of V' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 172 ;
+  }
+'Convec Moist flux (Q)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 173 ;
+  }
+'Convec Heat flux (Cp.T)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 174 ;
+  }
+'Turbulent flux of U' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 175 ;
+  }
+'Turbulent flux of V' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 176 ;
+  }
+'Turbul Moist flux (Q)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 177 ;
+  }
+'Turbul Heat flux (Cp.T)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 178 ;
+  }
+'Zonal Turbulent stress' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 179 ;
+  }
+'Merid. Turbulent stress' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 180 ;
+  }
+'Zonal Grav wave stress' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 181 ;
+  }
+'Merid. Grav wave stress' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 182 ;
+  }
+'Gravity Wave dissipation' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 183 ;
+  }
+'Tendency of surf press' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 184 ;
+  }
+'Time Cumulated Cape' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 185 ;
+  }
+'Time Cumulated Mocon' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 186 ;
+  }
+'Duration of total Precip.' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 187 ;
+  }
+'SBL Wind Velocity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 191 ;
+  }
+'10 m u  wind component' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 192 ;
+  }
+'10 m v  wind component' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 193 ;
+  }
+'2 m temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 194 ;
+  }
+'2 m dewpoint temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 195 ;
+  }
+'2m Relative humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 196 ;
+  }
+'2m Specific humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 197 ;
+  }
+'2 m Max temp (since ppp)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 198 ;
+  }
+'2 m Min temp (since ppp)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 199 ;
+  }
+'Surface Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 200 ;
+  }
+'Deep Soil Temperature' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 201 ;
+  }
+'Surface Water Contents' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 202 ;
+  }
+'Deep Soil Water Contents' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 203 ;
+  }
+'u at bottom level' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 204 ;
+  }
+'v at bottom level' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 205 ;
+  }
+'T at bottom level' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 206 ;
+  }
+'Q at bottom level' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 207 ;
+  }
+'Geopot bottom level' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 208 ;
+  }
+'Inst flx LS rain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 209 ;
+  }
+'Inst flx LS snow' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 210 ;
+  }
+'Inst flx Conv rain' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 211 ;
+  }
+'Inst flx Conv snow' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 212 ;
+  }
+'Inst flx Conv Cld Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 213 ;
+  }
+'Inst flx Low Cld Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 214 ;
+  }
+'Inst flx Medium Cld Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 215 ;
+  }
+'Inst flx High Cld Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 216 ;
+  }
+'Inst flx Tot Cld cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 217 ;
+  }
+'Inst flx Cloudiness' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 218 ;
+  }
+'Snow mass' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 219 ;
+  }
+'Inst Surf Solar radn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 220 ;
+  }
+'Inst Surf Earth radn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 221 ;
+  }
+'Inst Top Solar radn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 222 ;
+  }
+'Inst Top Earth radn' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 223 ;
+  }
+'Inst Convective flux of U' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 224 ;
+  }
+'Inst Convective flux of V' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 225 ;
+  }
+'Inst Convec Moist flux (Q)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 226 ;
+  }
+'Inst Convec Heat flux (Cp.T)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 227 ;
+  }
+'Inst Turbulent flux of U' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 228 ;
+  }
+'Inst Turbulent flux of V' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 229 ;
+  }
+'Inst Turbul Moist flux (Q)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 230 ;
+  }
+'Inst Turbul Heat flux (Cp.T)' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 231 ;
+  }
+'(RMI) Prono Conv Upd Cover' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 232 ;
+  }
+'(RMI) Prono Conv VV dt' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 233 ;
+  }
+'SBL Zonal gust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 235 ;
+  }
+'SBL Meridian gust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 236 ;
+  }
+'SBL Gust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 237 ;
+  }
+'SBL Max. Rel. Humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 238 ;
+  }
+'SBL Min. Rel. Humidity' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 239 ;
+  }
+'Surface CAPE' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 240 ;
+  }
+'PBL Mocon' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 241 ;
+  }
+'PBL height' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 242 ;
+  }
