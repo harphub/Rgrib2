@@ -1,0 +1,844 @@
+'ORO' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 1 ;
+  }
+'LandSeaMask' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 2 ;
+  }
+'LandFrac' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 3 ;
+  }
+'std_or' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 4 ;
+  }
+'AniSO' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 5 ;
+  }
+'AngSO' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 6 ;
+  }
+'SSO' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 7 ;
+  }
+'OroR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 8 ;
+  }
+'SurfR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 9 ;
+  }
+'ThR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 10 ;
+  }
+'ClayFrac' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 11 ;
+  }
+'SandFrac' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 12 ;
+  }
+'VegTyp' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 13 ;
+  }
+'LAI' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 14 ;
+  }
+'RD' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 15 ;
+  }
+'SMR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 16 ;
+  }
+'VegFrac' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 17 ;
+  }
+'UrbFrac' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 18 ;
+  }
+'albedo' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 19 ;
+  }
+'emis' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 20 ;
+  }
+'CST' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 21 ;
+  }
+'CDST' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 22 ;
+  }
+'RT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 23 ;
+  }
+'CSW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 24 ;
+  }
+'CDSW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 25 ;
+  }
+'RDSW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 26 ;
+  }
+'SWR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 27 ;
+  }
+'DWR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 28 ;
+  }
+'CSR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 29 ;
+  }
+'IR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 30 ;
+  }
+'RE' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 31 ;
+  }
+'CA' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 32 ;
+  }
+'M-VG' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 33 ;
+  }
+'M-RD' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 34 ;
+  }
+'VR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 35 ;
+  }
+'SLP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 40 ;
+  }
+'MSLP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 41 ;
+  }
+'IZJ' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 42 ;
+  }
+'IMJ' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 43 ;
+  }
+'TP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 44 ;
+  }
+'ITT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 45 ;
+  }
+'TFI' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 46 ;
+  }
+'SVV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 47 ;
+  }
+'SurfT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 48 ;
+  }
+'DeepT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 49 ;
+  }
+'IntSurfT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 50 ;
+  }
+'SurfSWet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 51 ;
+  }
+'DeepSWet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 52 ;
+  }
+'FrozenSurfWet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 53 ;
+  }
+'FrozenDeepWet' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 54 ;
+  }
+'SurfRelMoi' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 55 ;
+  }
+'SoilM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 56 ;
+  }
+'UpdPronVel' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 76 ;
+  }
+'DownpronVel' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 77 ;
+  }
+'Dens' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 78 ;
+  }
+'CAM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 79 ;
+  }
+'UPMF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 80 ;
+  }
+'DPMF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 81 ;
+  }
+'UPV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 82 ;
+  }
+'UMF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 83 ;
+  }
+'DPV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 84 ;
+  }
+'DMF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 85 ;
+  }
+'LHP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 86 ;
+  }
+'PTVG' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 87 ;
+  }
+'VTG' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 88 ;
+  }
+'STW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 89 ;
+  }
+'SNW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 90 ;
+  }
+'AVA' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 91 ;
+  }
+'RVA' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 92 ;
+  }
+'PVA' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 93 ;
+  }
+'TA' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 94 ;
+  }
+'H' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 95 ;
+  }
+'Z' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 96 ;
+  }
+'P' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 97 ;
+  }
+'T' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 98 ;
+  }
+'DT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 99 ;
+  }
+'PT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 100 ;
+  }
+'WT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 101 ;
+  }
+'WPT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 102 ;
+  }
+'ET' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 103 ;
+  }
+'EPT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 104 ;
+  }
+'Q' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 105 ;
+  }
+'R' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 106 ;
+  }
+'U' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 107 ;
+  }
+'V' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 108 ;
+  }
+'W' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 109 ;
+  }
+'Div' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 110 ;
+  }
+'Vort' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 111 ;
+  }
+'AVort' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 112 ;
+  }
+'PVort' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 113 ;
+  }
+'VP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 114 ;
+  }
+'SF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 115 ;
+  }
+'SHS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 116 ;
+  }
+'STS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 117 ;
+  }
+'Pdep' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 118 ;
+  }
+'Vdiv' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 119 ;
+  }
+'Vvel' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 120 ;
+  }
+'CLW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 122 ;
+  }
+'CSW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 123 ;
+  }
+'None' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 127 ;
+  }
+'LSR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 128 ;
+  }
+'LSS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 129 ;
+  }
+'CR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 130 ;
+  }
+'CS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 131 ;
+  }
+'TotPrecip' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 132 ;
+  }
+'ConvCl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 133 ;
+  }
+'LoCl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 134 ;
+  }
+'MiCl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 135 ;
+  }
+'HiCl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 136 ;
+  }
+'TotCl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 137 ;
+  }
+'Cl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 138 ;
+  }
+'SoilMois' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 139 ;
+  }
+'WaterEvap' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 140 ;
+  }
+'LatHeatEvap' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 141 ;
+  }
+'SM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 142 ;
+  }
+'SS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 143 ;
+  }
+'LatHeatSubl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 144 ;
+  }
+'SMelt' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 145 ;
+  }
+'SurfSensHeatFl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 146 ;
+  }
+'SurfLatHeatFl' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 147 ;
+  }
+'PD' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 148 ;
+  }
+'TME' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 149 ;
+  }
+'SurfSWrad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 150 ;
+  }
+'SurfLWrad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 151 ;
+  }
+'TopSWrad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 152 ;
+  }
+'TopLWrad' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 153 ;
+  }
+'csSWF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 154 ;
+  }
+'csLWF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 155 ;
+  }
+'SPF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 156 ;
+  }
+'TPF' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 157 ;
+  }
+'SurfDownSW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 158 ;
+  }
+'SurfDownLW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 159 ;
+  }
+'SoilHeatFlux' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 160 ;
+  }
+'SoilWaterFlux' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 161 ;
+  }
+'SurfRunoff' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 162 ;
+  }
+'DSR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 163 ;
+  }
+'IRR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 164 ;
+  }
+'EvapoTrans' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 165 ;
+  }
+'Trans' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 166 ;
+  }
+'TotO3' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 167 ;
+  }
+'TPW' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 168 ;
+  }
+'SSM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 169 ;
+  }
+'LSM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 170 ;
+  }
+'CFU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 171 ;
+  }
+'CFV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 172 ;
+  }
+'CFM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 173 ;
+  }
+'CFH' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 174 ;
+  }
+'TFU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 175 ;
+  }
+'TFV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 176 ;
+  }
+'TFM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 177 ;
+  }
+'TFH' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 178 ;
+  }
+'ZTS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 179 ;
+  }
+'MTS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 180 ;
+  }
+'ZGWS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 181 ;
+  }
+'MGWS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 182 ;
+  }
+'GWD' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 183 ;
+  }
+'SPT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 184 ;
+  }
+'CumCape' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 185 ;
+  }
+'CumMocon' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 186 ;
+  }
+'DurPrec' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 187 ;
+  }
+'SBLwind' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 191 ;
+  }
+'U10' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 192 ;
+  }
+'V10' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 193 ;
+  }
+'T2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 194 ;
+  }
+'DT2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 195 ;
+  }
+'RH2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 196 ;
+  }
+'SH2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 197 ;
+  }
+'MaxT2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 198 ;
+  }
+'MinT2' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 199 ;
+  }
+'ST' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 200 ;
+  }
+'DST' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 201 ;
+  }
+'SWC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 202 ;
+  }
+'DSWC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 203 ;
+  }
+'BLU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 204 ;
+  }
+'BLV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 205 ;
+  }
+'BLT' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 206 ;
+  }
+'BLQ' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 207 ;
+  }
+'BLGP' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 208 ;
+  }
+'IFLR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 209 ;
+  }
+'IFLS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 210 ;
+  }
+'IFCR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 211 ;
+  }
+'IFCS' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 212 ;
+  }
+'IFCCC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 213 ;
+  }
+'IFLCC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 214 ;
+  }
+'IFMCC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 215 ;
+  }
+'IFHCC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 216 ;
+  }
+'IFTCC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 217 ;
+  }
+'IFC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 218 ;
+  }
+'SMass' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 219 ;
+  }
+'ISSR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 220 ;
+  }
+'ISER' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 221 ;
+  }
+'ITSR' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 222 ;
+  }
+'ITER' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 223 ;
+  }
+'ICFU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 224 ;
+  }
+'ICFV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 225 ;
+  }
+'ICFM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 226 ;
+  }
+'ICFH' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 227 ;
+  }
+'ITFU' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 228 ;
+  }
+'ITFV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 229 ;
+  }
+'ITFM' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 230 ;
+  }
+'ITFH' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 231 ;
+  }
+'PCUC' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 232 ;
+  }
+'PCV' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 233 ;
+  }
+'ZonGust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 235 ;
+  }
+'MerGust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 236 ;
+  }
+'Gust' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 237 ;
+  }
+'RHmax' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 238 ;
+  }
+'RHmin' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 239 ;
+  }
+'SurfCape' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 240 ;
+  }
+'PBLMocon' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 241 ;
+  }
+'PBLh' = {
+  table2Version = 228 ;
+  indicatorOfParameter = 242 ;
+  }

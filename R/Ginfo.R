@@ -21,6 +21,10 @@ Ginfo.GRIBlist <- function(x, IntPar=c(), DblPar=c(), StrPar=c(),
   Ginfo.character(filename, IntPar, DblPar, StrPar, rList, multi)
 }
 
+Ginfo.GRIBindex <- function(x, IntPar=c(), DblPar=c(), StrPar=c()) {
+  .Call("Rgrib_index_info", x, IntPar, DblPar, StrPar)
+}
+
 Ginfo.character <- function(x, IntPar=c(), DblPar=c(), StrPar=c(),
                             rList=NULL, multi=FALSE, ...){
   if (is.null(rList) ) {

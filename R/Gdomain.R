@@ -52,6 +52,8 @@
 ### the earth radius has an impact when calculating NE point from SW.
 ### We could *assume* that Lambert projections always originate from ALADIN/ALARO/AROME... or use centre of origin?
 
+# TODO:
+# ijDirectionIncrementGiven flag: if 0, don't even bother about dx, dy from file
 
 # LATLON
   if (gridtype=="regular_ll") {
@@ -60,6 +62,7 @@
 
     ggg <- Ginfo(gribhandle,
               IntPar=c("Nx", "Ny",
+                       "ijDirectionIncrementGiven",
                        "iScansNegatively", "jScansPositively",
                        "jPointsAreConsecutive", "alternativeRowScanning"),
               DblPar=c("latitudeOfFirstGridPointInDegrees", "longitudeOfFirstGridPointInDegrees",
@@ -103,9 +106,11 @@
     }
     projection$lon0 <- lon0
 
-    if (abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
-      warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
-                        "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
+    if (ggg$ijDirectionIncrementGiven == 0 ||
+        abs((Lon2-Lon1)/(ggg$Nx-1) - ggg$iDirectionIncrementInDegrees) > LonEps){
+    # this warning is so annoying...
+#      warning(paste("Longitudes may be inconsistent: Lon1=",Lon1,"Lon2=",Lon2,
+#                        "Nx=",ggg$Nx,"Dx=",ggg$iDirectionIncrementInDegrees))
 ### In fact, this usually means that the value given in the file is rounded
       delx <- (Lon2-Lon1)/(ggg$Nx-1)
     } else {
@@ -132,9 +137,10 @@
       Lat1 <- ggg$latitudeOfLastGridPointInDegrees
     }
     if (Lat1 > Lat2) warning(paste("Inconsistent Lat1=",Lat1,"Lat2=",Lat2))
-    if (abs( (Lat2-Lat1)/(ggg$Ny-1) - ggg$jDirectionIncrementInDegrees) > LonEps){
-          warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
-                        "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
+    if (ggg$ijDirectionIncrementGiven == 0 ||
+        abs( (Lat2-Lat1)/(ggg$Ny-1) - ggg$jDirectionIncrementInDegrees) > LonEps){
+#          warning(paste("Latitudes may be inconsistent: Lat1=",Lat1,"Lat2=",Lat2,
+#                        "Ny=",ggg$Ny,"Dy=",ggg$jDirectionIncrementInDegrees))
           dely <- (Lat2-Lat1)/(ggg$Ny-1)
     } else {
       dely <- ggg$jDirectionIncrementInDegrees
@@ -148,8 +154,9 @@
     class(result) <- "geodomain"
     result
 
-  } else if (gridtype=="lambert") {
+  } else if (gridtype %in% c("lambert", "lambert_lam")) {
 ### LAMBERT
+    # TODO: lambert_lam has additional info on coupling zone (Ncx & Ncy)
     info <- gridtype
 
     ggg <- Ginfo(gribhandle,
@@ -284,6 +291,7 @@
     info <- gridtype
     ggg <- Ginfo(gribhandle,
               IntPar=c("Nx","Ny",
+                       "ijDirectionIncrementGiven",
                        "iScansNegatively","jScansPositively",
                        "jPointsAreConsecutive","alternativeRowScanning"),
               DblPar=c("latitudeOfFirstGridPointInDegrees",

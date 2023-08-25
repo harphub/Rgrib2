@@ -16,7 +16,7 @@ They can be closed explicitely, but this is not really necessary in general,
 Freeing a GRIBhandle also frees the memory that contains the GRIB message.
 }
 \usage{
-  Ghandle(x, message=1, multi=FALSE)
+  Ghandle(x, message=NULL, multi=FALSE, keys=list(shortName="2t"))
   GhandleList()
   GhandleCount()
   GhandleFree(gribhandle)
@@ -24,7 +24,7 @@ Freeing a GRIBhandle also frees the memory that contains the GRIB message.
 }
 \arguments{
   \item{x}{A GRIBlist class object, the name of a GRIB file or a raw GRIB message.}
-  \item{message}{An integer indicating the position in the list of the message to be opened.}
+  \item{message}{An integer indicating the position in the list of the message to be opened. It may also be a list off eccodes key values. In that case, the first message that fits all keys is returned.}
   \item{multi}{Set to TRUE for experimental support of multi-message GRIB records.}
   \item{gribhandle}{A GRIBhandle}
 }

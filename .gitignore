@@ -8,3 +8,4 @@ src/*.dll
 src/Makevars
 .*.swp
 configure
+autom4te.cache

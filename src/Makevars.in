@@ -1,3 +1,4 @@
 # link to either eccodes or grib_api, and jasper and/or openjp2
+PKG_CPPFLAGS = @ECCODES_CPPFLAGS@
 PKG_LIBS = @LIBS@
 
