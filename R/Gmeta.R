@@ -5,7 +5,7 @@
   ##                 parameterName="Wind speed", but name="10 metre wind speed"
   ## So which should be used?
   ggg <- Ginfo(gribhandle,
-          StrPar=c("centre", "subCentre", "parameterName", "levelType", "name", "units"),
+          StrPar=c("centre", "subCentre", "parameterName", "levelType", "name", "units", "stepRange"),
           IntPar=c("level", "editionNumber", "table2Version", "indicatorOfParameter",
                    "parameterCategory", "parameterNumber")
          )
@@ -32,7 +32,8 @@
               origin = ggg$centre,
               level = ggg$level,
               leveltype = ggg$levelType,
-              unit = ggg$units))
+              unit = ggg$units,
+              steprange = ggg$stepRange))
 }
 
 #####################################
