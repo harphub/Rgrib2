@@ -65,7 +65,7 @@ SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
       // jump to end of message. check for '7777'.
       // FIX: ECMWF has modified behaviour for very large data sections in grib-1
       //  ref. wgrib.c, find "echack"
-      if (edition[n] == 1 && len[n] >=  2^23) {  // if highest bit set
+      if (edition[n] == 1 && len[n] >= 8388608) {  // if highest bit set
         lgds = buf1[i+7] & 128 ;
         lbms = buf1[i+7] & 64 ;
         //b_len = buf1 + 8;
