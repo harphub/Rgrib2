@@ -8,7 +8,7 @@ Depends: meteogrid (>= 3.8.2)
 Remotes: harphub/meteogrid
 Description: An R interface to the ECCODES library developed by ECMWF. Decoding and encoding of GRIB files. 
 LazyData: yes
-License: Apache License (>= 2.0)
+License: Apache License (>= 2)
 URL: https://github.com/harphub/Rgrib2
 BugReports: https://github.com/harphub/Rgrib2/issues
 RoxygenNote: 7.2.3
