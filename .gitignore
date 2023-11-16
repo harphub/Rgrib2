@@ -9,3 +9,6 @@ src/Makevars
 .*.swp
 configure
 autom4te.cache
+config.log
+config.status
+
