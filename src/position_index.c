@@ -66,25 +66,26 @@ SEXP Rgrib_position_index(SEXP filename, SEXP nmsg) {
       // FIX: ECMWF has modified behaviour for very large data sections in grib-1
       //  ref. wgrib.c, find "echack"
       if (edition[n] == 1 && len[n] >= 8388608) {  // if highest bit set
-        lgds = buf1[i+7] & 128 ;
-        lbms = buf1[i+7] & 64 ;
+        lgds = buf1[i+8+7] & 128 ;
+        lbms = buf1[i+8+7] & 64 ;
+        //center = buf1[i+4] ; // only ECMWF...
         //b_len = buf1 + 8;
-        len_pds = int3((buf1+8)) ;
+        len_pds = int3((buf1+i+8)) ;
         if (lgds) {
-          fseek(infile, loc + i + len_pds, SEEK_SET) ;
+          fseek(infile, loc + i + 8 + len_pds, SEEK_SET) ;
           fread(buf1, 1, 4, infile) ;
           len_gds = int3(buf1) ;
         } else {
           len_gds = 0 ;
         }
         if (lbms) {
-          fseek(infile, loc + i + len_pds + len_gds, SEEK_SET) ;
+          fseek(infile, loc + i + 8 + len_pds + len_gds, SEEK_SET) ;
           fread(buf1, 1, 4, infile) ;
           len_bms = int3(buf1) ;
         } else {
           len_bms = 0 ;
         }
-        fseek(infile, loc + i + len_pds + len_gds + len_bms, SEEK_SET) ;
+        fseek(infile, loc + i + 8 + len_pds + len_gds + len_bms, SEEK_SET) ;
         fread(buf1, 1, 4, infile) ;
         len_bds = int3(buf1) ;
         if (len_bds < 120) {
